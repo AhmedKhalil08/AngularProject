@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Wishlists\Commands\UpdateWishlist\" />
+    <Folder Include="Features\Wishlists\Queries\GetWishlistById\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
