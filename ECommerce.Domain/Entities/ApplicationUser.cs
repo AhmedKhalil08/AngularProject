@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ECommerce.Domain.Entites;
+using ECommerce.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -16,6 +18,7 @@ namespace ECommerce.Domain.Entities
         public UserRole Role { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsDeleted { get; set; }
 
         /*-------------------------------------------------------------------------*/
         //                          Navigation Props 

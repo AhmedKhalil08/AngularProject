@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ECommerce.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ECommerce.Domain.Entities
 {
-    public class Address
+    public class Address : BaseEntite<int>
     {
         //-------------------------------------------------------------------------
         //                             SELF PROPS
