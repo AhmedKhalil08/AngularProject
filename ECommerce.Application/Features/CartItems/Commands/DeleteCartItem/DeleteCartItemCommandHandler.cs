@@ -21,7 +21,7 @@ namespace ECommerce.Application.Features.CartItems.Commands.DeleteCartItem
             var item = await _repository.GetByIdAsync(request.Id);
             if (item == null) return false;
 
-            _repository.DeleteAsync(item.Id);
+            await _repository.DeleteAsync(item.Id);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

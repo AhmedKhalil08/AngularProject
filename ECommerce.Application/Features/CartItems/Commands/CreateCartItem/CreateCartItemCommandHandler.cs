@@ -24,10 +24,8 @@ namespace ECommerce.Application.Features.CartItems.Commands.CreateCartItem
                 ProductId = request.ProductId,
                 Quantity = request.Quantity
             };
-
             await _repository.AddAsync(item);
             await _unitOfWork.SaveChangesAsync();
-
             return new CartItemDto
             {
                 Id = item.Id,

@@ -9,9 +9,7 @@ namespace ECommerce.Application
         {
             // Register MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
             // Register application services
-
             return services;
         }
     }

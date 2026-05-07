@@ -12,13 +12,11 @@ namespace ECommerce.Application.Features.Reviews.Commands.CreateReview
     {
         private readonly IReviewRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ECommerce.Application.Interfaces.Services.ICurrentUserService _currentUserService;
 
-        public CreateReviewCommandHandler(IReviewRepository repository, IUnitOfWork unitOfWork, ECommerce.Application.Interfaces.Services.ICurrentUserService currentUserService)
+        public CreateReviewCommandHandler(IReviewRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
-            _currentUserService = currentUserService;
         }
 
         public async Task<ReviewDto> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
@@ -26,7 +24,6 @@ namespace ECommerce.Application.Features.Reviews.Commands.CreateReview
             var review = new Review
             {
                 ProductId = request.ProductId,
-                UserId = _currentUserService.UserId,
                 Rating = request.Rating,
                 Comment = request.Comment,
                 CreatedAt = DateTime.UtcNow

@@ -19,12 +19,9 @@ namespace ECommerce.Application.Features.CartItems.Commands.UpdateCartItem
         {
             var item = await _repository.GetByIdAsync(request.Id);
             if (item == null) return null;
-
             item.Quantity = request.Quantity;
-
-            _repository.UpdateAsync(item);
+            await _repository.UpdateAsync(item);
             await _unitOfWork.SaveChangesAsync();
-
             return new CartItemDto
             {
                 Id = item.Id,
