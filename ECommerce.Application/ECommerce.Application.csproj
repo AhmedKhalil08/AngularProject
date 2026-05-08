@@ -13,6 +13,14 @@
   <ItemGroup>
     <Folder Include="Interfaces\" />
     <Folder Include="DTOs\" />
+    <Folder Include="Features\OrderItems\Commands\UpdateOrderItem\" />
+    <Folder Include="Features\OrderItems\Queries\GetAllOrderItems\" />
+    <Folder Include="Features\OrderItems\Queries\GetOrderItemById\" />
+    <Folder Include="Features\Payments\" />
+    <Folder Include="Features\Orders\" />
+    <Folder Include="Features\PromoCodes\" />
+    <Folder Include="Features\Wishlists\Commands\UpdateWishlist\" />
+    <Folder Include="Features\Wishlists\Queries\GetWishlistById\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
