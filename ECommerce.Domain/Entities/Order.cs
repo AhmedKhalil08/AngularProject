@@ -18,16 +18,16 @@ namespace ECommerce.Domain.Entities
         //-------------------------------------------------------------------------
         //                             FOREIGN KEY
         //-------------------------------------------------------------------------
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int ShippingAddressId { get; set; }
-        public int PromoCodeId { get; set; }
+        public int? PromoCodeId { get; set; }
         /*-------------------------------------------------------------------------*/
         //                          Navigation Props 
         /*-------------------------------------------------------------------------*/
         public ApplicationUser User { get; set; }
         public Address ShippingAddress { get; set; }
-        public PromoCode PromoCode { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; }
-        public Payment Payment { get; set; }
+        public PromoCode? PromoCode { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }=new List<OrderItem>();
+        public Payment? Payment { get; set; }
     }
 }
