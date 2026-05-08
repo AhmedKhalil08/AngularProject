@@ -2,9 +2,6 @@ using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Domain.Entites;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Features.Reviews.Commands.CreateReview
 {
