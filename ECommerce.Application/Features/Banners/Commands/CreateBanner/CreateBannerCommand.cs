@@ -1,4 +1,5 @@
 ﻿using ECommerce.Application.DTOs;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,5 +15,6 @@ namespace ECommerce.Application.Features.Banners.Commands.CreateBanner
         public string? Link { get; set; }
 
         public int DisplayOrder { get; set; }
+        public bool IsActive { get; set; }
     }
 }

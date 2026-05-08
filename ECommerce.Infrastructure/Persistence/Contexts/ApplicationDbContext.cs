@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace ECommerce.Infrastructure.Persistence.Contexts
 {
-    public class ApplicationDbContext:IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -16,11 +16,11 @@ namespace ECommerce.Infrastructure.Persistence.Contexts
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         //KANDEL
-        public DbSet<Domain.Entites.Category> Categories { get; set; }
-        public DbSet<Domain.Entites.Product> Products { get; set; }
-        public DbSet<Domain.Entites.CartItem> CartItems { get; set; }
-        public DbSet<Domain.Entites.ProductImage> ProductImages { get; set; }
-        public DbSet<Domain.Entites.Review> Reviews { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         // Ahmed 
         public DbSet<Address> Addresses { get; set; }

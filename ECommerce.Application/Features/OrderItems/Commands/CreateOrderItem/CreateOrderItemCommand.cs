@@ -11,6 +11,7 @@ namespace ECommerce.Application.Features.OrderItems.Commands.CreateOrderItem
       
         public int OrderId { get; set; }
         public int ProductId { get; set; }
+        public ProductDto ProductD { get; set; }
         public int Quantity { get; set; }
     }
 }

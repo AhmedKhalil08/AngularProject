@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MediatR;
 using ECommerce.Application.DTOs;
+using ECommerce.Application.Interfaces.Persistence;
 
 namespace ECommerce.Application.Features.PromoCodes.Queries.GetPromoCodeById
 {

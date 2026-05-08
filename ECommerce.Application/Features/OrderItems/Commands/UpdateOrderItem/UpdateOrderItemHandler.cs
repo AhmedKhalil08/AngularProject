@@ -1,6 +1,7 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Features.Banners.Commands.UpdateBanner;
 using ECommerce.Application.Interfaces.Persistence;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,9 +31,7 @@ namespace ECommerce.Application.Features.OrderItems.Commands.UpdateOrderItem
             {
                 Id = item.Id,
                 OrderId = item.OrderId,
-                ProductId = item.ProductId,
                 Quantity = item.Quantity,
-                UnitPrice = item.UnitPrice
 
             };
         }

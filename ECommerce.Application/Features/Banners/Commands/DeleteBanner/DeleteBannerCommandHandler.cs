@@ -1,5 +1,4 @@
-﻿using ECommerce.Application.Features.CartItems.Commands.DeleteCartItem;
-using ECommerce.Application.Interfaces.Persistence;
+﻿using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

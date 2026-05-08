@@ -6,7 +6,8 @@ using ECommerce.Application.DTOs;
 
 namespace ECommerce.Application.Features.PromoCodes.Commands.DeletePromoCode
 {
-    public class DeletePromoCodeCommand
+    public class DeletePromoCodeCommand:IRequest<bool>
     {
+        public int Id { get; set; }
     }
 }

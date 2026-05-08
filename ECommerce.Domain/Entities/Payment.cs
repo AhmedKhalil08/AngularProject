@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ECommerce.Domain.Common;
 using ECommerce.Domain.Enums;
 
 namespace ECommerce.Domain.Entities
