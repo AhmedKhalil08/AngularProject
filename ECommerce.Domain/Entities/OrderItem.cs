@@ -1,26 +1,26 @@
-﻿using ECommerce.Domain.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ECommerce.Domain.Entities
 {
-    public class Wishlist : BaseEntity<int>
+    public class OrderItem: BaseEntity<int>
     {
         //-------------------------------------------------------------------------
         //                             SELF PROPS
         //-------------------------------------------------------------------------
-        public int Id { get; set; }
-        public DateTime AddedAt { get; set; }
+      
+        public int Quantity { get; set; }
+        // public int UnitPrice { get; set; }
         //-------------------------------------------------------------------------
         //                             FOREIGN KEY
         //-------------------------------------------------------------------------
-        public string UserId { get; set; }
+        public int OrderId { get; set; }
         public int ProductId { get; set; }
-        //-------------------------------------------------------------------------
-        //                             NAVIGATION
-        //-------------------------------------------------------------------------
-        public ApplicationUser User { get; set; }
+        /*-------------------------------------------------------------------------*/
+        //                          Navigation Props 
+        /*-------------------------------------------------------------------------*/
+        public Order Order { get; set; }
         public Product Product { get; set; }
     }
 }

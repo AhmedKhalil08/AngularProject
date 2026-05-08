@@ -1,24 +1,28 @@
-﻿using ECommerce.Domain.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ECommerce.Domain.Entities
 {
-    public class Cart : BaseEntity<int>
+    public class Banner  : BaseEntity<int>
     {
         //-------------------------------------------------------------------------
         //                             SELF PROPS
         //-------------------------------------------------------------------------
-        public int Id { get; set; }
+
+       
+        public string Title { get; set; } 
+        public string ImageUrl { get; set; }
+        public string? Link { get; set; }
+        public bool IsActive { get; set; }
+        public int DisplayOrder { get; set; }
+
         //-------------------------------------------------------------------------
         //                             FOREIGN KEY
         //-------------------------------------------------------------------------
-        public string UserId { get; set; }
-        //-------------------------------------------------------------------------
-        //                             NAVIGATION
-        //-------------------------------------------------------------------------
-        public ApplicationUser User { get; set; }
-        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+        /*-------------------------------------------------------------------------*/
+        //                          Navigation Props 
+        /*-------------------------------------------------------------------------*/
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ECommerce.Domain.Entites
 {
-    public class ProductImage : BaseEntite<int>
+    public class ProductImage : BaseEntity<int>
     {
         public int ProductId { get; set; }
         public string ImageUrl { get; set; }
