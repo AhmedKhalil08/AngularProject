@@ -10,7 +10,6 @@ namespace ECommerce.Domain.Entities
         //-------------------------------------------------------------------------
         //                             SELF PROPS
         //-------------------------------------------------------------------------
-        public int Id { get; set; }
         public string FullName { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
