@@ -1,4 +1,5 @@
 ﻿using ECommerce.Domain.Common;
+using ECommerce.Domain.Entites;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,6 @@ namespace ECommerce.Domain.Entities
         //-------------------------------------------------------------------------
         //                             SELF PROPS
         //-------------------------------------------------------------------------
-        public int Id { get; set; }
         public string StoreName { get; set; }
         public string? StoreDescription { get; set; }
         public string? LogoUrl { get; set; }
@@ -25,5 +25,6 @@ namespace ECommerce.Domain.Entities
         //                             NAVIGATION
         //-------------------------------------------------------------------------
         public ApplicationUser User { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
