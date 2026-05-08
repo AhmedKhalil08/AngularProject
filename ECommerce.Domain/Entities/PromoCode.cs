@@ -15,7 +15,7 @@ namespace ECommerce.Domain.Entities
         public int MaxUsageCount { get; set; }
         public int CurrentUsageCount { get; set; }
         public DateTime ExpiryDate { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive => ExpiryDate > DateTime.UtcNow;
 
         //-------------------------------------------------------------------------
         //                             FOREIGN KEY

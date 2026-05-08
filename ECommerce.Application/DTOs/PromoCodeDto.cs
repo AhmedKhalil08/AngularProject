@@ -18,6 +18,6 @@ namespace ECommerce.Application.DTOs
 
         public DateTime ExpiryDate { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive => ExpiryDate > DateTime.UtcNow;
     }
 }
