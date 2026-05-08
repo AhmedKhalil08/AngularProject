@@ -1,7 +1,7 @@
 ﻿using ECommerce.Domain.Common;
 using ECommerce.Domain.Enums;
 
-namespace ECommerce.Domain.Entites
+namespace ECommerce.Domain.Entities
 {
     public class CartItem : BaseEntity<int>
     {

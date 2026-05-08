@@ -1,16 +1,9 @@
 ﻿using ECommerce.Application.DTOs;
-using ECommerce.Application.Features.OrderItems.Queries.GetAllOrderItems;
 using ECommerce.Application.Interfaces.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 
 namespace ECommerce.Application.Features.OrderItems.Queries.GetAllOrderItems
-{   
+{
     public class GetAllOrderItemsQueryHandler : IRequestHandler<GetAllOrderItemsQuery, List<OrderItemDto>>
     {
         private readonly IOrderItemRepository _repository;

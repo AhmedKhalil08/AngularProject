@@ -30,7 +30,7 @@ namespace ECommerce.Application.Features.PromoCodes.Commands.UpdatePromoCode
             item.DiscountPercent = request.DiscountPercent;
 
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
             return new PromoCodeDto
             {
                 Id = item.Id,

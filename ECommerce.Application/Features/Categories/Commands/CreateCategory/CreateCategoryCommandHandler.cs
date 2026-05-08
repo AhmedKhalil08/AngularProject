@@ -1,6 +1,6 @@
 ﻿using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.DTOs;
-using ECommerce.Domain.Entites;
+using ECommerce.Domain.Entities;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

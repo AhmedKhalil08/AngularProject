@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ECommerce.Application.Features.OrderItems.Commands.UpdateOrderItem
 {
-    internal class UpdateOrderItemCommand: IRequest<OrderItemDto>
+    public class UpdateOrderItemCommand: IRequest<OrderItemDto>
     {
         public int Id { get; set; }
         public int Quantity { get; set; }

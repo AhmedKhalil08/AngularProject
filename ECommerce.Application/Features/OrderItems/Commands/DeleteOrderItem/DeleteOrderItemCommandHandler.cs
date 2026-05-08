@@ -1,12 +1,9 @@
-﻿using ECommerce.Application.Features.CartItems.Commands.DeleteCartItem;
-using ECommerce.Application.Interfaces.Persistence;
+﻿using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Features.OrderItems.Commands.DeleteOrderItem
 {
-    public class DeleteOrderItemCommandHandler: IRequestHandler<DeleteOrderItemCommand, bool>
+    public class DeleteOrderItemCommandHandler : IRequestHandler<DeleteOrderItemCommand, bool>
     {
         private readonly IOrderItemRepository _repository;
         private readonly IUnitOfWork _unitOfWork;

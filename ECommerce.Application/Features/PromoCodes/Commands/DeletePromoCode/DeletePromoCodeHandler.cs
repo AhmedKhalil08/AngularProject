@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.Features.Banners.Commands.DeleteBanner;
 using ECommerce.Application.Interfaces.Persistence;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,4 +1,5 @@
 ﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.Features.Banners.Queries.GetBannerById;
 using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
 using System.Threading;

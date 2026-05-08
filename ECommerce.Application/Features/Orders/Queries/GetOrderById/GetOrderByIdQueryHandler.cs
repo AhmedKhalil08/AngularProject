@@ -1,6 +1,7 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Features.OrderItems.Queries.GetOrderItemById;
 using ECommerce.Application.Interfaces.Persistence;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;

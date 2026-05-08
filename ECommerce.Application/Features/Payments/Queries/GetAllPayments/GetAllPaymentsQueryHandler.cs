@@ -8,7 +8,7 @@ using MediatR;
 
 namespace ECommerce.Application.Features.Payments.Queries.GetAllPayments
 {
-    public class GetAllPaymentsQueryHandler:IRequsetHandler<GetAllPaymentsQuery, List<PaymentDto>>
+    public class GetAllPaymentsQueryHandler:IRequestHandler<GetAllPaymentsQuery, List<PaymentDto>>
     {
         private readonly IPaymentRepository _repository;
 

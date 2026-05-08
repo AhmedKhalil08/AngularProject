@@ -1,6 +1,6 @@
 ﻿using ECommerce.Domain.Common;
 
-namespace ECommerce.Domain.Entites
+namespace ECommerce.Domain.Entities
 {
     public class ProductImage : BaseEntity<int>
     {

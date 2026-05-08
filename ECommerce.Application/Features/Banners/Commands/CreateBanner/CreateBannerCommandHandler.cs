@@ -1,11 +1,11 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
-using ECommerce.Domain.Entites;
+using ECommerce.Domain.Entities;
 using MediatR;
 
 namespace ECommerce.Application.Features.Banners.Commands.CreateBanner
 {
-    internal class CreateBannerCommandHandler : IRequestHandler<CreateBannerCommand, BannerDto>
+    public class CreateBannerCommandHandler : IRequestHandler<CreateBannerCommand, BannerDto>
     {
         private readonly IBannerRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -16,15 +16,9 @@ namespace ECommerce.Application.Features.Banners.Commands.CreateBanner
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<BannerDto> Handle(CreateBannerCommand request, CancellationToken cancellationToken)
         {
 
-            /*
-              public string Title { get; set; } 
-        public string ImageUrl { get; set; }
-        public string? Link { get; set; }
-        public bool IsActive { get; set; }
-        public int DisplayOrder { get; set; }*/
             var banner = new Banner
             {
                 Title = request.Title,
