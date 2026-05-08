@@ -3,7 +3,7 @@ using ECommerce.Domain.Enums;
 
 namespace ECommerce.Domain.Entities
 {
-    public class CartItem : BaseEntite<int>
+    public class CartItem : BaseEntity<int>
     {
         public int CartId { get; set; }
         public int ProductId { get; set; }

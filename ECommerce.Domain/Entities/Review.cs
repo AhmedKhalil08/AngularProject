@@ -2,7 +2,7 @@
 
 namespace ECommerce.Domain.Entities
 {
-    public class Review : BaseEntite<int>
+    public class Review : BaseEntity<int>
     {
         public int ProductId { get; set; }
 

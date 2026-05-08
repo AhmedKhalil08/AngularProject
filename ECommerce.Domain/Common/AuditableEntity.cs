@@ -1,6 +1,6 @@
 ﻿namespace ECommerce.Domain.Common
 {
-    public abstract class AuditableEntity<TId> : BaseEntite<TId>
+    public abstract class AuditableEntity<TId> : BaseEntity<TId>
     {
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;

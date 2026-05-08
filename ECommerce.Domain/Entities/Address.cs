@@ -5,11 +5,12 @@ using System.Text;
 
 namespace ECommerce.Domain.Entities
 {
-    public class Address : BaseEntite<int>
+    public class Address : BaseEntity<int>
     {
         //-------------------------------------------------------------------------
         //                             SELF PROPS
         //-------------------------------------------------------------------------
+        public int Id { get; set; }
         public string FullName { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
