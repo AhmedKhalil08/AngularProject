@@ -1,10 +1,15 @@
 ﻿using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure.Persistence.Contexts;
 using ECommerce.Infrastructure.Persistence.Repositories;
+using ECommerce.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ECommerce.Infrastructure
 {
@@ -14,7 +19,7 @@ namespace ECommerce.Infrastructure
         {
             // Register your infrastructure services here
             // For example:
-            // Identity
+            // Identity Ahmed 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -25,13 +30,45 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             // Ahmed
+            #region  Ahmed Repos
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthService, AuthService>();
+            #endregion
+
+            #region JWT
+            // JWT Auth
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+             .AddJwtBearer(options =>
+             {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                 ValidateIssuer = true,
+                 ValidateAudience = true,
+                 ValidateLifetime = true,
+                 ValidateIssuerSigningKey = true,
+                 ValidIssuer = configuration["Jwt:Issuer"],
+                 ValidAudience = configuration["Jwt:Audience"],
+                 IssuerSigningKey = new SymmetricSecurityKey(
+                 Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                 };
+                  });
             //
+            #endregion
+
+            #region Current User and Http Context Acessor
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            #endregion
 
             return services;
 

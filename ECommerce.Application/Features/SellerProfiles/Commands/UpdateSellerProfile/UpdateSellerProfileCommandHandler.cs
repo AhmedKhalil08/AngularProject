@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ECommerce.Application.Features.SellerProfiles.Commands.UpdateSellerProfile
 {
-    internal class UpdateSellerProfileCommandHandler : IRequestHandler<UpdateSellerProfileCommand, SellerProfileDto>
+    public class UpdateSellerProfileCommandHandler : IRequestHandler<UpdateSellerProfileCommand, SellerProfileDto>
     {
         private readonly ISellerProfileRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
