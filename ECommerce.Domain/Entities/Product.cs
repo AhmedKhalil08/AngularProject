@@ -13,7 +13,7 @@ namespace ECommerce.Domain.Entities
         public int CategoryId { get; set; }
         public ProductStatus Status { get; set; } = ProductStatus.Available;
         public string SellerId { get; set; }
-        //public SellerProfile Seller { get; set; }
+        public SellerProfile Seller { get; set; }
         public Category Category { get; set; }
         public ICollection<ProductImage> Images { get; set; } = new HashSet<ProductImage>();
         public ICollection<Review> Reviews { get; set; } = new HashSet<Review>();

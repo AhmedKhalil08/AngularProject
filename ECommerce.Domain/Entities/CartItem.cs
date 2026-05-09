@@ -11,6 +11,6 @@ namespace ECommerce.Domain.Entities
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public Product Product { get; set; }
 
-        // public Cart Cart { get; set; }
+         public Cart Cart { get; set; }
     }
 }
