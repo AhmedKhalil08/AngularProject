@@ -15,7 +15,7 @@ namespace ECommerce.API.Controllers
             _authService = authService;
         }
 
-        #region Register Customer Post
+        #region Register Customer 
 
         [HttpPost("register/customer")]
         public async Task<IActionResult> RegisterCustomer([FromBody] RegisterDto model)
@@ -32,7 +32,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Register Seller Post
+        #region Register Seller 
 
 
         [HttpPost("register/seller")]
@@ -51,7 +51,7 @@ namespace ECommerce.API.Controllers
 
         #endregion
 
-        #region Login Post
+        #region Login 
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
