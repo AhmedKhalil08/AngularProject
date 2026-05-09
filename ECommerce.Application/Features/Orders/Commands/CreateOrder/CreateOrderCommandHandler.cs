@@ -94,7 +94,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             await _unitOfWork.SaveChangesAsync();
 
             // 4. تشغيل خدمة الدفع (Stripe أو PayPal) بناءً على الإجمالي والنوع
-            var paymentResult = await _paymentService.ProcessPaymentAsync(totalAmount, request.PaymentMethod);
+            var paymentResult = await _paymentService.ProcessPaymentAsync(totalAmount, request.PaymentMethod, order.Id  );
 
             // لو حابين نحفظ الـ TransactionId اللي راجع من الدفع
             // order.Payment.TransactionId = paymentResult.TransactionId;
