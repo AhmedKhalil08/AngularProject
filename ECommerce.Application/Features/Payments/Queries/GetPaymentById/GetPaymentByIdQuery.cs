@@ -8,5 +8,6 @@ namespace ECommerce.Application.Features.Payments.Queries.GetPaymentById
 {
     public class GetPaymentByIdQuery: IRequest<PaymentDto>
     {
+        public int Id { get; set; }
     }
 }

@@ -24,24 +24,29 @@ namespace ECommerce.Application.Features.Orders.Queries.GetAllOrders
             {
                 Id= item.Id,
                 OrderDate = item.OrderDate,
-                CustomerId = item.CustomerId,
+                UserName=item.User.FullName,
                 TotalAmount = item.TotalAmount,
                 Status = item.Status,
                 Notes = item.Notes,
-                UserName = item.UserName,
+               
                 Address = new AddressDto
                 {
-                    Street = item.Address?.Street,
-                    City = item.Address?.City,
-                    State = item.Address?.State,
-                    PostalCode = item.Address?.PostalCode,
-                    Country = item.Address?.Country
+                    Street = item.ShippingAddress?.Street,
+                    City = item.ShippingAddress?.City,
+                    State = item.ShippingAddress?.State,
+                    ZipCode = item.ShippingAddress?.ZipCode,
+                    Country = item.ShippingAddress?.Country,
+                    Phone = item.ShippingAddress?.Phone,
+                    IsDefault = item.ShippingAddress?.IsDefault ?? true
                 },
                 PromoCode = new PromoCodeDto
                 {
-                    Id = item.PromoCodeId,
+                    Id = item.PromoCodeId ?? 0,
                     Code = item.PromoCode?.Code,
-                    DiscountAmount = item.PromoCode?.DiscountAmount ?? 0
+                    DiscountPercent = item.PromoCode?.DiscountPercent ?? 0,
+                    MaxUsageCount = item.PromoCode?.MaxUsageCount ?? 0,
+                    CurrentUsageCount = item.PromoCode?.CurrentUsageCount ?? 0,
+                    ExpiryDate = item.PromoCode?.ExpiryDate ?? DateTime.MinValue
                 },
 
 

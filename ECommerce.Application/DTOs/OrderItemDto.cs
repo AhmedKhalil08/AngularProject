@@ -10,5 +10,6 @@ namespace ECommerce.Application.DTOs
         public int OrderId { get; set; }
         public int Quantity { get; set; }
         public ProductDto ProductD { get; set; }
+        public int Price { get; set; } = 0;
     }
 }

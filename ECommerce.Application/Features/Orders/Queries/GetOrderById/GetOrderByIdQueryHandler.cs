@@ -5,6 +5,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ECommerce.Application.Features.Orders.Queries.GetOrderById
 {
@@ -23,34 +24,35 @@ namespace ECommerce.Application.Features.Orders.Queries.GetOrderById
             {
                 Id = item.Id,
                 OrderDate = item.OrderDate,
-                CustomerId = item.CustomerId,
+                UserName=item.User.FullName,
                 TotalAmount = item.TotalAmount,
                 Status = item.Status,
                 Notes = item.Notes,
-                UserName = item.UserName,
+               
                 
                 Address = new AddressDto
                 {
-                    Street = item.Address?.Street,
-                    City = item.Address?.City,
-                    State = item.Address?.State,
-                    ZipCode = item.Address?.PostalCode,
-                    Country = item.Address?.Country,
-                    Id = item.AddressId,
-                    Phone= item.Address?.Phone,
-                    FullName = item.Address?.FullName,
-                    IsDefault = item.Address?.IsDefault ?? false
+                   FullName= item.ShippingAddress?.FullName?? string.Empty,
+                   Street = item.ShippingAddress?.Street ?? string.Empty,
+                   City = item.ShippingAddress?.City ?? string.Empty,
+                   State = item.ShippingAddress?.State ?? string.Empty,
+                   Country = item.ShippingAddress?.Country ?? string.Empty,
+                   ZipCode = item.ShippingAddress?.ZipCode ?? string.Empty,
+                   Phone = item.ShippingAddress?.Phone ?? string.Empty,
+                   IsDefault = item.ShippingAddress?.IsDefault ?? true
+
+
 
                 },
                 PromoCode = new PromoCodeDto
                 {
-                    Id = item.PromoCodeId,
+                    Id = item.PromoCodeId??0,
                     Code = item.PromoCode?.Code,
                     DiscountPercent = item.PromoCode?.DiscountPercent ?? 0,
                     MaxUsageCount = item.PromoCode?.MaxUsageCount ?? 0,
                     CurrentUsageCount = item.PromoCode?.CurrentUsageCount ?? 0,
                     ExpiryDate = item.PromoCode?.ExpiryDate ?? DateTime.MinValue,
-                    IsActive = item.PromoCode?.IsActive ?? false
+                    
                 }
 
             };

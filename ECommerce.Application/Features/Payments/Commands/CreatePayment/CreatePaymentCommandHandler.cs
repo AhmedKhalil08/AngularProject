@@ -33,7 +33,7 @@ namespace ECommerce.Application.Features.Payments.Commands.CreatePayment
             {
                 OrderId = request.OrderId,
                 Amount = request.Amount,
-                TranactionId = request.TranactionId,
+
                 Method = method,
                 Status = PaymentStatus.Pending,
                 PaidAt = DateTime.UtcNow
