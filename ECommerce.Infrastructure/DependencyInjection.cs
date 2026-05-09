@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Interfaces.Services;
+using ECommerce.Application.Services;
 using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure.Persistence.Contexts;
 using ECommerce.Infrastructure.Persistence.Repositories;
@@ -29,7 +30,9 @@ namespace ECommerce.Infrastructure
             services.AddScoped<ICartItemRepository, CartItemRepository>();
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IFileService, FileService>();
 
             // Ahmed
             #region  Ahmed Repos

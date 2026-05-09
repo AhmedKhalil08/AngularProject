@@ -4,6 +4,7 @@
     {
         Task<T> GetByIdAsync(Tkey id);
         Task<IReadOnlyList<T>> GetAllAsync();
+         IQueryable<T> Table {  get; } 
         Task AddAsync(T entity);
         Task DeleteAsync(Tkey id);
         Task UpdateAsync(T entity);

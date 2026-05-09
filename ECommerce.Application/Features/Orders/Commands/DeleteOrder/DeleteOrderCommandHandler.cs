@@ -9,22 +9,52 @@ namespace ECommerce.Application.Features.Orders.Commands.DeleteOrder
 {
     public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, bool>
     {
-        private readonly IOrderRepository _repository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository; // 👈 هنحتاجه عشان نعدل الـ Stock
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteOrderCommandHandler(IOrderRepository repository, IUnitOfWork unitOfWork)
+        public DeleteOrderCommandHandler(
+            IOrderRepository orderRepository,
+            IProductRepository productRepository,
+            IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _orderRepository = orderRepository;
+            _productRepository = productRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
-            var item = await _repository.GetByIdAsync(request.Id);
-            if (item == null) return false;
+            // 1. لازم نتأكد إننا بنجيب الأوردر ومعاه الـ Items بتاعته
+            // (تأكد إن ريبوزيتوري الـ Order بيعمل Include للـ OrderItems هنا)
+            var order = await _orderRepository.GetByIdAsync(request.Id);
+            if (order == null) return false;
 
-            await _repository.DeleteAsync(item.Id);
+            // 💡 حماية إضافية: نمنع مسح أوردر مدفوع!
+            if (order.Payment != null && order.Payment.Status == Domain.Enums.PaymentStatus.completed)
+            {
+                throw new Exception("لا يمكن مسح طلب تم دفعه بالفعل. يجب عمل استرجاع (Refund) أولاً.");
+            }
+
+            // 2. إرجاع المخزون (Restock)
+            if (order.OrderItems != null && order.OrderItems.Any())
+            {
+                foreach (var item in order.OrderItems)
+                {
+                    var product = await _productRepository.GetByIdAsync(item.ProductId);
+                    if (product != null)
+                    {
+                        product.Stock += item.Quantity; 
+                        await _productRepository.UpdateAsync(product);
+                    }
+                }
+            }
+
+            // 3. مسح الأوردر 
+            await _orderRepository.DeleteAsync(order.Id);
+
             await _unitOfWork.SaveChangesAsync();
+
             return true;
         }
     }

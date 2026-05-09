@@ -47,7 +47,7 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateOrder
             {
                 Id = order.Id,
                 OrderDate = order.OrderDate,
-                TotalAmount = order.TotalAmount, // بنرجع الإجمالي الأصلي اللي متسجل في الداتابيز
+                TotalAmount = order.TotalAmount, 
                 Status = order.Status,
                 Notes = order.Notes,
 

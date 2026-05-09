@@ -8,20 +8,18 @@ using Stripe.Checkout;
 
 namespace ECommerce.Infrastructure.Services
 {
+
     public class PaymentService : IPaymentService
     {
-        private readonly IPaymentService _paymentService;
         private readonly IConfiguration _configuration;
         private readonly PayPalHttpClient _paypalClient;
-        public PaymentService(IPaymentService paymentService, IConfiguration configuration)
+        public PaymentService(IConfiguration configuration)
         {
-            _paymentService = paymentService;
             _configuration = configuration;
             var paypalEnvironment = new SandboxEnvironment(_configuration["PayPalSettings:ClientId"], _configuration["PayPalSettings:Secret"]);
             StripeConfiguration.ApiKey = _configuration["StripeSettings:SecretKey"];
             _paypalClient = new PayPalHttpClient(paypalEnvironment);
-        }
-        public async Task<PaymentResultDto> ProcessPaymentAsync(decimal amount, ECommerce.Domain.Enums.PaymentMethod method, int orderId)
+        }        public async Task<PaymentResultDto> ProcessPaymentAsync(decimal amount, ECommerce.Domain.Enums.PaymentMethod method, int orderId)
         {
             switch (method)
             {
@@ -157,9 +155,11 @@ namespace ECommerce.Infrastructure.Services
             }
             catch
             {
-                return false; 
+                return false;
             }
         }
+
+
     }
 
 }
