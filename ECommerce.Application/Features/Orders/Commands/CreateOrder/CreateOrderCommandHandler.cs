@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Services;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
 using MediatR;
@@ -10,111 +11,96 @@ using System.Text;
 
 namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
 {
-    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderDto>
+    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, PaymentResultDto>
     {
-        private readonly IOrderRepository _repository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository; // عشان نجيب السعر الحقيقي
+        //private readonly ICurrentUserService _currentUserService; // عشان نجيب اليوزر
+        private readonly IPaymentService _paymentService; // خدمة الدفع
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateOrderCommandHandler(IOrderRepository repository, IUnitOfWork unitOfWork)
+        public CreateOrderCommandHandler(
+            IOrderRepository orderRepository,
+            IProductRepository productRepository,
+            //ICurrentUserService currentUserService,
+            IPaymentService paymentService,
+            IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _orderRepository = orderRepository;
+            _productRepository = productRepository;
+            //_currentUserService = currentUserService;
+            _paymentService = paymentService;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<OrderDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public async Task<PaymentResultDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            // Here you would typically add logic to create the order in the database
-            // For this example, we'll just return a new OrderDto with the provided data
-            var order = new Order
+            // 1. جلب User ID أمنياً من التوكن
+            //var userId = _currentUserService.UserId;
+            //if (string.IsNullOrEmpty(userId))
+            //    throw new UnauthorizedAccessException("يجب تسجيل الدخول أولاً.");
+
+            // 2. التحقق من الأسعار الحقيقية من الداتابيز وحساب الإجمالي
+            decimal totalAmount = 0;
+            var orderItems = new List<OrderItem>();
+
+            foreach (var item in request.Items)
             {
-                PromoCode = new PromoCode { Code = request.PromoCode },
-                UserId = new UserDto { Id = request.Id }.Id,
-                User= new ApplicationUser { Id = new UserDto { Id = request.Id }.Id }, 
-                OrderItems = request.OrderItems.Select(item => new OrderItem
+                var product = await _productRepository.GetByIdAsync(item.ProductId);
+                if (product == null) throw new Exception($"المنتج رقم {item.ProductId} غير موجود.");
+                if (product.Stock < item.Quantity) throw new Exception($"الكمية المطلوبة من {product.Name} غير متوفرة.");
+
+                totalAmount += product.Price * item.Quantity; // السعر من الداتابيز مش من الريكويست!
+
+                orderItems.Add(new OrderItem
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
-                    Product= new Product { Price = item.Product.Price  }
-                }).ToList(),
-                TotalAmount = CalculateTotalAmount(request.OrderItems),
+                    UnitPrice = product.Price 
+                });
+            }
+
+            // (هنا ممكن تضيف لوجيك الخصم بتاع الـ PromoCode لو موجود)
+
+            // 3. إنشاء الـ Order Entity بدون ما نكريت Entities تانية جواها
+            var order = new Order
+            {
+                //UserId = userId,
+                OrderDate = DateTime.UtcNow,
+                TotalAmount = totalAmount,
+                Status = OrderStatus.Pending,
+                PaymentMethod = request.PaymentMethod,
+                OrderItems = orderItems,
+                ShippingAddress = new Address
+                {
+                    FullName = request.Address.FullName,
+                    Street = request.Address.Street,
+                    City = request.Address.City,
+                    State = request.Address.State,
+                    Country = request.Address.Country,
+                    ZipCode = request.Address.ZipCode,
+                    Phone = request.Address.Phone
+                },
                 Payment = new Payment
                 {
-                    Amount = CalculateTotalAmount(request.OrderItems),
-                    Method = request.Payment.Method,
-                    
-                },
-              ShippingAddress = new Address
-                    {
-                        FullName = request.Address.FullName,
-                        Street = request.Address.Street,
-                        City = request.Address.City,
-                        State = request.Address.State,
-                        Country = request.Address.Country,
-                        ZipCode = request.Address.ZipCode,
-                        Phone = request.Address.Phone,
-                        IsDefault = request.Address.IsDefault
-                    },
-            };
-            await _repository.AddAsync(order);
-            await _unitOfWork.SaveChangesAsync();
-
-
-            return new OrderDto
-            {
-                Id = order.Id,
-                OrderDate = order.OrderDate,
-                TotalAmount = order.TotalAmount,
-                Status = order.Status,
-                Notes = order.Notes,
-                UserName = order.User.UserName,
-                Address = new AddressDto()
-                {
-                    Id= order.ShippingAddress?.Id ?? 0,
-                    FullName = order.ShippingAddress?.FullName ?? string.Empty,
-                    Street = order.ShippingAddress?.Street ?? string.Empty,
-                    City = order.ShippingAddress?.City ?? string.Empty,
-                    State = order.ShippingAddress?.State ?? string.Empty,
-                    Country = order.ShippingAddress?.Country ?? string.Empty,
-                    ZipCode = order.ShippingAddress?.ZipCode ?? string.Empty,
-                    Phone = order.ShippingAddress?.Phone ?? string.Empty,
-                    IsDefault = order.ShippingAddress?.IsDefault ?? true
-
-                },
-                PromoCode = new PromoCodeDto() {
-                        Id = order.PromoCodeId ?? 0,
-                        Code = order.PromoCode?.Code,
-                        DiscountPercent = order.PromoCode?.DiscountPercent ?? 0,
-                        MaxUsageCount = order.PromoCode?.MaxUsageCount ?? 0,
-                        CurrentUsageCount = order.PromoCode?.CurrentUsageCount ?? 0,
-                        ExpiryDate = order.PromoCode?.ExpiryDate ?? DateTime.MinValue
-
-                },
-                OrderItems = order.OrderItems.Select(item => new OrderItemDto
-                {
-                    Id = item.Id,
-                    OrderId = item.OrderId,
-                    Quantity = item.Quantity,
-                    Price = (int)item.Product.Price,
-                }).ToList(),
-                Payment = new PaymentDto()
-                {
-                        Id = order.Payment?.Id ?? 0,
-                        Amount = order.Payment?.Amount ?? 0,
-                        Method = order.Payment?.Method ?? PaymentMethod.CreditCard,
-                       TransactionId = order.Payment?.TransactionId ?? string.Empty
+                    Amount = totalAmount,
+                    Method = request.PaymentMethod,
+                    Status = PaymentStatus.Pending
                 }
             };
-        }
-        private decimal CalculateTotalAmount(List<OrderItem> orderItems)
-        {
-            // Simulate total amount calculation based on order items
-            decimal total = 0;
-            foreach (var item in orderItems)
-            {
-                total += item.Quantity * item.Product.Price; // Assume each item has a Price property
-            }
-            return total;
-        } 
 
+            await _orderRepository.AddAsync(order);
+            // لازم نعمل SaveChanges عشان الـ Order ياخد Id في الداتابيز
+            await _unitOfWork.SaveChangesAsync();
+
+            // 4. تشغيل خدمة الدفع (Stripe أو PayPal) بناءً على الإجمالي والنوع
+            var paymentResult = await _paymentService.ProcessPaymentAsync(totalAmount, request.PaymentMethod);
+
+            // لو حابين نحفظ الـ TransactionId اللي راجع من الدفع
+            // order.Payment.TransactionId = paymentResult.TransactionId;
+            // await _unitOfWork.SaveChangesAsync();
+
+            return paymentResult; // بنرجع لينك الدفع للـ Front-end
+        }
     }
 }

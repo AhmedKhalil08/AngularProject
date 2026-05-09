@@ -11,45 +11,49 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateOrder
 {
     public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, OrderDto>
     {
-        private readonly IOrderRepository _repository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateOrderCommandHandler(IOrderRepository repository, IUnitOfWork unitOfWork)
+        public UpdateOrderCommandHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<OrderDto> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
         {
-            var item = await _repository.GetByIdAsync(request.Id);
-            if (item == null) return null;
-            item.Status = request.Status;
-            item.TotalAmount = request.TotalAmount;
-            item.Payment = new Domain.Entities.Payment
+            // 1. البحث عن الطلب في الداتابيز
+            var order = await _orderRepository.GetByIdAsync(request.Id);
+
+            if (order == null)
             {
-                Amount = request.Payment.Amount,
-                Method = (Domain.Enums.PaymentMethod)request.Payment.Method,
-                Status = (Domain.Enums.PaymentStatus)request.Payment.Status,
-                PaidAt = request.Payment.PaidAt
-            };
-            await _repository.UpdateAsync(item);
+                throw new Exception($"الطلب رقم {request.Id} غير موجود.");
+            }
+
+            // 2. تحديث البيانات المسموح بتحديثها فقط
+            order.Status = request.Status;
+
+            if (!string.IsNullOrEmpty(request.Notes))
+            {
+                order.Notes = request.Notes;
+            }
+
+            // 3. تحديث في الميموري ثم حفظ في قاعدة البيانات
+            await _orderRepository.UpdateAsync(order);
             await _unitOfWork.SaveChangesAsync();
+
+            // 4. إرجاع الـ DTO (Mapping)
             return new OrderDto
             {
-                Id = item.Id,
-                Status = item.Status,
-                TotalAmount = item.TotalAmount,
-                Payment = new PaymentDto
-                {
-                    Id = item.Payment?.Id ?? 0,
-                    Amount = item.Payment?.Amount ?? 0,
-                    Method = item.Payment != null ? (PaymentMethod)item.Payment.Method : default,
-                    Status = item.Payment != null ? (PaymentStatus)item.Payment.Status : default,
-                    PaidAt = item.Payment?.PaidAt ?? DateTime.MinValue,
-                    OrderId = item.Payment?.OrderId ?? 0
+                Id = order.Id,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount, // بنرجع الإجمالي الأصلي اللي متسجل في الداتابيز
+                Status = order.Status,
+                Notes = order.Notes,
 
-                }
+                // لو عامل Include للـ User والـ Items في الـ Repository، تقدر ترجعهم هنا كمان
+                // UserName = order.User?.UserName,
+                // إلخ...
             };
         }
     }

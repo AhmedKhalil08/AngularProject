@@ -15,6 +15,7 @@ namespace ECommerce.Domain.Entities
         public decimal TotalAmount { get; set; }
         public OrderStatus Status { get; set; }
         public string? Notes { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         //-------------------------------------------------------------------------
         //                             FOREIGN KEY
