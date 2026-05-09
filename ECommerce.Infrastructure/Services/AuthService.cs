@@ -26,9 +26,7 @@ namespace ECommerce.Infrastructure.Services
         private readonly ISellerProfileRepository _sellerProfileRepo;
         private readonly IUnitOfWork _unitOfWork;
 
-        /*-----------------------------------------------------------------*/
-        //                          Injection     
-        /*------------------------------------------------------------------*/
+
         public AuthService(UserManager<ApplicationUser> userManager,
                             IConfiguration configuration,
                             ISellerProfileRepository sellerProfileRepo,
@@ -39,7 +37,7 @@ namespace ECommerce.Infrastructure.Services
             _sellerProfileRepo = sellerProfileRepo;
             _unitOfWork = unitOfWork;
         }
-        //********************************************************************************
+
 
         #region Register Custmer 
         public async Task<AuthResponseDto> RegisterCustomerAsync(RegisterDto DTO)

@@ -18,7 +18,7 @@ namespace ECommerce.API.Controllers
             _mediator=mediator;
         }
 
-        #region Get All Get
+        #region Get All 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery]string UserId)
         {
@@ -27,7 +27,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Add Post
+        #region Add 
         [HttpPost]
         public async Task <IActionResult> Add([FromBody] AddToWishlistCommand command)
         {
@@ -36,7 +36,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Remove Delete
+        #region Remove 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(int id)

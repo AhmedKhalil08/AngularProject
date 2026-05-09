@@ -19,7 +19,7 @@ namespace ECommerce.API.Controllers
             _mediator= mediator;
         }
 
-        #region GetAll Get
+        #region GetAll
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] string userId)
         {
@@ -28,7 +28,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region  GetByID Get
+        #region  GetByID 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -38,7 +38,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Create Address Post
+        #region Create Address
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAddressCommand command)
         {
@@ -47,7 +47,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Update Address Put
+        #region Update Address 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id , UpdateAddressCommand command)
         {
@@ -57,7 +57,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Delete Del
+        #region Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -16,7 +16,7 @@ namespace ECommerce.API.Controllers
             _mediator = mediator;
         }
 
-        #region Get  
+       
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] string UserId)
         {
@@ -24,9 +24,7 @@ namespace ECommerce.API.Controllers
             if (result == null) return NotFound();
             return Ok(result);
         }
-        #endregion
 
-        #region Clear Cart
         [HttpDelete]
         public async Task<IActionResult> Clear([FromQuery] string userId)
         {
@@ -34,6 +32,5 @@ namespace ECommerce.API.Controllers
             if (!result) return NotFound();
             return NoContent();
         }
-        #endregion
     }
 }
