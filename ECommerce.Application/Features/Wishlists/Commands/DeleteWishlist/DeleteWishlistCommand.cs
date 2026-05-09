@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ECommerce.Application.Features.Wishlists.Commands.DeleteWishlist
 {
-    internal class DeleteWishlistCommand : IRequest<bool>
+    public class DeleteWishlistCommand : IRequest<bool>
     {
         public int Id { get; set; }
     }

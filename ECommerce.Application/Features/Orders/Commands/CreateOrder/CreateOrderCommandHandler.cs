@@ -28,14 +28,32 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             var order = new Order
             {
                 PromoCode = new PromoCode { Code = request.PromoCode },
-                UserId = request.Id,
+                UserId = new UserDto { Id = request.Id }.Id,
+                User= new ApplicationUser { Id = new UserDto { Id = request.Id }.Id }, 
                 OrderItems = request.OrderItems.Select(item => new OrderItem
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
                     Product= new Product { Price = item.Product.Price  }
                 }).ToList(),
-                TotalAmount = CalculateTotalAmount(request.OrderItems)
+                TotalAmount = CalculateTotalAmount(request.OrderItems),
+                Payment = new Payment
+                {
+                    Amount = CalculateTotalAmount(request.OrderItems),
+                    Method = request.Payment.Method,
+                    
+                },
+              ShippingAddress = new Address
+                    {
+                        FullName = request.Address.FullName,
+                        Street = request.Address.Street,
+                        City = request.Address.City,
+                        State = request.Address.State,
+                        Country = request.Address.Country,
+                        ZipCode = request.Address.ZipCode,
+                        Phone = request.Address.Phone,
+                        IsDefault = request.Address.IsDefault
+                    },
             };
             await _repository.AddAsync(order);
             await _unitOfWork.SaveChangesAsync();

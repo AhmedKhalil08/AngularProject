@@ -16,7 +16,7 @@
     <Folder Include="ECommerce\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
-
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
@@ -31,6 +31,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.0" />
+  </ItemGroup>
+  </ItemGroup>
   </ItemGroup>
 
 </Project>

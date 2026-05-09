@@ -26,5 +26,6 @@ namespace ECommerce.Domain.Entities
         //                             NAVIGATION
         //-------------------------------------------------------------------------
         public ApplicationUser User { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
