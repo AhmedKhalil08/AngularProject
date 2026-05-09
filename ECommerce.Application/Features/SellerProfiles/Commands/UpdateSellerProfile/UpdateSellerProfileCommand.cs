@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ECommerce.Application.Features.SellerProfiles.Commands.UpdateSellerProfile
 {
-    internal class UpdateSellerProfileCommand : IRequest<SellerProfileDto>
+    public class UpdateSellerProfileCommand : IRequest<SellerProfileDto>
     {
         public int Id { get; set; }
         public string StoreName { get; set; }

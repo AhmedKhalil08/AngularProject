@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ECommerce.Application.Features.Wishlists.Commands.DeleteWishlist
 {
-    internal class DeleteWishlistCommandHandler : IRequestHandler<DeleteWishlistCommand, bool>
+    public class DeleteWishlistCommandHandler : IRequestHandler<DeleteWishlistCommand, bool>
     {
         private readonly IWishlistRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
