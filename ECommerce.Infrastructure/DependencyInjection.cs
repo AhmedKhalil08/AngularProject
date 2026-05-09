@@ -1,7 +1,9 @@
 ﻿using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Infrastructure.Persistence.Repositories;
+using ECommerce.Infrastructure.Services.EmailService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace ECommerce.Infrastructure
 {
@@ -17,6 +19,12 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //Email Service
+             services.AddScoped<IEmailService, EmailService>();
+             services.AddHttpClient();
+
+
             return services;
         }
 
