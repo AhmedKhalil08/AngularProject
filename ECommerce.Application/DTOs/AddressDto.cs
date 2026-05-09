@@ -14,6 +14,6 @@ namespace ECommerce.Application.DTOs
         public string Country { get; set; }
         public string ZipCode { get; set; }
         public string Phone { get; set; }
-        public bool IsDefault { get; set; }
+        public bool IsDefault { get; set; } = true;
     }
 }

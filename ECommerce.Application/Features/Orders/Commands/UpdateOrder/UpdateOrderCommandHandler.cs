@@ -2,13 +2,14 @@
 using ECommerce.Application.Features.OrderItems.Commands.UpdateOrderItem;
 using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
+using ECommerce.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ECommerce.Application.Features.Orders.Commands.UpdateOrder
 {
-    public class UpdateOrderCommandHandler: IRequestHandler<UpdateOrderCommand, OrderDto>
+    public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, OrderDto>
     {
         private readonly IOrderRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -36,11 +37,19 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateOrder
             await _unitOfWork.SaveChangesAsync();
             return new OrderDto
             {
-            Id = item.Id,
-            Status = item.Status,
-            TotalAmount = item.TotalAmount,
-            Payment = item.Payment
+                Id = item.Id,
+                Status = item.Status,
+                TotalAmount = item.TotalAmount,
+                Payment = new PaymentDto
+                {
+                    Id = item.Payment?.Id ?? 0,
+                    Amount = item.Payment?.Amount ?? 0,
+                    Method = item.Payment != null ? (PaymentMethod)item.Payment.Method : default,
+                    Status = item.Payment != null ? (PaymentStatus)item.Payment.Status : default,
+                    PaidAt = item.Payment?.PaidAt ?? DateTime.MinValue,
+                    OrderId = item.Payment?.OrderId ?? 0
 
+                }
             };
         }
     }

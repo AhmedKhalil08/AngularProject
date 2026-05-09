@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using MediatR;
 
 namespace ECommerce.Application
 {
@@ -7,9 +8,9 @@ namespace ECommerce.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            // Register MediatR
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            // Register application services
+            //// Register MediatR
+            //services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            //// Register application services
             return services;
         }
     }

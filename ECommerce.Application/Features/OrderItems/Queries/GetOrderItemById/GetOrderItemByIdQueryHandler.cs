@@ -23,7 +23,12 @@ namespace ECommerce.Application.Features.OrderItems.Queries.GetOrderItemById
             {
                 Id = item.Id,
                 Quantity = item.Quantity,
-                ProductId = item.ProductId,
+                ProductD = new ProductDto
+                {
+                    Id = item.Product.Id,
+                    Name = item.Product.Name,
+                    Price = item.Product.Price
+                },
                 OrderId = item.OrderId
 
             };
