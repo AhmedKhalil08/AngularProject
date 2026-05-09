@@ -7,12 +7,14 @@ using ECommerce.Domain.Enums;
 
 namespace ECommerce.Application.Features.Orders.Commands.UpdateOrder
 {
-    public class UpdateOrderCommand: IRequest<OrderDto>
+    public class UpdateOrderCommand : IRequest<OrderDto>
     {
         public int Id { get; set; }
-        public OrderStatus Status { get; set; }
-        public int TotalAmount { get; set; }
 
-        public PaymentDto Payment { get; set; }
+        // الحالة اللي الأدمن هيغيرها (مثلاً: Shipped, Delivered, Cancelled)
+        public OrderStatus Status { get; set; }
+
+        // ممكن نضيف ملاحظات لو الأدمن حابب يكتب سبب الإلغاء مثلاً
+        public string? Notes { get; set; }
     }
 }

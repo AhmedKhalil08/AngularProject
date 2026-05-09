@@ -13,6 +13,10 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
+        // 1. خاصية الـ Table لاستخدامها مع Mapster (ProjectToType)
+        // لاحظ استخدام AsNoTracking عشان السرعة في الـ Queries
+        public IQueryable<T> Table => _context.Set<T>().AsNoTracking();
+
         public virtual async Task AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
@@ -20,7 +24,7 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
 
         public virtual async Task DeleteAsync(TKey id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await _context.Set<T>().FindAsync(id);
             if (entity != null)
             {
                 _context.Set<T>().Remove(entity);
@@ -29,7 +33,7 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
 
         public virtual async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public virtual async Task<T> GetByIdAsync(TKey id)

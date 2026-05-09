@@ -1,8 +1,10 @@
 
 using ECommerce.Application;
+using ECommerce.Application.Mapping;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace ECommerce.API
 {
@@ -14,7 +16,11 @@ namespace ECommerce.API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -32,7 +38,7 @@ namespace ECommerce.API
                         .AllowAnyMethod());
             });
             var app = builder.Build();
-
+            MapsterConfig.RegisterMappings();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -45,6 +51,8 @@ namespace ECommerce.API
             app.UseCors("AllowAngular");
             app.UseAuthentication();
             app.UseAuthorization();
+
+
 
 
             app.MapControllers();
