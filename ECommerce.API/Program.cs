@@ -18,7 +18,7 @@ namespace ECommerce.API
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            //builder.Services.AddOpenApi();
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure(builder.Configuration);
             //Swagger test
@@ -36,7 +36,7 @@ namespace ECommerce.API
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                //app.MapOpenApi();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }

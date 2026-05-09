@@ -48,4 +48,4 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
         }
     }
 }
-}
+
