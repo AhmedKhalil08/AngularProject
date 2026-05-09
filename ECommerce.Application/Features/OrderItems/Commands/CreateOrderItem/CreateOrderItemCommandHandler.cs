@@ -28,6 +28,7 @@ namespace ECommerce.Application.Features.OrderItems.Commands.CreateOrderItem
             {
                 OrderId = request.OrderId,
                 ProductId = request.ProductId,
+                Product= new Product { Id = request.ProductId },
                 Quantity = request.Quantity
             };
             var product = await _productrepo.GetByIdAsync(request.ProductId);

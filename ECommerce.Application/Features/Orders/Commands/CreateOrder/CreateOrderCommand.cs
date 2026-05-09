@@ -16,5 +16,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
         public string? PromoCode { get; set; }
 
         public PaymentDto Payment { get; set; }
+
+        public AddressDto Address { get; set; } = new AddressDto();
     }
 }
