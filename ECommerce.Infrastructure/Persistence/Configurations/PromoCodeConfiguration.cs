@@ -16,10 +16,10 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.Property(oi => oi.Code)
            .IsRequired();
 
-            //builder.HasMany(c => c.Orders)
-            //   .WithOne()
-            //   .HasForeignKey(ci => ci.OrderId)
-            //   .OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(c => c.Orders)
+               .WithOne()
+               .HasForeignKey(ci => ci.PromoCodeId)
+               .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
