@@ -8,6 +8,5 @@ namespace ECommerce.Application.Features.Carts.Queries
 {
     public class GetCartByUserIdQuery : IRequest<CartDto>
     {
-        public string UserId { get; set; }
     }
 }

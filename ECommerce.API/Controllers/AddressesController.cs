@@ -23,9 +23,9 @@ namespace ECommerce.API.Controllers
 
         #region GetAll
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string userId)
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllAddressesQuery { UserId= userId});
+            var result = await _mediator.Send(new GetAllAddressesQuery());
                 return Ok(result);
         }
         #endregion

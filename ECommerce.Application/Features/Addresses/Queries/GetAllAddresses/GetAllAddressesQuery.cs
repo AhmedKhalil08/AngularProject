@@ -8,6 +8,6 @@ namespace ECommerce.Application.Features.Addresses.Queries.GetAllAddresses
 {
     public class GetAllAddressesQuery : IRequest<List<AddressDto>>
     {
-        public string UserId { get; set; }
+        //public string UserId { get; set; }
     }
 }

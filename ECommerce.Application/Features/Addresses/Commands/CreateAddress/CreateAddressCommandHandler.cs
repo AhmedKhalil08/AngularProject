@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using MediatR;
 using System;
@@ -12,10 +13,11 @@ namespace ECommerce.Application.Features.Addresses.Commands.CreateAddress
     {
         private readonly IAddressRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
-
-        public CreateAddressCommandHandler(IAddressRepository repository, IUnitOfWork unitOfWork)
+        private readonly ICurrentUserService _currentUser;
+        public CreateAddressCommandHandler(IAddressRepository repository, IUnitOfWork unitOfWork, ICurrentUserService currentUser)
         {
             _repository = repository;
+            _currentUser = currentUser;
             _unitOfWork = unitOfWork;
         }
 
@@ -23,7 +25,7 @@ namespace ECommerce.Application.Features.Addresses.Commands.CreateAddress
         {
             var address = new Address
             {
-                UserId = request.UserId,
+                UserId = _currentUser.UserId,
                 FullName = request.FullName,
                 Street = request.Street,
                 City = request.City,

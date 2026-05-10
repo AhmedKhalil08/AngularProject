@@ -18,17 +18,17 @@ namespace ECommerce.API.Controllers
 
        
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string UserId)
+        public async Task<IActionResult> Get()
         {
-            var result = await _mediator.Send(new GetCartByUserIdQuery { UserId = UserId });
+            var result = await _mediator.Send(new GetCartByUserIdQuery ());
             if (result == null) return NotFound();
             return Ok(result);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Clear([FromQuery] string userId)
+        public async Task<IActionResult> Clear()
         {
-            var result = await _mediator.Send(new ClearCartCommand { UserId = userId });
+            var result = await _mediator.Send(new ClearCartCommand ());
             if (!result) return NotFound();
             return NoContent();
         }
