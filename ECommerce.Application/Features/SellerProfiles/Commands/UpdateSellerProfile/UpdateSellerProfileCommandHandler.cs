@@ -1,5 +1,7 @@
 ﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.Exceptions;
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Interfaces.Services;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,16 +13,20 @@ namespace ECommerce.Application.Features.SellerProfiles.Commands.UpdateSellerPro
     {
         private readonly ISellerProfileRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUserService _currentUser;
 
-        public UpdateSellerProfileCommandHandler(ISellerProfileRepository repository, IUnitOfWork unitOfWork)
+        public UpdateSellerProfileCommandHandler(ISellerProfileRepository repository, IUnitOfWork unitOfWork, ICurrentUserService currentUser)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _currentUser=currentUser;
         }
 
         public async Task<SellerProfileDto> Handle(UpdateSellerProfileCommand request, CancellationToken cancellationToken)
         {
             var profile = await _repository.GetByIdAsync(request.Id);
+            if(profile==null) throw new NotFoundException("Seller profile not found");
+            if (profile.UserId != _currentUser.UserId) throw new ForbiddenAccessException("this is not your profile");
 
             profile.StoreName = request.StoreName;
             profile.StoreDescription = request.StoreDescription;

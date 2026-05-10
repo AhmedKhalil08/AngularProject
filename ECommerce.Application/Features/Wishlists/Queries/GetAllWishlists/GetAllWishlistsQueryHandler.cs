@@ -1,18 +1,22 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Interfaces.Services;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ECommerce.Application.Features.Wishlists.Queries.GetAllWishlists
 {
-    internal class GetAllWishlistsQueryHandler
+    public  class GetAllWishlistsQueryHandler : IRequestHandler<GetAllWishlistsQuery,List<WishlistDto>>
     {
         private readonly IWishlistRepository _repository;
+        private readonly ICurrentUserService _currentUser;
 
-        public GetAllWishlistsQueryHandler(IWishlistRepository repository)
+        public GetAllWishlistsQueryHandler(IWishlistRepository repository, ICurrentUserService currentUser)
         {
             _repository = repository;
+            _currentUser= currentUser;
         }
 
         public async Task<List<WishlistDto>> Handle(GetAllWishlistsQuery request, CancellationToken cancellationToken)
@@ -20,7 +24,7 @@ namespace ECommerce.Application.Features.Wishlists.Queries.GetAllWishlists
             var wishlists = await _repository.GetAllAsync();
 
             return wishlists
-                .Where(w => w.UserId == request.UserId && !w.IsDeleted)
+                .Where(w => w.UserId == _currentUser.UserId && !w.IsDeleted)
                 .Select(w => new WishlistDto
                 {
                     Id = w.Id,

@@ -1,18 +1,15 @@
 ﻿using ECommerce.Application.DTOs.Auth;
+using ECommerce.Application.Exceptions;
 using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -25,17 +22,23 @@ namespace ECommerce.Infrastructure.Services
         private readonly IConfiguration _configuration;
         private readonly ISellerProfileRepository _sellerProfileRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICurrentUserService _currentUserService;
 
 
         public AuthService(UserManager<ApplicationUser> userManager,
                             IConfiguration configuration,
                             ISellerProfileRepository sellerProfileRepo,
-                            IUnitOfWork unitOfWork)
+                            IUnitOfWork unitOfWork,
+                    IHttpContextAccessor httpContextAccessor,
+                    ICurrentUserService currentUserService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _sellerProfileRepo = sellerProfileRepo;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
+            _currentUserService = currentUserService;
         }
 
 
@@ -105,16 +108,16 @@ namespace ECommerce.Infrastructure.Services
            ?? await _userManager.FindByNameAsync(DTO.EmailOrUserName);
 
             if (user == null)
-                throw new Exception("Invalid email/username or password");
+                throw new UnauthorizedAccessException("Invalid email/username or password");
 
             //  Check password
             var isValid = await _userManager.CheckPasswordAsync(user, DTO.Password);
             if (!isValid)
-                throw new Exception("Invalid email/username or password");
+                throw new UnauthorizedAccessException("Invalid email/username or password");
 
             // Check if account is active
             if (!user.IsActive)
-                throw new Exception("Account is Banned");
+                throw new ForbiddenAccessException("Account is Banned");
 
             // Generate token 
             var token = GenerateJwtToken(user);
@@ -132,6 +135,93 @@ namespace ECommerce.Infrastructure.Services
         }
         #endregion
 
+        #region Google Login
+        public async Task<AuthResponseDto> GoogleLoginAsync()
+        {
+            // Read the Google response from the current request
+            var result = await _httpContextAccessor.HttpContext
+                .AuthenticateAsync(IdentityConstants.ExternalScheme);
+
+            if (!result.Succeeded)
+                throw new UnauthorizedAccessException("Google authentication failed");
+
+            // Extract user info from Google's response
+            var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var fullName = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            if (email == null)
+                throw new BadRequestException("Could not retrieve email from Google");
+
+            // Check if user already exists
+            var user = await _userManager.FindByEmailAsync(email);
+
+            // If not, create them automatically
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    FullName = fullName ?? email,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow,
+                    Role = UserRole.Customer
+                };
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                {
+                    var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                    throw new BadRequestException(errors);
+                }
+            }
+
+            // Generate JWT and return — same as regular login
+            var token = GenerateJwtToken(user);
+
+            return new AuthResponseDto
+            {
+                Token = token,
+                Email = user.Email,
+                FullName = user.FullName,
+                Role = user.Role.ToString(),
+                Expiration = DateTime.UtcNow.AddDays(7)
+            };
+        }
+        #endregion
+
+
+        #region Change Password
+        public async Task<bool> ChangePasswordAsync(ChangePasswordDto model)
+        {
+            // Get current user from JWT token
+            var userId = _currentUserService.UserId;
+            if (userId == null)
+                throw new UnauthorizedAccessException("You are not logged in");
+
+            // Find user in DB
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+
+            // Check if account is active
+            if (!user.IsActive)
+                throw new ForbiddenAccessException("Account is banned");
+
+            // Change password
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new BadRequestException(errors);
+            }
+
+            return true;
+        }
+        #endregion
+
+
         #region Helpers 
 
         // Private helper — creates user and returns token response
@@ -142,7 +232,7 @@ namespace ECommerce.Infrastructure.Services
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                throw new Exception(errors);
+                throw new BadRequestException(errors);
             }
 
             var token = GenerateJwtToken(user);
@@ -162,7 +252,7 @@ namespace ECommerce.Infrastructure.Services
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser != null)
-                throw new Exception("Email already registered");
+                throw new BadRequestException("Email already registered");
         }
         #endregion
 

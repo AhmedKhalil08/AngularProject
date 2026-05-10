@@ -8,7 +8,7 @@ namespace ECommerce.Application.Features.Addresses.Commands.CreateAddress
 {
     public class CreateAddressCommand : IRequest<AddressDto>
     {
-        public string UserId { get; set; }
+        //public string UserId { get; set; }
         public string FullName { get; set; }
         public string Street { get; set; }
         public string City { get; set; }

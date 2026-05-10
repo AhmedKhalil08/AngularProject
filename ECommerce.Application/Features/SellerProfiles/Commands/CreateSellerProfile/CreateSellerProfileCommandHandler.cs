@@ -1,7 +1,9 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,18 +14,19 @@ namespace ECommerce.Application.Features.SellerProfiles.Commands.CreateSellerPro
     {
         private readonly ISellerProfileRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
-
-        public CreateSellerProfileCommandHandler(ISellerProfileRepository repository, IUnitOfWork unitOfWork)
+        private readonly ICurrentUserService _currentUser;
+        public CreateSellerProfileCommandHandler(ISellerProfileRepository repository, IUnitOfWork unitOfWork, ICurrentUserService currentUser)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _currentUser = currentUser;
         }
 
         public async Task<SellerProfileDto> Handle(CreateSellerProfileCommand request, CancellationToken cancellationToken)
         {
             var profile = new SellerProfile
             {
-                UserId = request.UserId,
+                UserId = _currentUser.UserId,
                 StoreName = request.StoreName,
                 StoreDescription = request.StoreDescription,
                 LogoUrl = request.LogoUrl,

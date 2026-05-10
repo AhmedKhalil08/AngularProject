@@ -1,4 +1,5 @@
 ﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.Exceptions;
 using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
 using System;
@@ -22,6 +23,8 @@ namespace ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerPr
         {
             var profile = await _repository.GetByIdAsync(request.Id);
 
+            if (profile == null)
+                throw new NotFoundException("Seller profile not found");
             profile.IsApproved = request.IsApproved;
 
             await _repository.UpdateAsync(profile);
