@@ -1,6 +1,9 @@
 using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Domain.Entities;
+using Mapster;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,24 +13,22 @@ namespace ECommerce.Application.Features.Products.Queries.GetProductById
     {
         private readonly IProductRepository _productRepository;
 
-        public GetProductByIdQueryHandler(IProductRepository productRepository)
+        public GetProductByIdQueryHandler( IProductRepository productRepository)
         {
             _productRepository = productRepository;
+            
         }
 
         public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(request.Id);
-            if (product == null) return null;
+            var product = await _productRepository
+                .Table
+                .Where(p => p.Id == request.Id)
+                .ProjectToType<ProductDto>()
+                .FirstOrDefaultAsync(cancellationToken);
+               
 
-            return new ProductDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Stock = product.Stock,
-                Description = product.Description
-            };
+            return product;
         }
     }
 }

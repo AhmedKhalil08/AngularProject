@@ -8,5 +8,6 @@ namespace ECommerce.Application.Interfaces.Persistence
 {
     public interface IOrderRepository:IGenericRepository<Order,int>
     {
+                Task<List<Order>> GetOrdersByUserIdAsync(string userId);
     }
 }

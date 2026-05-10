@@ -7,12 +7,9 @@ using System.Text;
 
 namespace ECommerce.Application.Features.Payments.Commands.UpdatePayment
 {
-    public class UpdatePaymentCommand : IRequest<PaymentDto>
+    public class ConfirmPaymentCommand : IRequest<bool>
     {
-        public int PaymentId { get; set; }
-
-        public PaymentStatus Status { get; set; }
-
-    
+        public int OrderId { get; set; }
+        public string TransactionId { get; set; } // رقم العملية اللي جيالك من Stripe
     }
 }
