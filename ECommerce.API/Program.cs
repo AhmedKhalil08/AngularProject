@@ -1,22 +1,18 @@
 
+using ECommerce.API.Extensions;
 using ECommerce.API.Middlewares;
 using ECommerce.Application;
+using ECommerce.Application.Extensions;
+using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
+using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Mapping;
 using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Contexts;
-using ECommerce.Infrastructure.Persistence.Seeding;
+using ECommerce.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
-using MediatR;
-using ECommerce.Application;
-using ECommerce.Application.Interfaces.Persistence;
-using ECommerce.Infrastructure.Persistence.Repositories;
-using ECommerce.Infrastructure.Persistence.Configurations;
-
-using ECommerce.Infrastructure;
 
 
 namespace ECommerce.API
@@ -26,18 +22,18 @@ namespace ECommerce.API
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddScoped<IBannerRepository, BannerRepository>();
-            builder.Services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
+           
 
             // Add services to the container.
 
             builder.Services.AddControllers()
-                .AddJsonOptions(options => {
+                .AddJsonOptions(options =>
+                {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CreatePromoCodeCommandHandler).Assembly));
+    //        builder.Services.AddMediatR(cfg =>
+    //cfg.RegisterServicesFromAssembly(typeof(CreatePromoCodeCommandHandler).Assembly));
 
 
 
@@ -58,6 +54,7 @@ namespace ECommerce.API
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
+            builder.Services.AddDatabaseSeeding();
             // Global Exception 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
@@ -86,12 +83,8 @@ namespace ECommerce.API
             app.UseCors("AllowAngular");
             app.UseAuthentication();
             app.UseAuthorization();
-
-
-
-
             app.MapControllers();
-
+            await app.ExecuteDatabaseSeedingAsync();
             app.Run();
         }
     }

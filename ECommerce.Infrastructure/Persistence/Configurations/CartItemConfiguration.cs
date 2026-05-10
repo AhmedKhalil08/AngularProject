@@ -16,7 +16,7 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.HasOne(ci => ci.Product)
                    .WithMany()
                    .HasForeignKey(ci => ci.ProductId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(ci => ci.Cart)
                    .WithMany(c => c.CartItems)
