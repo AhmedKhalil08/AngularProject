@@ -1,10 +1,6 @@
 using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Features.Products.Queries.GetAllProducts
 {
@@ -26,7 +22,8 @@ namespace ECommerce.Application.Features.Products.Queries.GetAllProducts
                 Name = p.Name,
                 Price = p.Price,
                 Stock = p.Stock,
-                Description = p.Description
+                Description = p.Description,
+                ImageUrls = p.Images.Select(i => i.ImageUrl).ToList()
             }).ToList();
         }
     }

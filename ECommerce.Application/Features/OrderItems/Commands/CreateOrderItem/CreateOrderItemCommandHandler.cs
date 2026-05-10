@@ -38,7 +38,7 @@ namespace ECommerce.Application.Features.OrderItems.Commands.CreateOrderItem
             {
                 Id = item.Id,
                 OrderId = item.OrderId,
-                ProductD = new ProductDto() { Id =product.Id, Name=product.Name, Description=product.Description, Price=product.Price},
+                ProductId = item.ProductId,
                 Quantity = item.Quantity
             };
         }

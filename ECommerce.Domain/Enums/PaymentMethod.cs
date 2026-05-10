@@ -6,9 +6,9 @@ namespace ECommerce.Domain.Enums
 {
     public enum PaymentMethod
     {
-        CreditCard,
-        PayPal,
-        Wallet,
-        CashOnDelivery
+        CashOnDelivery=1,
+        CreditCard=2,
+        PayPal=3,
+        Wallet=4
     }
 }

@@ -1,4 +1,5 @@
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Interfaces.Services;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,11 +10,13 @@ namespace ECommerce.Application.Features.Products.Commands.DeleteProduct
     {
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IFileService _fileService;
 
-        public DeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
+        public DeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork, IFileService fileService)
         {
             _productRepository = productRepository;
             _unitOfWork = unitOfWork;
+            _fileService = fileService;
         }
 
         public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
@@ -21,8 +24,17 @@ namespace ECommerce.Application.Features.Products.Commands.DeleteProduct
             var product = await _productRepository.GetByIdAsync(request.Id);
             if (product == null) return false;
 
-            _productRepository.DeleteAsync(product.Id);
+            if (product.Images != null)
+            {
+                foreach (var img in product.Images)
+                {
+                    _fileService.DeleteFile(img.ImageUrl); 
+                }
+            }
+
+            await _productRepository.DeleteAsync(product.Id);
             await _unitOfWork.SaveChangesAsync();
+
             return true;
         }
     }

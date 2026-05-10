@@ -12,7 +12,7 @@ namespace ECommerce.Domain.Entities
         //-------------------------------------------------------------------------
       
         public int Quantity { get; set; }
-        // public int UnitPrice { get; set; }
+         public decimal UnitPrice { get; set; }
         //-------------------------------------------------------------------------
         //                             FOREIGN KEY
         //-------------------------------------------------------------------------
