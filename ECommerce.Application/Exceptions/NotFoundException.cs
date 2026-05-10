@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ECommerce.Application.Exceptions
+﻿namespace ECommerce.Application.Exceptions
 {
-    public class NotFoundException :Exception
+    public class NotFoundException : Exception
     {
-        public NotFoundException (string message) : base(message) { }
+        public NotFoundException(string message) : base(message) { }
     }
 }

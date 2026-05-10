@@ -3,13 +3,10 @@ using ECommerce.API.Extensions;
 using ECommerce.API.Middlewares;
 using ECommerce.Application;
 using ECommerce.Application.Extensions;
-using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
-using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Mapping;
 using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Contexts;
-using ECommerce.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -22,22 +19,14 @@ namespace ECommerce.API
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-           
-
             // Add services to the container.
-
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-
-    //        builder.Services.AddMediatR(cfg =>
-    //cfg.RegisterServicesFromAssembly(typeof(CreatePromoCodeCommandHandler).Assembly));
-
-
-
-
+            //        builder.Services.AddMediatR(cfg =>
+            //cfg.RegisterServicesFromAssembly(typeof(CreatePromoCodeCommandHandler).Assembly));
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -70,7 +59,6 @@ namespace ECommerce.API
                 //await DataSeeder.SeedAllAsync(userManager, context);
             }
             app.UseExceptionHandler();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -78,7 +66,6 @@ namespace ECommerce.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
             app.UseHttpsRedirection();
             app.UseCors("AllowAngular");
             app.UseAuthentication();
