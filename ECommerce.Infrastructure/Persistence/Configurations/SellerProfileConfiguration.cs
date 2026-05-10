@@ -25,9 +25,7 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
                 .HasForeignKey<SellerProfile>(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(s => s.Products)
-                .WithOne(p => p.Seller)
-                .HasForeignKey(p => p.SellerId);
+            
         }
     }
 }

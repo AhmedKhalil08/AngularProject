@@ -30,6 +30,19 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
+
+            services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IBannerRepository, BannerRepository>();
+            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWishlistRepository, WishlistRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+
+
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IPaymentService, PaymentService>();

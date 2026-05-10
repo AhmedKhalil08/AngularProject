@@ -24,11 +24,11 @@ namespace ECommerce.API.Controllers
         }
         //Create Banner
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreatePromoCodeCommand command)
+        public async Task <IActionResult> Create([FromForm] CreatePromoCodeCommand command)
         {
-            var result = await Mediator.Send(command);
+            //var result =;
 
-            return Ok(result);
+            return Ok(await Mediator.Send(command));
 
         }
 

@@ -21,11 +21,14 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
                    .WithMany(c => c.Products)
                    .HasForeignKey(p => p.CategoryId)
                    .OnDelete(DeleteBehavior.NoAction);
+
             /* builder.HasOne(p => p.Seller)
                    .WithMany(s => s.Products)
                    .HasForeignKey(p => p.SellerId)
                    .OnDelete(DeleteBehavior.NoAction); 
             */
+
+     
         }
     }
 }

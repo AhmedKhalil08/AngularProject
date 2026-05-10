@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ECommerce.Infrastructure.Persistence.Configurations
 {
-    internal class AddressConfiguration :IEntityTypeConfiguration<Address>
+    public class AddressConfiguration :IEntityTypeConfiguration<Address>
     {
         public void Configure(EntityTypeBuilder<Address> builder)
         {
