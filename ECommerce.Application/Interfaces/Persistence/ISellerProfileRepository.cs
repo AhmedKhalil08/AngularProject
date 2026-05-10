@@ -7,5 +7,6 @@ namespace ECommerce.Application.Interfaces.Persistence
 {
     public interface ISellerProfileRepository : IGenericRepository<SellerProfile, int>
     {
+        Task<SellerProfile> GetByUserIdAsync(string userId);
     }
 }
