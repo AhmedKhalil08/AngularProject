@@ -15,7 +15,7 @@ namespace ECommerce.Domain.Entities
         public string Title { get; set; } 
         public string ImageUrl { get; set; }
         public string? Link { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public int DisplayOrder { get; set; }
 
         //-------------------------------------------------------------------------
