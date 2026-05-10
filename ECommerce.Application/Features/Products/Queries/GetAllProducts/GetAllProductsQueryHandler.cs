@@ -1,10 +1,6 @@
 using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Features.Products.Queries.GetAllProducts
 {

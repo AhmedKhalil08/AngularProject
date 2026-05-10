@@ -64,9 +64,13 @@ namespace ECommerce.Infrastructure
                  IssuerSigningKey = new SymmetricSecurityKey(
                  Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                  };
+                  }).AddGoogle(options =>
+                  {
+                      options.ClientId = configuration["Authentication:Google:ClientId"];
+                      options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
                   });
             //
-        
+
 
 
             services.AddHttpContextAccessor();

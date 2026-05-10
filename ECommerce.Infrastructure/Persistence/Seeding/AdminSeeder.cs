@@ -1,0 +1,34 @@
+﻿using ECommerce.Domain.Entities;
+using ECommerce.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ECommerce.Infrastructure.Persistence.Seeding
+{
+    public class AdminSeeder
+    {
+        public static async Task SeedAsync(UserManager<ApplicationUser> userManager)
+        {
+            var adminEmail = "admin@ecommerce.com";
+
+            if (await userManager.FindByEmailAsync(adminEmail) != null)
+                return;
+
+            var admin = new ApplicationUser
+            {
+                UserName = "admin",
+                Email = adminEmail,
+                FullName = "System Admin",
+                PhoneNumber = "0000000000",
+                Role = UserRole.Admin,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                EmailConfirmed = true
+            };
+
+            await userManager.CreateAsync(admin, "Admin@123");
+        }
+    }
+}

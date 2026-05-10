@@ -1,5 +1,7 @@
 ﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.Exceptions;
 using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Application.Interfaces.Services;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,16 +13,23 @@ namespace ECommerce.Application.Features.Addresses.Commands.UpdateAddress
     {
         private readonly IAddressRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUserService _currentUser;
 
-        public UpdateAddressCommandHandler(IAddressRepository repository, IUnitOfWork unitOfWork)
+        public UpdateAddressCommandHandler(IAddressRepository repository, IUnitOfWork unitOfWork, ICurrentUserService currentUser)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+             _currentUser=currentUser;
         }
 
         public async Task<AddressDto> Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
         {
             var address = await _repository.GetByIdAsync(request.Id);
+            if (address == null)
+                throw new NotFoundException("Address not found");
+
+            if (address.UserId != _currentUser.UserId)
+                throw new ForbiddenAccessException("This is not your address");
 
             address.FullName = request.FullName;
             address.Street = request.Street;

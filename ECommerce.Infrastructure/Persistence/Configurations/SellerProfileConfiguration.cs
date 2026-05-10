@@ -24,10 +24,12 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
                 .WithOne(u => u.SellerProfile)
                 .HasForeignKey<SellerProfile>(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
+            builder.HasAlternateKey(s => s.UserId);
             builder.HasMany(s => s.Products)
                 .WithOne(p => p.Seller)
-                .HasForeignKey(p => p.SellerId);
+                .HasForeignKey(p => p.SellerId)
+                .HasPrincipalKey(s => s.UserId); ;
+            builder.HasAlternateKey(s => s.UserId);
         }
     }
 }
