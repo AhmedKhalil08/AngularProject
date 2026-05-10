@@ -4,7 +4,6 @@ using ECommerce.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260510184237_InitialCreate")]
-    partial class InitialCreate
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -465,10 +462,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("SellerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SellerId1")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -480,7 +474,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("SellerId1");
+                    b.HasIndex("SellerId");
 
                     b.ToTable("Products");
                 });
@@ -633,9 +627,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("SellerProfiles");
                 });
@@ -810,7 +801,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -821,7 +812,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.ApplicationUser", "User")
                         .WithOne("Cart")
                         .HasForeignKey("ECommerce.Domain.Entities.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -926,8 +917,9 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasOne("ECommerce.Domain.Entities.SellerProfile", "Seller")
                         .WithMany("Products")
-                        .HasForeignKey("SellerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("SellerId")
+                        .HasPrincipalKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -974,7 +966,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.ApplicationUser", "User")
                         .WithOne("SellerProfile")
                         .HasForeignKey("ECommerce.Domain.Entities.SellerProfile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -985,13 +977,13 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ECommerce.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Wishlists")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Product");

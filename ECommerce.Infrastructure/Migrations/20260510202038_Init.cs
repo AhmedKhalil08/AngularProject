@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerce.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -161,8 +161,7 @@ namespace ECommerce.Infrastructure.Migrations
                         name: "FK_Addresses_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -266,8 +265,7 @@ namespace ECommerce.Infrastructure.Migrations
                         name: "FK_Carts_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -288,12 +286,12 @@ namespace ECommerce.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SellerProfiles", x => x.Id);
+                    table.UniqueConstraint("AK_SellerProfiles_UserId", x => x.UserId);
                     table.ForeignKey(
                         name: "FK_SellerProfiles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -345,8 +343,7 @@ namespace ECommerce.Infrastructure.Migrations
                     Stock = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    SellerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SellerId1 = table.Column<int>(type: "int", nullable: false),
+                    SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
@@ -360,11 +357,10 @@ namespace ECommerce.Infrastructure.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Products_SellerProfiles_SellerId1",
-                        column: x => x.SellerId1,
+                        name: "FK_Products_SellerProfiles_SellerId",
+                        column: x => x.SellerId,
                         principalTable: "SellerProfiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -527,14 +523,12 @@ namespace ECommerce.Infrastructure.Migrations
                         name: "FK_Wishlists_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Wishlists_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -656,9 +650,9 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_SellerId1",
+                name: "IX_Products_SellerId",
                 table: "Products",
-                column: "SellerId1");
+                column: "SellerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ApplicationUserId",
@@ -674,12 +668,6 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "IX_Reviews_UserId",
                 table: "Reviews",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SellerProfiles_UserId",
-                table: "SellerProfiles",
-                column: "UserId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wishlists_ProductId",

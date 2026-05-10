@@ -44,7 +44,7 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.HasOne(a => a.User)
                 .WithMany(u => u.Addresses)
                 .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
