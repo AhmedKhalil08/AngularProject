@@ -13,6 +13,10 @@ using MimeKit.Text;
 using System.Net.Mail;
 using System.Net;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using ECommerce.Infrastructure.Persistence.Repositories;
+using ECommerce.Domain.Entities;
+using ECommerce.Application.DTOs;
+
 
 namespace ECommerce.Infrastructure.Services.EmailService
 {
@@ -26,7 +30,7 @@ namespace ECommerce.Infrastructure.Services.EmailService
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public void SendEmail(EmailDto request)
+        public async Task SendEmail(EmailDto request)
         {
             ArgumentNullException.ThrowIfNull(request);
 
@@ -34,11 +38,11 @@ namespace ECommerce.Infrastructure.Services.EmailService
             {
                 // Send confirmation email to the user
                 var confirmationEmail = CreateConfirmationEmail(request);
-                SendEmailMessage(confirmationEmail);
+                await SendEmailMessageAsync(confirmationEmail);
 
                 // Send original message to the business
                 var businessEmail = CreateBusinessEmail(request);
-                SendEmailMessage(businessEmail);
+                await SendEmailMessageAsync(businessEmail);
             }
             catch (Exception ex)
             {
@@ -64,13 +68,34 @@ namespace ECommerce.Infrastructure.Services.EmailService
             return email;
         }
 
+        private MimeMessage CreateConfirmationOrderEmail(EmailDto request,OrderDto order)
+        {
+            var email = new MimeMessage();
+
+            email.From.Add(MailboxAddress.Parse(_config["EmailUsername"]));
+            email.To.Add(MailboxAddress.Parse(request.To));
+            email.Subject = "Order confirmed!";
+
+            email.Body = new TextPart(TextFormat.Html)
+            {
+                Text = $"<p>Thanks for your order,with ID {order.Id} , " +
+                $"Your total cost is {order.TotalAmount}.</p>" +
+                $"<table><tr><th>Item</th><th>Quantity</th><th>Price</th></tr>" +
+                $"{string.Join("", order.OrderItems.Select(item => $"<tr><td>{item.ProductName}</td><td>{item.Quantity}</td><td>{item.Price}</td></tr>"))}</table>"
+            };
+
+            return email;
+        }
+
+
+
         // Email to the business with the user's message
         private MimeMessage CreateBusinessEmail(EmailDto request)
         {
             var email = new MimeMessage();
 
-            email.From.Add(MailboxAddress.Parse(_config["EmailUsername"]));
-            email.To.Add(MailboxAddress.Parse(_config["EmailUsername"]));
+            email.From.Add(MailboxAddress.Parse(_config.GetValue<string>("EmailSettings:EmailUsername")));
+            email.To.Add(MailboxAddress.Parse(_config.GetValue<string>("EmailSettings:EmailUsername")));
             email.Subject = $"New message from {request.ContactName}";
 
             email.Body = new TextPart(TextFormat.Html)
@@ -86,14 +111,14 @@ namespace ECommerce.Infrastructure.Services.EmailService
         }
 
         // Connects and sends the email
-        private void SendEmailMessage(MimeMessage email)
+        private async Task SendEmailMessageAsync(MimeMessage email)
         {
             using var smtp = new SmtpClient();
 
-            var host = _config["EmailHost"];
-            var port = _config.GetValue<int>("Port");
-            var username = _config["EmailUsername"];
-            var password = _config["EmailPassword"];
+            var host = _config.GetValue<string>("EmailSettings:EmailHost");
+            var port = _config.GetValue<int>("EmailSettings:Port");
+            var username = _config.GetValue<string>("EmailSettings:EmailUsername");
+            var password = _config.GetValue<string>("EmailSettings:EmailPassword");
 
             if (string.IsNullOrWhiteSpace(host))
                 throw new InvalidOperationException("EmailHost configuration is missing");

@@ -5,6 +5,7 @@ using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
 
 namespace ECommerce.API
 {
@@ -20,6 +21,12 @@ namespace ECommerce.API
                 .AddJsonOptions(options => {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
+
+            builder.Services.AddMediatR(cfg =>
+      cfg.RegisterServicesFromAssembly(typeof(CreatePromoCodeCommandHandler).Assembly));
+
+
+
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

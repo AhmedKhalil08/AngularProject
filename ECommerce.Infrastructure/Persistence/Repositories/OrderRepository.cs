@@ -45,7 +45,7 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
         {
             if (entity == null)
             {
-                throw new ArgumentNullException(nameof(entity), "Order entity cannot be null.");    
+                throw new ArgumentNullException(nameof(entity), "Order entity cannot be null.");
             }
             else
             {
@@ -54,5 +54,10 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
             }
         }
 
+        public async Task<List<Order>> GetOrdersByUserIdAsync(string userId)
+        {
+            return await _context.Set<Order>().Where(o => o.UserId == userId).ToListAsync();
+        }
+       
     }
 }
