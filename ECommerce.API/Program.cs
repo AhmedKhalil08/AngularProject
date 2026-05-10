@@ -9,6 +9,15 @@ using ECommerce.Infrastructure.Persistence.Seeding;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
+using MediatR;
+using ECommerce.Application;
+using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Infrastructure.Persistence.Repositories;
+using ECommerce.Infrastructure.Persistence.Configurations;
+
+using ECommerce.Infrastructure;
+
 
 namespace ECommerce.API
 {
@@ -17,6 +26,8 @@ namespace ECommerce.API
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddScoped<IBannerRepository, BannerRepository>();
+            builder.Services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
 
             // Add services to the container.
 
@@ -24,6 +35,12 @@ namespace ECommerce.API
                 .AddJsonOptions(options => {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
+
+            builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(CreatePromoCodeCommandHandler).Assembly));
+
+
+
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
