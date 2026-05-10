@@ -4,6 +4,7 @@ using ECommerce.Application.Features.Addresses.Commands.UpdateAddress;
 using ECommerce.Application.Features.Addresses.Queries.GetAddressById;
 using ECommerce.Application.Features.Addresses.Queries.GetAllAddresses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AddressesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -49,7 +51,7 @@ namespace ECommerce.API.Controllers
 
         #region Update Address 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id , UpdateAddressCommand command)
+        public async Task<IActionResult> Update(int id , [FromBody]UpdateAddressCommand command)
         {
             command.Id = id;
             var result = await _mediator.Send(command);
