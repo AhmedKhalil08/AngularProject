@@ -1,8 +1,12 @@
 
+using ECommerce.API.Middlewares;
 using ECommerce.Application;
 using ECommerce.Application.Mapping;
+using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Contexts;
+using ECommerce.Infrastructure.Persistence.Seeding;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -10,7 +14,7 @@ namespace ECommerce.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -37,8 +41,22 @@ namespace ECommerce.API
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
+            // Global Exception 
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
+            // For User Services
+            builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
             MapsterConfig.RegisterMappings();
+            // SEED 
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                //await DataSeeder.SeedAllAsync(userManager, context);
+            }
+            app.UseExceptionHandler();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

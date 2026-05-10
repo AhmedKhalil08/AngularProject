@@ -4,6 +4,7 @@ using ECommerce.Application.Features.Addresses.Commands.UpdateAddress;
 using ECommerce.Application.Features.Addresses.Queries.GetAddressById;
 using ECommerce.Application.Features.Addresses.Queries.GetAllAddresses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AddressesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,16 +21,16 @@ namespace ECommerce.API.Controllers
             _mediator= mediator;
         }
 
-        #region GetAll Get
+        #region GetAll
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string userId)
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllAddressesQuery { UserId= userId});
+            var result = await _mediator.Send(new GetAllAddressesQuery());
                 return Ok(result);
         }
         #endregion
 
-        #region  GetByID Get
+        #region  GetByID 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -38,7 +40,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Create Address Post
+        #region Create Address
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAddressCommand command)
         {
@@ -47,9 +49,9 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Update Address Put
+        #region Update Address 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id , UpdateAddressCommand command)
+        public async Task<IActionResult> Update(int id , [FromBody]UpdateAddressCommand command)
         {
             command.Id = id;
             var result = await _mediator.Send(command);
@@ -57,7 +59,7 @@ namespace ECommerce.API.Controllers
         }
         #endregion
 
-        #region Delete Del
+        #region Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

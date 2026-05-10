@@ -5,6 +5,7 @@ using ECommerce.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ECommerce.Application.Interfaces.Services;
 
 namespace ECommerce.Application.Features.Wishlists.Commands.CreateWishlist
 {
@@ -12,18 +13,20 @@ namespace ECommerce.Application.Features.Wishlists.Commands.CreateWishlist
     {
         private readonly IWishlistRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUserService _currentUser;
 
-        public AddToWishlistCommandHandler(IWishlistRepository repository, IUnitOfWork unitOfWork)
+        public AddToWishlistCommandHandler(IWishlistRepository repository, IUnitOfWork unitOfWork , ICurrentUserService currentUser)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _currentUser= currentUser;
         }
 
         public async Task<WishlistDto> Handle(AddToWishlistCommand request, CancellationToken cancellationToken)
         {
             var wishlist = new Wishlist
             {
-                UserId = request.UserId,
+                UserId = _currentUser.UserId,
                 ProductId = request.ProductId,
                 AddedAt = DateTime.UtcNow
             };

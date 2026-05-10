@@ -10,5 +10,8 @@ namespace ECommerce.Application.Interfaces.Services
         Task<AuthResponseDto> RegisterCustomerAsync(RegisterDto model);
         Task<AuthResponseDto> RegisterSellerAsync(RegisterSellerDto model);
         Task<AuthResponseDto> LoginAsync(LoginDto model);
+
+        Task<AuthResponseDto> GoogleLoginAsync();
+        Task<bool> ChangePasswordAsync(ChangePasswordDto model);
     }
 }

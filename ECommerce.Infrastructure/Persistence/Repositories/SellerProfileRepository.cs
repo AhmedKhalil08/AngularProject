@@ -16,5 +16,6 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
             return await _context.SellerProfiles
                 .FirstOrDefaultAsync(s => s.UserId == userId && !s.IsDeleted);
         }
+        
     }
 }

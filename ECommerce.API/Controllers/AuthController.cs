@@ -1,5 +1,8 @@
 ﻿using ECommerce.Application.DTOs.Auth;
 using ECommerce.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,56 +18,66 @@ namespace ECommerce.API.Controllers
             _authService = authService;
         }
 
-        #region Register Customer Post
+        #region Register Customer 
 
         [HttpPost("register/customer")]
         public async Task<IActionResult> RegisterCustomer([FromBody] RegisterDto model)
         {
-            try
-            {
-                var result = await _authService.RegisterCustomerAsync(model);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.RegisterCustomerAsync(model);
+            return Ok(result);
         }
         #endregion
 
-        #region Register Seller Post
+        #region Register Seller 
 
 
         [HttpPost("register/seller")]
         public async Task<IActionResult> RegisterSeller([FromBody] RegisterSellerDto model)
         {
-            try
-            {
-                var result = await _authService.RegisterSellerAsync(model);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.RegisterSellerAsync(model);
+            return Ok(result);
         }
 
         #endregion
 
-        #region Login Post
+        #region Login 
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
-            try
+            var result = await _authService.LoginAsync(model);
+            return Ok(result);
+        }
+        #endregion
+
+        #region Google Login
+
+        [HttpGet("google-login")]
+        public IActionResult GoogleLogin()
+        {
+            var properties = new AuthenticationProperties
             {
-                var result = await _authService.LoginAsync(model);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+                RedirectUri = Url.Action("GoogleCallback", "Auth", null, Request.Scheme)
+            };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("google-callback")]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var result = await _authService.GoogleLoginAsync();
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Change PAssword
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
+        {
+            var result = await _authService.ChangePasswordAsync(model);
+            return Ok(new { message = "Password Changed Successfuly" });
         }
         #endregion
     }

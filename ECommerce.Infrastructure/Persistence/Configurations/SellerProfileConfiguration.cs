@@ -27,7 +27,9 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.HasAlternateKey(s => s.UserId);
             builder.HasMany(s => s.Products)
                 .WithOne(p => p.Seller)
-                .HasForeignKey(p => p.SellerId);
+                .HasForeignKey(p => p.SellerId)
+                .HasPrincipalKey(s => s.UserId); ;
+            builder.HasAlternateKey(s => s.UserId);
         }
     }
 }

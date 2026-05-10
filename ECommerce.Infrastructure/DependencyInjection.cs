@@ -35,16 +35,16 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IFileService, FileService>();
 
             // Ahmed
-            #region  Ahmed Repos
+            
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthService, AuthService>();
-            #endregion
+            
 
-            #region JWT
+            
             // JWT Auth
             services.AddAuthentication(options =>
             {
@@ -64,14 +64,18 @@ namespace ECommerce.Infrastructure
                  IssuerSigningKey = new SymmetricSecurityKey(
                  Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                  };
+                  }).AddGoogle(options =>
+                  {
+                      options.ClientId = configuration["Authentication:Google:ClientId"];
+                      options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
                   });
             //
-            #endregion
 
-            #region Current User and Http Context Acessor
+
+
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            #endregion
+            
 
             return services;
 
