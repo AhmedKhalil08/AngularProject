@@ -67,7 +67,7 @@ namespace ECommerce.API
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                //await DataSeeder.SeedAllAsync(userManager, context);
+                await DataSeeder.SeedAllAsync(userManager, context);
             }
             app.UseExceptionHandler();
 
