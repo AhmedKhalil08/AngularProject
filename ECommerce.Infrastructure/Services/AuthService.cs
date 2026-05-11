@@ -4,6 +4,7 @@ using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
+using ECommerce.Infrastructure.Services.EmailService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -24,14 +25,16 @@ namespace ECommerce.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICurrentUserService _currentUserService;
-
+        private readonly IEmailService _emailService;
 
         public AuthService(UserManager<ApplicationUser> userManager,
                             IConfiguration configuration,
                             ISellerProfileRepository sellerProfileRepo,
                             IUnitOfWork unitOfWork,
                     IHttpContextAccessor httpContextAccessor,
-                    ICurrentUserService currentUserService)
+                    ICurrentUserService currentUserService,
+                       IEmailService emailService )
+
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -39,6 +42,7 @@ namespace ECommerce.Infrastructure.Services
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
             _currentUserService = currentUserService;
+            _emailService = emailService;
         }
 
 
@@ -109,6 +113,10 @@ namespace ECommerce.Infrastructure.Services
 
             if (user == null)
                 throw new UnauthorizedAccessException("Invalid email/username or password");
+            if (!user.EmailConfirmed)
+            {
+                throw new ForbiddenAccessException("Please Confirm Your Email First");
+            }
 
             //  Check password
             var isValid = await _userManager.CheckPasswordAsync(user, DTO.Password);
@@ -166,7 +174,8 @@ namespace ECommerce.Infrastructure.Services
                     FullName = fullName ?? email,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow,
-                    Role = UserRole.Customer
+                    Role = UserRole.Customer,
+                    EmailConfirmed = true
                 };
 
                 var createResult = await _userManager.CreateAsync(user);
@@ -234,6 +243,20 @@ namespace ECommerce.Infrastructure.Services
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new BadRequestException(errors);
             }
+            // ── ADD THIS BLOCK ──────────────────────────────────────────
+            var confirmToken = Guid.NewGuid().ToString();
+            user.EmailConfirmationToken = confirmToken;
+            user.EmailConfirmationTokenExpiry = DateTime.UtcNow.AddHours(24);
+            await _userManager.UpdateAsync(user);
+            
+            var confirmUrl = $"{_configuration["AppUrl"]}/api/auth/confirm-email?token={confirmToken}&email={user.Email}";
+            await _emailService.SendEmail(new EmailDto
+            {
+                To = user.Email,
+                ContactName = user.FullName,
+                Body = $"<p>Click <a href='{confirmUrl}'>here</a> to confirm your email.</p>"
+            });
+            // ────────────────────────────────────────────────────────────
 
             var token = GenerateJwtToken(user);
 
@@ -255,6 +278,8 @@ namespace ECommerce.Infrastructure.Services
                 throw new BadRequestException("Email already registered");
         }
         #endregion
+
+        
 
         #region Token 
         private string GenerateJwtToken(ApplicationUser user)
@@ -290,5 +315,35 @@ namespace ECommerce.Infrastructure.Services
 
         }
         #endregion 
+
+
+        // Confirm Email
+        public async Task<string> ConfirmEmailAsync(string email,string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if ( user == null)
+            {
+                throw new KeyNotFoundException("User Not Found");
+            }
+            if (user.EmailConfirmed)
+            {
+                return "Email Already Confirmed";
+            }
+            if(user.EmailConfirmationToken != token)
+            {
+                throw new BadRequestException("Invalid Confirmation token");
+            }
+            if (user.EmailConfirmationTokenExpiry < DateTime.UtcNow)
+            {
+                throw new BadRequestException("Confirmation link has expired. Please register again");
+            }
+            // Confirm & clear token
+            user.EmailConfirmed = true;
+            user.EmailConfirmationToken = null;
+            user.EmailConfirmationTokenExpiry = null;
+            await _userManager.UpdateAsync(user);
+
+            return "Email Confirmed Successfully , you can login now";
+        }
     }
 }

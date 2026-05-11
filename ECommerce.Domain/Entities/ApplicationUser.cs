@@ -19,6 +19,9 @@ namespace ECommerce.Domain.Entities
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsDeleted { get; set; }
+        // email confirmation 
+        public string? EmailConfirmationToken { get; set; }
+        public DateTime? EmailConfirmationTokenExpiry { get; set; }
 
         /*-------------------------------------------------------------------------*/
         //                          Navigation Props 
