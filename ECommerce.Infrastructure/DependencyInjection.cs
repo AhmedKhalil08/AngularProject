@@ -86,15 +86,17 @@ namespace ECommerce.Infrastructure
                   });
             //
 
-
+            services.AddScoped<IBannerRepository, BannerRepository>();
+            services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+
 
 
             //Email Service
-             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
              services.AddHttpClient();
 
 
