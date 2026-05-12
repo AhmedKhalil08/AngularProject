@@ -295,7 +295,7 @@ namespace ECommerce.Infrastructure.Services
                 var token2 = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
                 var encodedToken = Uri.EscapeDataString(token2);
-                var clientUrl = "http://localhost:4200";
+                var clientUrl = _configuration["AppUrl"];
                 var confirmationLink = $"{clientUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
 
                 await _emailService.SendEmailConf(new EmailDto()
