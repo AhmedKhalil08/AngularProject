@@ -22,7 +22,7 @@ namespace ECommerce.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllWishlistsQuery() );
+            var result = await _mediator.Send(new GetAllWishlistsQuery());
             return Ok(result);
         }
         #endregion

@@ -4,17 +4,15 @@ using ECommerce.Application.Features.PromoCodes.Commands.DeletePromoCode;
 using ECommerce.Application.Features.PromoCodes.Commands.UpdatePromoCode;
 using ECommerce.Application.Features.PromoCodes.Queries.GetAllPromoCodes;
 using ECommerce.Application.Features.PromoCodes.Queries.GetPromoCodeById;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PromoCodeController:ApiControllerBase
+    public class PromoCodeController : ApiControllerBase
     {
 
         private IMediator _mediator;
@@ -24,7 +22,7 @@ namespace ECommerce.API.Controllers
         }
         //Create Banner
         [HttpPost]
-        public async Task <IActionResult> Create([FromForm] CreatePromoCodeCommand command)
+        public async Task<IActionResult> Create([FromForm] CreatePromoCodeCommand command)
         {
             //var result =;
 
@@ -77,7 +75,7 @@ namespace ECommerce.API.Controllers
         //Create PromoCode
 
 
-      
+
         //Get PromoCode By Code
 
     }

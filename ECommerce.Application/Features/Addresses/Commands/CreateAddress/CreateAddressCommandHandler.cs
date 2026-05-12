@@ -3,9 +3,6 @@ using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ECommerce.Application.Features.Addresses.Commands.CreateAddress
 {

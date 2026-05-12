@@ -4,17 +4,15 @@ using ECommerce.Application.Features.Categories.Commands.DeleteCategory;
 using ECommerce.Application.Features.Categories.Commands.UpdateCategory;
 using ECommerce.Application.Features.Categories.Queries.GetAllCategories;
 using ECommerce.Application.Features.Categories.Queries.GetCategoryById;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController:ApiControllerBase
+    public class CategoryController : ApiControllerBase
     {
         private IMediator _mediator;
         public CategoryController(IMediator mediator)
@@ -23,7 +21,7 @@ namespace ECommerce.API.Controllers
         }
 
         //Create Category
-        
+
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateCategoryCommand command)
         {

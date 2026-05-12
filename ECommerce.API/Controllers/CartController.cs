@@ -1,7 +1,6 @@
 ﻿using ECommerce.Application.Features.Carts.Commands.ClearCart;
 using ECommerce.Application.Features.Carts.Queries;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
@@ -16,11 +15,11 @@ namespace ECommerce.API.Controllers
             _mediator = mediator;
         }
 
-       
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _mediator.Send(new GetCartByUserIdQuery ());
+            var result = await _mediator.Send(new GetCartByUserIdQuery());
             if (result == null) return NotFound();
             return Ok(result);
         }
@@ -28,7 +27,7 @@ namespace ECommerce.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> Clear()
         {
-            var result = await _mediator.Send(new ClearCartCommand ());
+            var result = await _mediator.Send(new ClearCartCommand());
             if (!result) return NotFound();
             return NoContent();
         }

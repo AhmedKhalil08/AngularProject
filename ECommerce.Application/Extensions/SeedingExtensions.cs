@@ -1,5 +1,4 @@
 using ECommerce.Application.Features.Database.Commands.Seed;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ECommerce.Application.Extensions;

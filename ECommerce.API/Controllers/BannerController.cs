@@ -4,11 +4,8 @@ using ECommerce.Application.Features.Banners.Commands.DeleteBanner;
 using ECommerce.Application.Features.Banners.Commands.UpdateBanner;
 using ECommerce.Application.Features.Banners.Queries.GetAllBanners;
 using ECommerce.Application.Features.Banners.Queries.GetBannerById;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using ECommerce.Infrastructure.Persistence.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace ECommerce.API.Controllers
@@ -46,21 +43,21 @@ namespace ECommerce.API.Controllers
         }
         //Update Banner
         [HttpGet("{id}")]
-        public async Task<IActionResult> Update (int id)
+        public async Task<IActionResult> Update(int id)
         {
-           var result= await Mediator.Send(new UpdateBannerCommand {  Id = id });
+            var result = await Mediator.Send(new UpdateBannerCommand { Id = id });
 
-            if (result==null)
+            if (result == null)
             {
                 return NotFound($"Banner with ID {id} not found.");
             }
-           
-           
+
+
             return Ok(result);
         }
 
         //Get All Banners
-      
+
         [HttpGet]
         public async Task<ActionResult<List<BannerDto>>> GetAllBanners()
         {
@@ -75,7 +72,7 @@ namespace ECommerce.API.Controllers
         {
             return Ok(await Mediator.Send(new GetBannerByIdQuery { Id = id }));
         }
-      
+
 
     }
 }

@@ -30,6 +30,13 @@ namespace ECommerce.Application.Mapping
     // بنجيب بيانات البائع من جدول الـ SellerProfile (أو User حسب ما إنت مسميه)
                 .Map(dest => dest.SellerName, src => src.Seller.StoreName)
                  .Map(dest => dest.storeDes, src => src.Seller.StoreDescription);
+
+            TypeAdapterConfig<ApplicationUser, PaymentDto>.NewConfig()
+                .Map(dest => dest.UserName, src => src.UserName);
+            //TypeAdapterConfig<ApplicationUser, SellerProfileDto>.NewConfig()
+            //    .Map(dest => dest.UserName, src => src.UserName)
+            //    .Map(dest => dest.Email, src => src.Email)
+               
         }
     }
 
