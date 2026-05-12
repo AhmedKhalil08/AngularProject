@@ -10,6 +10,7 @@ using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Contexts;
 using ECommerce.Infrastructure.Persistence.Repositories;
+using ECommerce.Infrastructure.Persistence.Seeding;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
