@@ -98,6 +98,8 @@ namespace ECommerce.Infrastructure
 
             //Email Service
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IMailConfService, MailConfService>();
+
             services.AddHttpClient();
 
 

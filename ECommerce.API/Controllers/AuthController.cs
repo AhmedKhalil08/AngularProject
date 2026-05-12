@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using ECommerce.Domain.Entities;
 
 namespace ECommerce.API.Controllers
 {
@@ -12,9 +14,13 @@ namespace ECommerce.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly IMailConfService _mailconfservice;
+
+        public AuthController(IAuthService authService, IMailConfService mailconfservice)
         {
             _authService = authService;
+            _mailconfservice = mailconfservice;
+           
         }
 
         #region Register Customer 
@@ -77,6 +83,24 @@ namespace ECommerce.API.Controllers
         {
             var result = await _authService.ChangePasswordAsync(model);
             return Ok(new { message = "Password Changed Successfuly" });
+        }
+        #endregion
+
+        #region Arwa:confirm email
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string token)
+        {
+            var result = await _mailconfservice.ConfirmEmail(userId, token);
+
+            if (result.IsSuccess)
+                return Content($@"<html><body style='font-family:sans-serif;text-align:center;padding:50px'>
+            <h2 style='color:green'> {result.Data}</h2>
+            <p>You can now <a href='http://localhost:4200/auth/login'>login</a></p>
+            </body></html>", "text/html");
+
+            return Content($@"<html><body style='font-family:sans-serif;text-align:center;padding:50px'>
+        <h2 style='color:red'>{result.Error}</h2>
+        </body></html>", "text/html");
         }
         #endregion
     }

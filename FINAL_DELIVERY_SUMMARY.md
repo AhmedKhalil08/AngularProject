@@ -121,9 +121,9 @@ dotnet run
 ## 🔑 Test Credentials
 
 ```
-Admin:     admin@ecommerce.com / SecurePassword123!
-Seller:    seller@ecommerce.com / SecurePassword123!
-Customer:  customer1@ecommerce.com / SecurePassword123!
+Admin:     admin@ecommerce.com / P@ssw0rd_123Eco!
+Seller:    seller@ecommerce.com / P@ssw0rd_123Eco!
+Customer:  customer1@ecommerce.com / P@ssw0rd_123Eco!
 ```
 
 ---

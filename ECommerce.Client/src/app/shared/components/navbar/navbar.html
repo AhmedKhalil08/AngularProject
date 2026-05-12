@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <a class="navbar-brand" routerLink="/">Vortex </a>
+
+  <button class="navbar-toggler" type="button" 
+    [attr.aria-expanded]="isMenuOpen"
+    (click)="isMenuOpen = !isMenuOpen">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/products">Products</a></li>
+    </ul>
+
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" routerLink="/cart">Cart</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/wishlist">Wishlist</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/orders">Orders</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/profile">Profile</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/seller/dashboard">Seller</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/admin/dashboard">Admin</a></li>
+      <li class="nav-item">
+        <button class="btn btn-outline-light ms-2" (click)="logout()">Logout</button>
+      </li>
+    </ul>
+  </div>
+</nav>

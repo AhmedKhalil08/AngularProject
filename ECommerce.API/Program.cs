@@ -7,6 +7,8 @@ using ECommerce.Application.Mapping;
 using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Contexts;
+using ECommerce.Infrastructure.Persistence.Repositories;
+using ECommerce.Infrastructure.Persistence.Seeding;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -39,10 +41,11 @@ namespace ECommerce.API
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngular", policy =>
-                    policy.WithOrigins("http://localhost:4200")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
-            });
+                            policy.WithOrigins("http://localhost:4200")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials());
+             });
             builder.Services.AddDatabaseSeeding();
             // Global Exception 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -56,7 +59,7 @@ namespace ECommerce.API
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                //await DataSeeder.SeedAllAsync(userManager, context);
+                await DataSeeder.SeedAllAsync(userManager, context);
             }
             app.UseExceptionHandler();
             // Configure the HTTP request pipeline.

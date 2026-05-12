@@ -28,7 +28,13 @@ namespace ECommerce.Infrastructure.Persistence.Seeding
                 EmailConfirmed = true
             };
 
-            await userManager.CreateAsync(admin, "Admin@123");
+            var result = await userManager.CreateAsync(admin, "Admin@123");
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                Console.WriteLine($"Admin seed failed: {errors}");
+            }
         }
     }
 }

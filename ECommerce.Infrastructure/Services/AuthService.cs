@@ -4,6 +4,7 @@ using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
+using ECommerce.Infrastructure.Services.EmailService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,10 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+//using NETCore.MailKit.Core;
+using Microsoft.AspNetCore.WebUtilities;
+
+
 
 namespace ECommerce.Infrastructure.Services
 {
@@ -24,6 +29,13 @@ namespace ECommerce.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IEmailService _emailService;
+
+       // private readonly IHttpContextAccessor _httpContextAccessor;
+      //  private readonly ICurrentUserService _currentUserService;
+        //private readonly IEmailService _emailService;
+       
+
 
 
         public AuthService(UserManager<ApplicationUser> userManager,
@@ -31,7 +43,10 @@ namespace ECommerce.Infrastructure.Services
                             ISellerProfileRepository sellerProfileRepo,
                             IUnitOfWork unitOfWork,
                     IHttpContextAccessor httpContextAccessor,
-                    ICurrentUserService currentUserService)
+                    ICurrentUserService currentUserService,
+                    IEmailService emailService
+                  
+            )
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -39,6 +54,8 @@ namespace ECommerce.Infrastructure.Services
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
             _currentUserService = currentUserService;
+            _emailService = emailService;
+            
         }
 
 
@@ -58,6 +75,7 @@ namespace ECommerce.Infrastructure.Services
                 CreatedAt = DateTime.UtcNow,
                 Role = UserRole.Customer
             };
+
             // Return The response 
             return await CreateUserAndGenerateResponse(user, DTO.Password);
         }
@@ -109,6 +127,10 @@ namespace ECommerce.Infrastructure.Services
 
             if (user == null)
                 throw new UnauthorizedAccessException("Invalid email/username or password");
+            if (!user.EmailConfirmed)
+            {
+                throw new ForbiddenAccessException("Please Confirm Your Email First");
+            }
 
             //  Check password
             var isValid = await _userManager.CheckPasswordAsync(user, DTO.Password);
@@ -123,14 +145,20 @@ namespace ECommerce.Infrastructure.Services
             var token = GenerateJwtToken(user);
 
             // return
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
             return new AuthResponseDto
             {
-                Token = token,
                 Email = user.Email,
                 FullName = user.FullName,
                 Role = user.Role.ToString(),
                 Expiration = DateTime.UtcNow.AddDays(7)
-
             };
         }
         #endregion
@@ -166,7 +194,8 @@ namespace ECommerce.Infrastructure.Services
                     FullName = fullName ?? email,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow,
-                    Role = UserRole.Customer
+                    Role = UserRole.Customer,
+                    EmailConfirmed = true
                 };
 
                 var createResult = await _userManager.CreateAsync(user);
@@ -234,8 +263,32 @@ namespace ECommerce.Infrastructure.Services
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new BadRequestException(errors);
             }
+            /*start of Arwa's code'*/
+            else
+            {
+                ///Arwa//
+                var token2 = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var token = GenerateJwtToken(user);
+                var encodedToken = Uri.EscapeDataString(token2);
+                var clientUrl = _configuration["AppUrl"];
+                var confirmationLink = $"{clientUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
+
+                await _emailService.SendEmailConf(new EmailDto()
+                {
+                    To = user.Email,
+
+                    Body = $@"
+                         <h2>Welcome!</h2>
+                            <p>Please confirm your account by 
+                             <a href='{confirmationLink}'>clicking here</a>.
+                        </p>
+                         <p>Or copy this link: <br> {confirmationLink}</p>"
+                });
+                
+            }
+            /*end*/
+
+                var token = GenerateJwtToken(user);
 
             return new AuthResponseDto
             {
@@ -255,6 +308,8 @@ namespace ECommerce.Infrastructure.Services
                 throw new BadRequestException("Email already registered");
         }
         #endregion
+
+        
 
         #region Token 
         private string GenerateJwtToken(ApplicationUser user)
@@ -289,6 +344,23 @@ namespace ECommerce.Infrastructure.Services
 
 
         }
-        #endregion 
+        #endregion
+
+
+        // Confirm Email
+        public async Task<string> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+
+            var decodedToken = Uri.UnescapeDataString(token);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            if (!result.Succeeded)
+                throw new BadRequestException("Invalid confirmation token");
+
+            return "Email confirmed successfully. You can now log in.";
+        }
     }
 }
