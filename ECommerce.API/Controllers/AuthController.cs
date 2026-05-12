@@ -91,38 +91,18 @@ namespace ECommerce.API.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string token)
         {
-            var result = await _mailconfservice.ConfirmEmail(userId,token);
-            return Ok(result);
+            var result = await _mailconfservice.ConfirmEmail(userId, token);
 
+            if (result.IsSuccess)
+                return Content($@"<html><body style='font-family:sans-serif;text-align:center;padding:50px'>
+            <h2 style='color:green'> {result.Data}</h2>
+            <p>You can now <a href='http://localhost:4200/auth/login'>login</a></p>
+            </body></html>", "text/html");
+
+            return Content($@"<html><body style='font-family:sans-serif;text-align:center;padding:50px'>
+        <h2 style='color:red'>{result.Error}</h2>
+        </body></html>", "text/html");
         }
-
-
-        //[HttpPost("resend-confirmation")]
-        //public async Task<IActionResult> ResendConfirmation([FromBody] string email)
-        //{
-        //    var user = await _userManager.FindByEmailAsync(email);
-        //    if (user is null)
-        //        return NotFound("User not found");
-
-        //    if (user.EmailConfirmed)
-        //        return BadRequest("Email is already confirmed");
-
-        //    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        //    var encodedToken = Uri.EscapeDataString(token);
-        //    var clientUrl = _config["ClientUrl"];
-        //    var confirmationLink = $"{clientUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
-
-        //    await _emailService.SendEmailAsync(new EmailDto
-        //    {
-        //        To = user.Email,
-        //        Subject = "Resend - Confirm Your Email",
-        //        Body = $"<p>Click <a href='{confirmationLink}'>here</a> to confirm your email.</p>"
-        //    });
-
-        //    return Ok("Confirmation email resent. Please check your inbox.");
-        //}
-
-
         #endregion
     }
 }
