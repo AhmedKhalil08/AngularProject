@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260512053355_Init")]
-    partial class Init
+    [Migration("20260512110237_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
