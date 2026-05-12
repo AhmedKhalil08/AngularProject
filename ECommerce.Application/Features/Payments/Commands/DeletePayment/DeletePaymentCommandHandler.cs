@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ECommerce.Application.Features.Payments.Commands.DeletePayment
 {
-    internal class DeletePaymentCommandHandler
+    public class DeletePaymentCommandHandler
     {
     }
 }

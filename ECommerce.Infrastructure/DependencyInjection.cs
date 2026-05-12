@@ -50,16 +50,16 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IFileService, FileService>();
 
             // Ahmed
-            
+
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthService, AuthService>();
-            
 
-            
+
+
             // JWT Auth
             services.AddAuthentication(options =>
             {
@@ -68,22 +68,22 @@ namespace ECommerce.Infrastructure
             })
              .AddJwtBearer(options =>
              {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                 ValidateIssuer = true,
-                 ValidateAudience = true,
-                 ValidateLifetime = true,
-                 ValidateIssuerSigningKey = true,
-                 ValidIssuer = configuration["Jwt:Issuer"],
-                 ValidAudience = configuration["Jwt:Audience"],
-                 IssuerSigningKey = new SymmetricSecurityKey(
-                 Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuer = true,
+                     ValidateAudience = true,
+                     ValidateLifetime = true,
+                     ValidateIssuerSigningKey = true,
+                     ValidIssuer = configuration["Jwt:Issuer"],
+                     ValidAudience = configuration["Jwt:Audience"],
+                     IssuerSigningKey = new SymmetricSecurityKey(
+                      Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                  };
-                  }).AddGoogle(options =>
-                  {
-                      options.ClientId = configuration["Authentication:Google:ClientId"];
-                      options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-                  });
+             }).AddGoogle(options =>
+             {
+                 options.ClientId = configuration["Authentication:Google:ClientId"];
+                 options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+             });
             //
 
             services.AddScoped<IBannerRepository, BannerRepository>();
@@ -92,12 +92,13 @@ namespace ECommerce.Infrastructure
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
 
 
             //Email Service
             services.AddScoped<IEmailService, EmailService>();
-             services.AddHttpClient();
+            services.AddHttpClient();
 
 
             return services;

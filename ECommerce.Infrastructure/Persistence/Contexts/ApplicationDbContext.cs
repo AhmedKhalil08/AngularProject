@@ -22,6 +22,7 @@ namespace ECommerce.Infrastructure.Persistence.Contexts
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Shipment> Shipments { get; set; }
 
         // Ahmed 
         public DbSet<Address> Addresses { get; set; }

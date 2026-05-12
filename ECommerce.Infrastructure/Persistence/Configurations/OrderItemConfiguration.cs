@@ -29,6 +29,10 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
                .WithMany()
               .HasForeignKey(c => c.ProductId)
               .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(oi => oi.Shipment)
+                   .WithMany(s => s.OrderItems)
+                   .HasForeignKey(oi => oi.ShipmentId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
 
         }

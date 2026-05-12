@@ -14,6 +14,7 @@ namespace ECommerce.Application.Interfaces.Persistence
         DbSet<CartItem> CartItems { get; }
         DbSet<ProductImage> ProductImages { get; }
         DbSet<Review> Reviews { get; }
+        DbSet<Shipment> Shipments { get; }
 
         // Ahmed 
         DbSet<ApplicationUser> Users { get; }

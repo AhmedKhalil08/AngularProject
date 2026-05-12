@@ -1,6 +1,7 @@
 ﻿using ECommerce.Application.Features.Payments.Commands.UpdatePayment; // 👈 اتأكد من الـ Namespace بتاعك
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
+using Stripe.V2.Core;
 
 namespace ECommerce.API.Controllers
 {
@@ -9,11 +10,9 @@ namespace ECommerce.API.Controllers
     {
         private readonly string _stripeSecret;
 
-        // 1. حقن الـ IConfiguration لقراءة الإعدادات بأمان
         public PaymentsController(IConfiguration configuration)
         {
-            // لازم تتأكد إنك ضايف السطر ده في ملف appsettings.json:
-            // "Stripe": { "WebhookSecret": "whsec_..." }
+            
             _stripeSecret = configuration["Stripe:WebhookSecret"];
         }
 
@@ -34,14 +33,15 @@ namespace ECommerce.API.Controllers
                 );
 
                 // 2. معالجة نجاح الدفع
-                if (stripeEvent.Type == Stripe.EventTypes.PaymentIntentSucceeded)
+                if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
                 {
-                    var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                    // حول الأوبجيكت لـ Session بدل PaymentIntent
+                    var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
-                    var orderId = int.Parse(paymentIntent.Metadata["OrderId"]);
-                    var transactionId = paymentIntent.Id;
+                    // بنجيب الـ OrderId من الميتا داتا اللي إحنا بعتناها
+                    var orderId = int.Parse(session.Metadata["OrderId"]);
+                    var transactionId = session.PaymentIntentId; // ده رقم العملية المالي
 
-                    // 3. مناداة الـ Handler بالاسم الصحيح اللي اتفقنا عليه
                     await Mediator.Send(new ConfirmPaymentCommand
                     {
                         OrderId = orderId,
