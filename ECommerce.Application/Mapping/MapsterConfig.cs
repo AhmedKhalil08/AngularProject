@@ -1,44 +1,44 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Domain.Entities;
 using Mapster;
+
 namespace ECommerce.Application.Mapping
 {
     public class MapsterConfig
     {
         public static void RegisterMappings()
         {
-            // 1. Order -> OrderDto
+            // Order
             TypeAdapterConfig<Order, OrderDto>.NewConfig()
                 .Map(dest => dest.UserName, src => src.User.UserName)
                 .Map(dest => dest.Address, src => src.ShippingAddress)
-                .PreserveReference(true);
+                .MaxDepth(2);
 
-            // 2. OrderItem -> OrderItemDto
+            // OrderItem - التعديل هنا
             TypeAdapterConfig<OrderItem, OrderItemDto>.NewConfig()
-                .Map(dest => dest.Price, src => (int)src.UnitPrice);
+     .Map(dest => dest.ProductId, src => src.ProductId)
+     .Map(dest => dest.Quantity, src => src.Quantity)
+     .Map(dest => dest.Price, src => src.UnitPrice)
+     .Map(dest => dest.ProductName, src => src.Product.Name)
+     // السطر ده هو الأهم: بيمنع المابستر إنه يحاول يملأ أي حاجة تانية بتوقعاته
+     .IgnoreNonMapped(true);
 
-            TypeAdapterConfig<Payment, PaymentDto>.NewConfig();
-
-            TypeAdapterConfig<Address, AddressDto>.NewConfig();
-
+            // Payment - لازم نلغي الـ UserName منه مؤقتاً للتأكد
+            TypeAdapterConfig<Payment, PaymentDto>.NewConfig()
+         .Map(dest => dest.Id, src => src.Id)
+         .Map(dest => dest.Amount, src => src.Amount)
+         .Map(dest => dest.TransactionId, src => src.TransactionId)
+         .Map(dest => dest.Method, src => src.Method)
+         .Map(dest => dest.Status, src => src.Status)
+         .Map(dest => dest.PaidAt, src => src.PaidAt)
+         // لو الـ PaymentDto فيه UserName، هاته من المسار ده بالظبط:
+         .Map(dest => dest.UserName, src => src.Order.User.UserName)
+         .IgnoreNonMapped(true);
+            // Product
             TypeAdapterConfig<Product, ProductDto>.NewConfig()
-               .Map(dest => dest.CategoryName, src => src.Category.Name)
-
-    // بنجيب لينكات الصور من لستة الـ ProductImages
+                .Map(dest => dest.CategoryName, src => src.Category.Name)
                 .Map(dest => dest.ImageUrls, src => src.Images.Select(img => img.ImageUrl).ToList())
-
-    // بنجيب بيانات البائع من جدول الـ SellerProfile (أو User حسب ما إنت مسميه)
-                .Map(dest => dest.SellerName, src => src.Seller.StoreName)
-                 .Map(dest => dest.storeDes, src => src.Seller.StoreDescription);
-
-            TypeAdapterConfig<ApplicationUser, PaymentDto>.NewConfig()
-                .Map(dest => dest.UserName, src => src.UserName);
-            //TypeAdapterConfig<ApplicationUser, SellerProfileDto>.NewConfig()
-            //    .Map(dest => dest.UserName, src => src.UserName)
-            //    .Map(dest => dest.Email, src => src.Email)
-               
+                .Map(dest => dest.SellerName, src => src.Seller.StoreName);
         }
     }
-
 }
-

@@ -14,7 +14,7 @@ namespace ECommerce.Application.DTOs
         public PaymentMethod Method { get; set; }
         public PaymentStatus Status { get; set; }
         public DateTime? PaidAt { get; set; }
-        public OrderDto Order { get; set; }
+       
 
     }
 }

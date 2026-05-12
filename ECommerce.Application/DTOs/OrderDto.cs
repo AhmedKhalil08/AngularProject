@@ -22,7 +22,7 @@ namespace ECommerce.Application.DTOs
         public AddressDto Address { get; set; }
 
         public PromoCodeDto? PromoCode { get; set; }
-        public List<OrderItemDto> OrderItems { get; set; }=new List<OrderItemDto>();
+        public List<OrderItemDto> OrderItems { get; set; }
         public PaymentDto Payment { get; set; }
     }
 }

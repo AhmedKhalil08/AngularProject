@@ -16,10 +16,7 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.Property(oi => oi.Code)
            .IsRequired();
 
-            builder.HasMany(c => c.Orders)
-               .WithOne()
-               .HasForeignKey(ci => ci.PromoCodeId)
-               .OnDelete(DeleteBehavior.NoAction);
+            builder.Property(oi=> oi.DiscountPercent).HasColumnType("decimal(18,2)");
         }
     }
 }

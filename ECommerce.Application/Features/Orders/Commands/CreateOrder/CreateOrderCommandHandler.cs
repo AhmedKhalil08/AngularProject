@@ -38,10 +38,10 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
         {
             var itemsBySeller = new Dictionary<string, List<OrderItem>>();
             var allOrderItems = new List<OrderItem>();
-            var userId = _currentUserService.UserId;
-            if (string.IsNullOrEmpty(userId))
-                throw new UnauthorizedAccessException("Must be logged in.");
-
+            //var userId = _currentUserService.UserId;
+            //if (string.IsNullOrEmpty(userId))
+            //    throw new UnauthorizedAccessException("Must be logged in.");
+            var userId = "620309fb-6d65-4fb5-ba45-14fb66df6bf9";
             decimal totalAmount = 0;
             var orderItems = new List<OrderItem>();
 
@@ -74,30 +74,39 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
 
             // 3. تحويل التجميعة إلى شحنات (Shipments) حقيقية
             var shipments = new List<Shipment>();
+            var shipingFee = 50; // ثابت لكل شحنة
+            var orderTotalAmount = totalAmount + (itemsBySeller.Count * shipingFee); // إجمالي الأوردر = مجموع المنتجات + مجموع الشحنات
             foreach (var sellerGroup in itemsBySeller)
             {
+                decimal totalItemsAmount = sellerGroup.Value.Sum(oi => oi.UnitPrice * oi.Quantity);
                 var shipment = new Shipment
                 {
                     SellerId = sellerGroup.Key,
                     Status = ShipmentStatus.Pending,
-                    ShippingFee = 50, // تقدر تخليها ديناميك لو كل بائع له سعر شحن مختلف
-                    OrderItems = sellerGroup.Value // ربط المنتجات بالشحنة
+                    ShippingFee = shipingFee,
+                    TotalAmount = totalItemsAmount + shipingFee,
+                    OrderItems = sellerGroup.Value ,
+                    
+                    
                 };
                 shipments.Add(shipment);
             }
 
             // PromoCode (إذا وجد)
-
+            var shippingAddress = request.Address.Adapt<Address>();
+            shippingAddress.UserId = userId; 
             // 4. بناء الأوردر الأساسي
             var order = new Order
             {
                 UserId = userId,
                 OrderDate = DateTime.UtcNow,
-                TotalAmount = totalAmount,
+                TotalAmount = orderTotalAmount,
                 Status = OrderStatus.Pending,
                 PaymentMethod = request.PaymentMethod,
-                ShippingAddress = request.Address.Adapt<Address>(),
+                
 
+                ShippingAddress = shippingAddress,
+                
                 OrderItems = allOrderItems, 
                 Shipments = shipments,      
 
@@ -113,7 +122,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             await _unitOfWork.SaveChangesAsync(); // الـ EF Core هيربط الـ Ids تلقائياً
 
             // 6. معالجة الدفع
-            var paymentResult = await _paymentService.ProcessPaymentAsync(totalAmount, request.PaymentMethod, order.Id);
+            var paymentResult = await _paymentService.ProcessPaymentAsync(orderTotalAmount, request.PaymentMethod, order.Id);
 
             return paymentResult;
         }

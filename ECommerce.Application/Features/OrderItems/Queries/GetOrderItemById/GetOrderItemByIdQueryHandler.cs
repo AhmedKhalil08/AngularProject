@@ -21,11 +21,10 @@ namespace ECommerce.Application.Features.OrderItems.Queries.GetOrderItemById
             if (item == null) return null;
             return new OrderItemDto
             {
-                Id = item.Id,
+                //Id = item.Id,
                 Quantity = item.Quantity,
                 ProductId = item.ProductId,
                
-                OrderId = item.OrderId
 
             };
         }

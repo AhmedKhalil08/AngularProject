@@ -11,7 +11,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
     public class CreateOrderCommand : IRequest<PaymentResultDto>
     {
         
-        public List<OrderItemDto> Items { get; set; } = new();
+        public List<CreateItemDto> Items { get; set; } = new();
         public string? PromoCode { get; set; }
         public PaymentMethod PaymentMethod { get; set; } 
         public AddressDto Address { get; set; } = new AddressDto();

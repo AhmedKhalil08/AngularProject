@@ -53,14 +53,16 @@ namespace ECommerce.API
             // For User Services
             builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
+            await app.ExecuteDatabaseSeedingAsync();
             MapsterConfig.RegisterMappings();
             // SEED 
-            using (var scope = app.Services.CreateScope())
-            {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await DataSeeder.SeedAllAsync(userManager, context);
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            //    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            //    await DataSeeder.SeedAllAsync(userManager, context);
+            //}
+            
             app.UseExceptionHandler();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -74,7 +76,6 @@ namespace ECommerce.API
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-            await app.ExecuteDatabaseSeedingAsync();
             app.Run();
         }
     }
