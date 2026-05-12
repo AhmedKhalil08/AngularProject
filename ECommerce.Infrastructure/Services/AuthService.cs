@@ -3,6 +3,7 @@ using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
+using ECommerce.Infrastructure.Services.EmailService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -16,6 +17,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+//using NETCore.MailKit.Core;
+using Microsoft.AspNetCore.WebUtilities;
+
+
 
 namespace ECommerce.Infrastructure.Services
 {
@@ -26,16 +31,32 @@ namespace ECommerce.Infrastructure.Services
         private readonly ISellerProfileRepository _sellerProfileRepo;
         private readonly IUnitOfWork _unitOfWork;
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IEmailService _emailService;
+       
+
+
 
         public AuthService(UserManager<ApplicationUser> userManager,
                             IConfiguration configuration,
                             ISellerProfileRepository sellerProfileRepo,
                             IUnitOfWork unitOfWork)
+                            IUnitOfWork unitOfWork,
+                    IHttpContextAccessor httpContextAccessor,
+                    ICurrentUserService currentUserService,
+                    IEmailService emailService
+                  
+            )
         {
             _userManager = userManager;
             _configuration = configuration;
             _sellerProfileRepo = sellerProfileRepo;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
+            _currentUserService = currentUserService;
+            _emailService = emailService;
+            
         }
 
 
@@ -55,6 +76,7 @@ namespace ECommerce.Infrastructure.Services
                 CreatedAt = DateTime.UtcNow,
                 Role = UserRole.Customer
             };
+
             // Return The response 
             return await CreateUserAndGenerateResponse(user, DTO.Password);
         }
@@ -137,6 +159,37 @@ namespace ECommerce.Infrastructure.Services
         // Private helper — creates user and returns token response
         private async Task<AuthResponseDto> CreateUserAndGenerateResponse(ApplicationUser user, string password)
         {
+            //*/
+            //var token2= await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            //var param = new Dictionary<string, string>
+            //{
+            //    {"token",token2 },
+            //    {"email",user.Email}
+
+            //};
+            //var callback = QueryHelpers.AddQueryString(user.FullName, param);
+            //var message = new EmailDto() {To=user.Email,Body=token2 };
+            //await _emailService.SendEmailAsync(message);
+            //*/
+
+           
+
+        //    await _emailService.SendEmailAsync(new EmailDto()
+        //    {
+        //        To = user.Email,
+
+        //        Body = $@" from default
+        //<h2>Welcome!</h2>
+        //<p>Please confirm your account by 
+        //    <a href='{confirmationLink}'>clicking here</a>.
+        //</p>
+        //<p>Or copy this link: {confirmationLink}</p>"
+        //    });
+          //  return new AuthResponseDto();
+
+            ///
+
+
             var result = await _userManager.CreateAsync(user, password);
 
             if (!result.Succeeded)
@@ -144,8 +197,32 @@ namespace ECommerce.Infrastructure.Services
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new Exception(errors);
             }
+            /*start of Arwa's code'*/
+            else
+            {
+                ///Arwa//
+                var token2 = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var token = GenerateJwtToken(user);
+                var encodedToken = Uri.EscapeDataString(token2);
+                var clientUrl = "http://localhost:4200";
+                var confirmationLink = $"{clientUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
+
+                await _emailService.SendEmailConf(new EmailDto()
+                {
+                    To = user.Email,
+
+                    Body = $@"
+        <h2>Welcome!</h2>
+        <p>Please confirm your account by 
+            <a href='{confirmationLink}'>clicking here</a>.
+        </p>
+        <p>Or copy this link: <br> {confirmationLink}</p>"
+                });
+                
+            }
+            /*end*/
+
+                var token = GenerateJwtToken(user);
 
             return new AuthResponseDto
             {

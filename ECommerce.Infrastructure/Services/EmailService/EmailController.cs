@@ -22,7 +22,7 @@ namespace ECommerce.Infrastructure.Services.EmailService
         public IActionResult SendEmail(EmailDto request)
         {
             // Call the service to send the email
-            _emailService.SendEmail(request);
+            _emailService.SendEmailAsync(request);
 
             // Return success response
             return Ok(new { message = "Email sent successfully" });

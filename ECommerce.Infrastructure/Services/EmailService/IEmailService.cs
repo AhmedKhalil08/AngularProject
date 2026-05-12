@@ -8,6 +8,8 @@ namespace ECommerce.Infrastructure.Services.EmailService
 {
     public interface IEmailService
     {
-        Task SendEmail(EmailDto request);
+        // void SendEmail(EmailDto request);
+        Task SendEmailAsync(EmailDto request);
+        Task SendEmailConf(EmailDto request);
     }
 }

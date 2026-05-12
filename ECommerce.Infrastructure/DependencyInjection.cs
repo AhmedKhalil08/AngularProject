@@ -86,12 +86,14 @@ namespace ECommerce.Infrastructure
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            
+
 
 
             //Email Service
-             services.AddScoped<IEmailService, EmailService>();
-             services.AddHttpClient();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IMailConfService, MailConfService>();
+
+            services.AddHttpClient();
 
 
             return services;
