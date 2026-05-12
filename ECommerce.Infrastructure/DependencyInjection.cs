@@ -97,7 +97,9 @@ namespace ECommerce.Infrastructure
 
             //Email Service
             services.AddScoped<IEmailService, EmailService>();
-             services.AddHttpClient();
+            services.AddScoped<IMailConfService, MailConfService>();
+
+            services.AddHttpClient();
 
 
             return services;
