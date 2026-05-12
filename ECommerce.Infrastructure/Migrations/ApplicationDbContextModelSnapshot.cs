@@ -101,12 +101,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("EmailConfirmationToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EmailConfirmationTokenExpiry")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 

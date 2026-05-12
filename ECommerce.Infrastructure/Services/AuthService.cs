@@ -145,14 +145,20 @@ namespace ECommerce.Infrastructure.Services
             var token = GenerateJwtToken(user);
 
             // return
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
             return new AuthResponseDto
             {
-                Token = token,
                 Email = user.Email,
                 FullName = user.FullName,
                 Role = user.Role.ToString(),
                 Expiration = DateTime.UtcNow.AddDays(7)
-
             };
         }
         #endregion
@@ -250,37 +256,6 @@ namespace ECommerce.Infrastructure.Services
         // Private helper — creates user and returns token response
         private async Task<AuthResponseDto> CreateUserAndGenerateResponse(ApplicationUser user, string password)
         {
-            //*/
-            //var token2= await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //var param = new Dictionary<string, string>
-            //{
-            //    {"token",token2 },
-            //    {"email",user.Email}
-
-            //};
-            //var callback = QueryHelpers.AddQueryString(user.FullName, param);
-            //var message = new EmailDto() {To=user.Email,Body=token2 };
-            //await _emailService.SendEmailAsync(message);
-            //*/
-
-           
-
-        //    await _emailService.SendEmailAsync(new EmailDto()
-        //    {
-        //        To = user.Email,
-
-        //        Body = $@" from default
-        //<h2>Welcome!</h2>
-        //<p>Please confirm your account by 
-        //    <a href='{confirmationLink}'>clicking here</a>.
-        //</p>
-        //<p>Or copy this link: {confirmationLink}</p>"
-        //    });
-          //  return new AuthResponseDto();
-
-            ///
-
-
             var result = await _userManager.CreateAsync(user, password);
 
             if (!result.Succeeded)
@@ -303,11 +278,11 @@ namespace ECommerce.Infrastructure.Services
                     To = user.Email,
 
                     Body = $@"
-        <h2>Welcome!</h2>
-        <p>Please confirm your account by 
-            <a href='{confirmationLink}'>clicking here</a>.
-        </p>
-        <p>Or copy this link: <br> {confirmationLink}</p>"
+                         <h2>Welcome!</h2>
+                            <p>Please confirm your account by 
+                             <a href='{confirmationLink}'>clicking here</a>.
+                        </p>
+                         <p>Or copy this link: <br> {confirmationLink}</p>"
                 });
                 
             }
@@ -369,36 +344,23 @@ namespace ECommerce.Infrastructure.Services
 
 
         }
-        #endregion 
+        #endregion
 
 
         // Confirm Email
-        public async Task<string> ConfirmEmailAsync(string email,string token)
+        public async Task<string> ConfirmEmailAsync(string userId, string token)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if ( user == null)
-            {
-                throw new KeyNotFoundException("User Not Found");
-            }
-            if (user.EmailConfirmed)
-            {
-                return "Email Already Confirmed";
-            }
-            if(user.EmailConfirmationToken != token)
-            {
-                throw new BadRequestException("Invalid Confirmation token");
-            }
-            if (user.EmailConfirmationTokenExpiry < DateTime.UtcNow)
-            {
-                throw new BadRequestException("Confirmation link has expired. Please register again");
-            }
-            // Confirm & clear token
-            user.EmailConfirmed = true;
-            user.EmailConfirmationToken = null;
-            user.EmailConfirmationTokenExpiry = null;
-            await _userManager.UpdateAsync(user);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
 
-            return "Email Confirmed Successfully , you can login now";
+            var decodedToken = Uri.UnescapeDataString(token);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            if (!result.Succeeded)
+                throw new BadRequestException("Invalid confirmation token");
+
+            return "Email confirmed successfully. You can now log in.";
         }
     }
 }

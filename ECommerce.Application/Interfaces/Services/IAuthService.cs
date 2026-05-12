@@ -14,6 +14,6 @@ namespace ECommerce.Application.Interfaces.Services
         Task<AuthResponseDto> GoogleLoginAsync();
         Task<bool> ChangePasswordAsync(ChangePasswordDto model);
 
-        Task<string> ConfirmEmailAsync(string email, string token);
+        Task<string> ConfirmEmailAsync(string userId, string token);
     }
 }
