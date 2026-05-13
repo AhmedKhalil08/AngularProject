@@ -31,5 +31,6 @@ namespace ECommerce.Domain.Entities
         public PromoCode? PromoCode { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }=new List<OrderItem>();
         public Payment? Payment { get; set; }
+        public ICollection<Shipment> Shipments { get; set; } = new HashSet<Shipment>();
     }
 }

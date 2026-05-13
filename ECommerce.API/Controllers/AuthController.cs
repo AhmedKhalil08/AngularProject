@@ -1,18 +1,20 @@
-﻿    using ECommerce.Application.DTOs;
-    using ECommerce.Application.DTOs.Auth;
-    using ECommerce.Application.Interfaces.Services;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authentication.Facebook;
-    using Microsoft.AspNetCore.Authentication.Google;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
+using ECommerce.Application.DTOs;
+using ECommerce.Application.DTOs.Auth;
+using ECommerce.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using ECommerce.Domain.Entities;
 using System.Security.Claims;
 
-    namespace ECommerce.API.Controllers
-    {
-        [Route("api/[controller]")]
-        [ApiController]
-        public class AuthController : ControllerBase
+namespace ECommerce.API.Controllers
+{
+   [Route("api/[controller]")]
+   [ApiController]
+  public class AuthController : ControllerBase
         {
             private readonly IAuthService _authService;
             private readonly IMailConfService _mailconfservice;

@@ -50,16 +50,16 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IFileService, FileService>();
 
             // Ahmed
-            
+
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthService, AuthService>();
-            
 
-            
+
+
             // JWT Auth
             services.AddAuthentication(options =>
             {
@@ -104,6 +104,7 @@ namespace ECommerce.Infrastructure
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
 
 

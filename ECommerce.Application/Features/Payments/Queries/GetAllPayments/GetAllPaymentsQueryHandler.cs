@@ -27,7 +27,7 @@ namespace ECommerce.Application.Features.Payments.Queries.GetAllPayments
                 Method = item.Method,
                 Status = item.Status,
                 PaidAt = item.PaidAt,
-                OrderId = item.OrderId
+                //OrderId = item.OrderId
             }).ToList();
         }
     }

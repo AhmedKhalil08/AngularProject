@@ -8,9 +8,7 @@ namespace ECommerce.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            // Register MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            // Register application services
             return services;
         }
     }
