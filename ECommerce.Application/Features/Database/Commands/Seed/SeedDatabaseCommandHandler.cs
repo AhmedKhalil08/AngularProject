@@ -17,14 +17,14 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
 {
     private readonly IApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    //private readonly RoleManager<IdentityRole> _roleManager;
     public SeedDatabaseCommandHandler(
         IApplicationDbContext context,
         UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
-        _roleManager = roleManager;
+        //_roleManager = roleManager;
     }
 
     public async Task<bool> Handle(SeedDatabaseCommand request, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             //}
 
             // Seed data in the correct order based on dependencies
-            await SeedApplicationRoles(cancellationToken);
+            //await SeedApplicationRoles(cancellationToken);
             await SeedApplicationUsers(cancellationToken);
             await SeedCategories(cancellationToken);
             await SeedSellerProfiles(cancellationToken);
@@ -67,25 +67,25 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
     /// Seed ApplicationUser data with different roles.
     /// </summary>
     /// 
-    private async Task SeedApplicationRoles(CancellationToken cancellationToken)
-    {
+    //private async Task SeedApplicationRoles(CancellationToken cancellationToken)
+    //{
 
 
-        var roleNames = Enum.GetNames(typeof(UserRole));
+    //    var roleNames = Enum.GetNames(typeof(UserRole));
 
-        foreach (var roleName in roleNames)
-        {
-            if (!await _roleManager.RoleExistsAsync(roleName))
-            {
-                await _roleManager.CreateAsync(new IdentityRole
-                {
-                    Name = roleName,
-                    NormalizedName = roleName.ToUpper()
-                });
-            }
+    //    foreach (var roleName in roleNames)
+    //    {
+    //        if (!await _roleManager.RoleExistsAsync(roleName))
+    //        {
+    //            await _roleManager.CreateAsync(new IdentityRole
+    //            {
+    //                Name = roleName,
+    //                NormalizedName = roleName.ToUpper()
+    //            });
+    //        }
 
-        }
-    }
+    //    }
+    //}
     private async Task SeedApplicationUsers(CancellationToken cancellationToken)
     {
         if (await _context.Users.AnyAsync(cancellationToken))
@@ -204,7 +204,6 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             {
                 // Optionally assign roles if not using the Role property directly
                 await _userManager.AddToRoleAsync(user, user.Role.ToString());
-
             }
             else
             {
