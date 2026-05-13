@@ -96,7 +96,8 @@
 
 .card-actions {
   display: flex;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+    gap: 0.5rem;
   margin-top: 1rem;
   border-top: 1px solid #f0f0f0;
   padding-top: 1rem;
@@ -114,6 +115,9 @@
   cursor: pointer;
   transition: all 0.25s ease;
   letter-spacing: 0.5px;
+    flex: 1 1 auto;
+  justify-content: center;
+  min-width: 80px
 }
 
 .approve-btn {
@@ -158,4 +162,8 @@
 .restore-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px #7c6ff777;
+}.banned-badge {
+  background: #ffd6e0;
+  color: #c0392b;
+  border: 1px solid #ffb3c6;
 }

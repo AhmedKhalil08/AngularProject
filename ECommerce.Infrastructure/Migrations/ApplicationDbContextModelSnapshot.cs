@@ -664,6 +664,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("TrackingNumber")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");

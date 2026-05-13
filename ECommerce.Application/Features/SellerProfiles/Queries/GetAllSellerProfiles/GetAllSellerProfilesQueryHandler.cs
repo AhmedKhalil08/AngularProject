@@ -29,10 +29,10 @@ namespace ECommerce.Application.Features.SellerProfiles.Queries.GetAllSellerProf
             // status
             query = request.Status switch
             {
-                "approved" => query.Where(p => p.IsApproved && !p.IsDeleted && p.User.IsActive),
-                "pending" => query.Where(p => !p.IsApproved && !p.IsDeleted && p.User.IsActive),
-                "banned" => query.Where(p => !p.User.IsActive && !p.IsDeleted),
-                "deleted" => query.Where(p => p.IsDeleted),
+                "approved" => query.Where(p => p.IsApproved && !p.User.IsDeleted && p.User.IsActive),
+                "pending" => query.Where(p => !p.IsApproved && !p.User.IsDeleted && p.User.IsActive),
+                "banned" => query.Where(p => !p.User.IsActive && !p.User.IsDeleted),
+                "deleted" => query.Where(p => p.User.IsDeleted),
                 _ => query
             };
             var totalCount = query.Count();
@@ -48,7 +48,7 @@ namespace ECommerce.Application.Features.SellerProfiles.Queries.GetAllSellerProf
                 LogoUrl = p.LogoUrl,
                 IsApproved = p.IsApproved,
                 TotalEarnings = p.TotalEarnings,
-                IsDeleted = p.IsDeleted,
+                IsDeleted = p.User.IsDeleted,
                 UserId = p.UserId,
                 FullName = p.User.FullName,
                 Email = p.User.Email,

@@ -108,7 +108,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
-                ProfileImageUrl = "https://via.placeholder.com/150?text=Admin"
+                ProfileImageUrl ="https://ui-avatars.com/api/?name=System+Administrator&background=7c6ff7&color=fff"
             },
             new ApplicationUser
             {
@@ -125,7 +125,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
-                ProfileImageUrl = "https://via.placeholder.com/150?text=Seller"
+                ProfileImageUrl ="https://ui-avatars.com/api/?name=John+Seller&background=f59e0b&color=fff"
             },
             new ApplicationUser
             {
@@ -142,7 +142,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
-                ProfileImageUrl = "https://via.placeholder.com/150?text=Seller2"
+                ProfileImageUrl = "https://ui-avatars.com/api/?name=Alice+Smith&background=f59e0b&color=fff"
             },
             new ApplicationUser
             {
@@ -159,7 +159,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
-                ProfileImageUrl = "https://via.placeholder.com/150?text=Customer1"
+                ProfileImageUrl = "https://ui-avatars.com/api/?name=Robert+Johnson&background=10b981&color=fff"
             },
             new ApplicationUser
             {
@@ -176,7 +176,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
-                ProfileImageUrl = "https://via.placeholder.com/150?text=Customer2"
+                ProfileImageUrl = "https://ui-avatars.com/api/?name=Emma+Williams&background=10b981&color=fff"
             },
             new ApplicationUser
             {
@@ -193,7 +193,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
-                ProfileImageUrl = "https://via.placeholder.com/150?text=Customer3"
+                ProfileImageUrl = "https://ui-avatars.com/api/?name=Michael+Brown&background=10b981&color=fff"
             }
         };
 
@@ -203,7 +203,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             if (result.Succeeded)
             {
                 // Optionally assign roles if not using the Role property directly
-                await _userManager.AddToRoleAsync(user, user.Role.ToString());
+                //await _userManager.AddToRoleAsync(user, user.Role.ToString());
             }
             else
             {
@@ -284,7 +284,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 UserId = sellerUsers[0].Id,
                 StoreName = "TechHub Store",
                 StoreDescription = "Premium electronics and gadgets with warranty and excellent customer service.",
-                LogoUrl = "https://via.placeholder.com/150?text=TechHub",
+                LogoUrl = "https://ui-avatars.com/api/?name=TechHub+Store&background=f59e0b&color=fff",
                 IsApproved = true,
                 TotalEarnings = 15250.50m,
                 CreatedAt = DateTime.UtcNow.AddMonths(-6)
@@ -298,7 +298,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 UserId = sellerUsers[1].Id,
                 StoreName = "Fashion Forward",
                 StoreDescription = "Curated collection of contemporary fashion, accessories, and lifestyle products.",
-                LogoUrl = "https://via.placeholder.com/150?text=Fashion",
+                LogoUrl = "https://ui-avatars.com/api/?name=Fashion+Forward&background=f59e0b&color=fff",
                 IsApproved = true,
                 TotalEarnings = 8920.75m,
                 CreatedAt = DateTime.UtcNow.AddMonths(-4)

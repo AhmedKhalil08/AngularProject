@@ -13,6 +13,7 @@ export class SellerCard {
   @Output() onApprove = new EventEmitter<SellerProfileDto>();
   @Output() onDelete = new EventEmitter<SellerProfileDto>();
   @Output() onRestore = new EventEmitter<SellerProfileDto>();
+  @Output() onToggleStatus = new EventEmitter<SellerProfileDto>();
   getInitials(name: string): string {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   }
