@@ -122,12 +122,21 @@ namespace ECommerce.API.Controllers
         }
 
         [HttpGet("sellers")]
-        public async Task<IActionResult> GetAllSellers()
+        public async Task<IActionResult> GetAllSellers(
+            [FromQuery] string? search,
+            [FromQuery] string? status,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 9)
         {
-            var result = await _mediator.Send(new GetAllSellerProfilesQuery());
+            var result = await _mediator.Send(new GetAllSellerProfilesQuery
+            {
+                Search = search,
+                Status = status,
+                Page = page,
+                PageSize = pageSize
+            });
             return Ok(result);
         }
-
 
         [HttpPut("sellers/{id}/approve")]
         public async Task<IActionResult> ApproveSeller(int id, [FromBody] ApproveSellerProfileCommand command)

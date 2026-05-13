@@ -3,6 +3,8 @@ import { UserDto } from '../../../../core/models/auth.model';
 import {  AdminService } from '../../services/admin.service';
 import { CustomerCard } from '../../components/customer-card/customer-card';
 import { PagedResult } from '../../../../core/models/pagination.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmModal } from '../../components/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-customers',
@@ -24,7 +26,7 @@ export class Customers implements OnInit {
   pageSize = 9;
 
 
-    constructor(private adminService: AdminService) {}
+    constructor(private adminService: AdminService,private modalService: NgbModal) {}
 
     ngOnInit(): void {
       this.loadCustomers();
@@ -54,11 +56,22 @@ toggleStatus(user: UserDto) {
 }
   
 deleteUser(user: UserDto) {
-  this.adminService.deleteUser(user.id).subscribe({
-    next: () => this.loadCustomers()
-  });
+  const modal = this.modalService.open(ConfirmModal, { centered: true });
+  modal.componentInstance.title = 'Delete Customer';
+  modal.componentInstance.message = `Are you sure you want to delete ${user.fullName}?`;
+  modal.componentInstance.confirmText = 'Delete';
+  modal.componentInstance.confirmClass = 'danger';
+
+  modal.result.then((confirmed) => {
+    if (confirmed) {
+      this.adminService.deleteUser(user.id).subscribe({
+        next: () => this.loadCustomers()
+      });
+    }
+  }).catch(() => {});
 }
-  onSearch(value: string) {
+
+onSearch(value: string) {
     this.search.set(value);
     this.currentPage.set(1);
     this.loadCustomers();
