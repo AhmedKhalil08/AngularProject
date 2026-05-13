@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ApiControllerBase
@@ -29,13 +29,13 @@ namespace ECommerce.API.Controllers
         {
             return Ok(await Mediator.Send(new GetMyOrdersQuery()));
         }
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("AllOrders")]
         public async Task<ActionResult<List<OrderDto>>> GetAllOrders()
         {
             return Ok(await Mediator.Send(new GetAllOrdersQuery()));
         }
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] UpdateOrderCommand command)
         {
@@ -50,7 +50,7 @@ namespace ECommerce.API.Controllers
             return Ok(new { message = "Order Changed Successfully" });
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

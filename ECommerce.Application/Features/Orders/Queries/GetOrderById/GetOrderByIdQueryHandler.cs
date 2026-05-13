@@ -28,8 +28,7 @@ namespace ECommerce.Application.Features.Orders.Queries.GetOrderById
                 TotalAmount = item.TotalAmount,
                 Status = item.Status,
                 Notes = item.Notes,
-               
-                
+                IsDeleted = item.IsDeleted,
                 Address = new AddressDto
                 {
                    FullName= item.ShippingAddress?.FullName?? string.Empty,
@@ -40,9 +39,6 @@ namespace ECommerce.Application.Features.Orders.Queries.GetOrderById
                    ZipCode = item.ShippingAddress?.ZipCode ?? string.Empty,
                    Phone = item.ShippingAddress?.Phone ?? string.Empty,
                    IsDefault = item.ShippingAddress?.IsDefault ?? true
-
-
-
                 },
                 PromoCode = new PromoCodeDto
                 {
@@ -51,10 +47,8 @@ namespace ECommerce.Application.Features.Orders.Queries.GetOrderById
                     DiscountPercent = item.PromoCode?.DiscountPercent ?? 0,
                     MaxUsageCount = item.PromoCode?.MaxUsageCount ?? 0,
                     CurrentUsageCount = item.PromoCode?.CurrentUsageCount ?? 0,
-                    ExpiryDate = item.PromoCode?.ExpiryDate ?? DateTime.MinValue,
-                    
+                    ExpiryDate = item.PromoCode?.ExpiryDate ?? DateTime.MinValue,                    
                 }
-
             };
         }
     }

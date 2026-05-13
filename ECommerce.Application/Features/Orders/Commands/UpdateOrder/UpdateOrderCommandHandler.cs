@@ -24,8 +24,7 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateOrder
         {
             // 1. البحث عن الطلب في الداتابيز
             var order = await _orderRepository.GetByIdAsync(request.Id);
-
-            if (order == null)
+            if(order == null || order.IsDeleted)
             {
                 throw new Exception($"الطلب رقم {request.Id} غير موجود.");
             }
@@ -37,7 +36,6 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateOrder
             {
                 order.Notes = request.Notes;
             }
-
             // 3. تحديث في الميموري ثم حفظ في قاعدة البيانات
             await _orderRepository.UpdateAsync(order);
             await _unitOfWork.SaveChangesAsync();

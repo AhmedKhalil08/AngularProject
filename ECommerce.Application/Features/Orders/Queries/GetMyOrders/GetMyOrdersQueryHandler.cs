@@ -25,8 +25,10 @@ namespace ECommerce.Application.Features.Orders.Queries.GetMyOrders
 
         public async Task<List<OrderDto>> Handle(GetMyOrdersQuery request, CancellationToken cancellationToken)
         {
-            //var userId = _currentUserService.UserId;
-            var userId = "620309fb-6d65-4fb5-ba45-14fb66df6bf9";
+            var userId = _currentUserService.UserId;
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedAccessException("Must be logged in.");
+            //var userId = "620309fb-6d65-4fb5-ba45-14fb66df6bf9";
 
             var ordersEntity = await _orderRepository.Table
          .Where(o => o.UserId == userId)
@@ -35,8 +37,10 @@ namespace ECommerce.Application.Features.Orders.Queries.GetMyOrders
          .Include(o => o.Payment)
          .Include(o => o.PromoCode)
          .Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+            
          .ToListAsync(cancellationToken);
 
+         
             // 3. المابينج اليدوي لضمان عدم حدوث FormatException
             var ordersDto = ordersEntity.Select(order => new OrderDto
             {
@@ -46,6 +50,7 @@ namespace ECommerce.Application.Features.Orders.Queries.GetMyOrders
                 Status = order.Status,
                 Notes = order.Notes,
                 UserName = order.User?.UserName ?? "N/A",
+                IsDeleted = order.IsDeleted,
 
                 Address = order.ShippingAddress == null ? null : new AddressDto
                 {

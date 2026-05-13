@@ -16,6 +16,7 @@ namespace ECommerce.Application.DTOs
         public OrderStatus Status { get; set; }
 
         public string? Notes { get; set; }
+        public bool IsDeleted { get; set; }
 
         public string UserName { get; set; }
 

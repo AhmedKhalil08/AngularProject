@@ -30,7 +30,6 @@ namespace ECommerce.Application.Features.Products.Commands.CreateProduct
         public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             var SellerId = _currentUserService.UserId;
-            // 1. إنشاء أوبجكت المنتج (مع تجهيز لستة الصور)
             var approvedSeller = await _sellerProfileRepository.GetByUserIdAsync(SellerId);
             if (approvedSeller == null || !approvedSeller.IsApproved)
             {
@@ -44,28 +43,25 @@ namespace ECommerce.Application.Features.Products.Commands.CreateProduct
                 Description = request.Description,
                 CategoryId = request.CategoryId,
                 SellerId=SellerId,
-                Images = new List<ProductImage>() // 👈 تهيئة القائمة
+                Images = new List<ProductImage>() 
             };
 
-            // 2. معالجة الصور
             if (request.Images != null && request.Images.Any())
             {
                 foreach (var image in request.Images)
                 {
                     var imagePath = await _fileService.UploadFileAsync(image, "products");
-                    // 👈 بنضيف الصورة للمنتج نفسه مش للـ Repository منفصل
+                   
                     product.Images.Add(new ProductImage
                     {
                         ImageUrl = imagePath,
-                        IsMain = (product.Images.Count == 0) // أول صورة تبقي هي الأساسية
+                        IsMain = (product.Images.Count == 0) 
                     });
                 }
             }
 
-            // 3. إضافة المنتج (الـ EF هيضيف معاه كل الصور اللي جوه الـ List بتاعته)
             await _productRepository.AddAsync(product);
 
-            // 4. حفظ الكل في خبطة واحدة (Transaction واحدة)
             await _unitOfWork.SaveChangesAsync();
 
             return new ProductDto

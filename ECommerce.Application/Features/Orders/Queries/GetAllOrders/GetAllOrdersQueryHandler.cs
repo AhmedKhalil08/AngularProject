@@ -35,7 +35,7 @@ namespace ECommerce.Application.Features.Orders.Queries.GetAllOrders
                 Status = order.Status,
                 Notes = order.Notes,
                 UserName = order.User?.UserName ?? "N/A", // سحب الاسم مباشرة
-
+                IsDeleted = order.IsDeleted,
                 // مابينج العنوان
                 Address = order.ShippingAddress == null ? null : new AddressDto
                 {

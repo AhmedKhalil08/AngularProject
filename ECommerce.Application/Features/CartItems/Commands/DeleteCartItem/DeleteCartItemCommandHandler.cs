@@ -18,7 +18,7 @@ namespace ECommerce.Application.Features.CartItems.Commands.DeleteCartItem
 
         public async Task<bool> Handle(DeleteCartItemCommand request, CancellationToken cancellationToken)
         {
-            var item = await _repository.GetByIdAsync(request.Id);
+            var item = await _repository.GetByIdAsync(request.CartItemId);
             if (item == null) return false;
 
             await _repository.DeleteAsync(item.Id);
