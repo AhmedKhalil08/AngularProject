@@ -61,4 +61,5 @@ export interface SellerProfileDto {
   fullName: string;
   email: string;
   isDeleted: boolean;
+    isActive: boolean; 
 }
