@@ -22,7 +22,7 @@ namespace ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerPr
 
         public async Task<SellerProfileDto> Handle(ApproveSellerProfileCommand request, CancellationToken cancellationToken)
         {
-            var profile = await _repository.GetByIdAsync(request.Id);
+            var profile = await _repository.GetByIdWithUserAsync(request.Id);
 
             if (profile == null)
                 throw new NotFoundException("Seller profile not found");
@@ -38,7 +38,10 @@ namespace ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerPr
                 StoreDescription = profile.StoreDescription,
                 LogoUrl = profile.LogoUrl,
                 IsApproved = profile.IsApproved,
-                TotalEarnings = profile.TotalEarnings
+                TotalEarnings = profile.TotalEarnings,
+                UserId = profile.UserId,        
+                FullName = profile.User.FullName, 
+                Email = profile.User.Email
             };
         }
     }

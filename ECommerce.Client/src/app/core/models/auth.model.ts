@@ -39,3 +39,26 @@ export interface ChangePasswordDto {
   newPassword: string;
   confirmNewPassword: string;
 }
+export interface UserDto {
+  id: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  profileImageUrl?: string;
+  role: string;
+  isActive: boolean;
+  isDeleted: boolean;
+}
+
+export interface SellerProfileDto {
+  id: number;
+  storeName: string;
+  storeDescription?: string;
+  logoUrl?: string;
+  isApproved: boolean;
+  totalEarnings: number;
+  userId: string;
+  fullName: string;
+  email: string;
+  isDeleted: boolean;
+}

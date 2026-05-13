@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.DTOs.Auth;
+﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.DTOs.Auth;
 using ECommerce.Application.Exceptions;
 using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Application.Interfaces.Services;
@@ -8,14 +9,14 @@ using ECommerce.Infrastructure.Services.EmailService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+//using NETCore.MailKit.Core;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-//using NETCore.MailKit.Core;
-using Microsoft.AspNetCore.WebUtilities;
 
 
 
@@ -163,8 +164,8 @@ namespace ECommerce.Infrastructure.Services
         }
         #endregion
 
-        #region Google Login
-        public async Task<AuthResponseDto> GoogleLoginAsync()
+        #region External Logins
+        public async Task<AuthResponseDto> ExternalLoginAsync()
         {
             // Read the Google response from the current request
             var result = await _httpContextAccessor.HttpContext
@@ -209,9 +210,16 @@ namespace ECommerce.Infrastructure.Services
             // Generate JWT and return — same as regular login
             var token = GenerateJwtToken(user);
 
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
             return new AuthResponseDto
             {
-                Token = token,
                 Email = user.Email,
                 FullName = user.FullName,
                 Role = user.Role.ToString(),
@@ -290,9 +298,16 @@ namespace ECommerce.Infrastructure.Services
 
                 var token = GenerateJwtToken(user);
 
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
             return new AuthResponseDto
             {
-                Token = token,
                 Email = user.Email,
                 FullName = user.FullName,
                 Role = user.Role.ToString(),
@@ -361,6 +376,40 @@ namespace ECommerce.Infrastructure.Services
                 throw new BadRequestException("Invalid confirmation token");
 
             return "Email confirmed successfully. You can now log in.";
+        }
+
+
+
+       
+        public async Task BecomeSellerAsync(BecomeSellerDto dto)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null)
+                throw new UnauthorizedAccessException("You are not logged in");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+
+            if (user.Role == UserRole.Seller)
+                throw new BadRequestException("You are already a seller");
+
+            user.Role = UserRole.Seller;
+            await _userManager.UpdateAsync(user);
+
+            var profile = new SellerProfile
+            {
+                UserId = user.Id,
+                StoreName = dto.StoreName,
+                StoreDescription = dto.StoreDescription,
+                LogoUrl = dto.LogoUrl,
+                IsApproved = false,
+                TotalEarnings = 0,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _sellerProfileRepo.AddAsync(profile);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

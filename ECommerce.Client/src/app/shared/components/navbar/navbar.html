@@ -13,16 +13,26 @@
       <li class="nav-item"><a class="nav-link" routerLink="/products">Products</a></li>
     </ul>
 
-    <ul class="navbar-nav ms-auto">
-      <li class="nav-item"><a class="nav-link" routerLink="/cart">Cart</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/wishlist">Wishlist</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/orders">Orders</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/profile">Profile</a></li>
+@if(isLoggedIn()) {
+  <ul class="navbar-nav ms-auto">
+    <li class="nav-item"><a class="nav-link" routerLink="/orders">Orders</a></li>
+    <li class="nav-item"><a class="nav-link" routerLink="/profile">Profile</a></li>
+    <li class="nav-item"><a class="nav-link" routerLink="/cart">Cart</a></li>
+    <li class="nav-item"><a class="nav-link" routerLink="/wishlist">Wishlist</a></li>
+    @if(isAdmin()) {
+<li class="nav-item"><a class="nav-link" routerLink="/admin/overview">Admin</a></li>    }
+    @if(isSeller()) {
       <li class="nav-item"><a class="nav-link" routerLink="/seller/dashboard">Seller</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/admin/dashboard">Admin</a></li>
-      <li class="nav-item">
-        <button class="btn btn-outline-light ms-2" (click)="logout()">Logout</button>
-      </li>
-    </ul>
-  </div>
+    }
+    <li class="nav-item">
+      <button class="btn btn-outline-light ms-2" (click)="logout()">Logout</button>
+    </li>
+  </ul>
+} @else {
+  <ul class="navbar-nav ms-auto">
+    <li class="nav-item"><a class="nav-link" routerLink="/auth/login">Login</a></li>
+    <li class="nav-item"><a class="nav-link" routerLink="/auth/register-type">Register</a></li>
+  </ul>
+}
+</div>
 </nav>

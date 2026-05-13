@@ -16,6 +16,17 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
             return await _context.SellerProfiles
                 .FirstOrDefaultAsync(s => s.UserId == userId && !s.IsDeleted);
         }
-        
+        public async Task<SellerProfile> GetByIdWithUserAsync(int id)
+        {
+            return await _context.SellerProfiles
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+        public async Task<List<SellerProfile>> GetAllWithUserAsync()
+        {
+            return await _context.SellerProfiles
+                .Include(s => s.User)
+                .ToListAsync();
+        }
     }
 }
