@@ -34,7 +34,7 @@ logout() {
   this.api.post('auth/logout', {}).subscribe({
     next: () => {
       this.currentUserSignal.set(null);
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/']);
     },
     error: () => {
       console.error('Logout failed');
@@ -55,5 +55,18 @@ registerSeller(dto: RegisterSellerDto) {
 
 changePassword(dto: ChangePasswordDto) {
   return this.api.post<void>('auth/change-password', dto);
+}
+loadCurrentUser() {
+  return this.api.get<AuthResponse>('auth/me').pipe(
+    tap(res => {
+      const user: CurrentUser = {
+        email: res.email,
+        fullName: res.fullName,
+        role: res.role,
+        expiration: res.expiration
+      };
+      this.currentUserSignal.set(user);
+    })
+  );
 }
 }

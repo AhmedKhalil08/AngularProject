@@ -1,0 +1,50 @@
+<div class="customer-card" [class.banned]="!customer.isActive" [class.deleted]="customer.isDeleted">
+  
+  <div class="card-top">
+    <div class="avatar" [style.background]="getAvatarColor(customer.id)">
+      @if(customer.profileImageUrl) {
+        <img [src]="customer.profileImageUrl" [alt]="customer.fullName" />
+      } @else {
+        <span>{{ getInitials(customer.fullName) }}</span>
+      }
+    </div>
+    <div class="badges">
+      @if(customer.isDeleted) {
+        <span class="badge deleted-badge">Deleted</span>
+      } @else if(customer.isActive) {
+        <span class="badge active-badge">Active</span>
+      } @else {
+        <span class="badge banned-badge">Banned</span>
+      }
+    </div>
+  </div>
+
+  <div class="card-info">
+    <h5>{{ customer.fullName }}</h5>
+    <p><i class="bi bi-envelope"></i> {{ customer.email }}</p>
+    <p><i class="bi bi-phone"></i> {{ customer.phoneNumber }}</p>
+  </div>
+
+<div class="card-actions">
+  @if(customer.isDeleted) {
+    <button class="action-btn restore-btn" (click)="onRestore.emit(customer)">
+      <i class="bi bi-arrow-counterclockwise"></i> Restore
+    </button>
+  } @else {
+    <button class="action-btn"
+      [class.ban-btn]="customer.isActive"
+      [class.activate-btn]="!customer.isActive"
+      (click)="onToggleStatus.emit(customer)">
+      @if(customer.isActive) {
+        <i class="bi bi-slash-circle"></i> Ban
+      } @else {
+        <i class="bi bi-check-circle"></i> Activate
+      }
+    </button>
+  }
+  @if(!customer.isDeleted) {
+    <button class="action-btn delete-btn" (click)="onDelete.emit(customer)">
+      <i class="bi bi-trash3"></i> Delete
+    </button>
+  }
+</div></div>

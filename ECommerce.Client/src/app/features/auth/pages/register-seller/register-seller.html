@@ -1,0 +1,116 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h2 class="text-center mb-4"> Seller Register</h2>
+
+            @if(errorMessage){
+                <div class="alert alert-danger">{{ errorMessage }}</div>
+            }
+
+            <form [formGroup]="registerSellerForm" (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                    <label class="form-label"> Full Name </label>
+                    <input type="text" class="form-control" formControlName="fullName">
+                    @if(registerSellerForm.get('fullName')?.invalid && registerSellerForm.get('fullName')?.touched) {
+                    @if(registerSellerForm.get('fullName')?.hasError('required')) {
+                        <span class="text-danger small">Full name is required</span>
+                    }
+                    @else if(registerSellerForm.get('fullName')?.hasError('minlength')) {
+                        <span class="text-danger small">Minimum 3 characters</span>
+                    }
+                    }
+
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"> User Name  </label>
+                    <input type="text" class="form-control" formControlName="userName">
+                    @if(registerSellerForm.get('userName')?.invalid && registerSellerForm.get('userName')?.touched) {
+                    @if(registerSellerForm.get('userName')?.hasError('required')) {
+                        <span class="text-danger small">User Name  is required</span>
+                    } @else if(registerSellerForm.get('userName')?.hasError('minlength')) {
+                        <span class="text-danger small">Minimum 3 characters</span>
+                    }
+                    }
+
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"> Email </label>
+                    <input type="text" class="form-control" formControlName="email">
+                    @if(registerSellerForm.get('email')?.invalid && registerSellerForm.get('email')?.touched) {
+                    @if(registerSellerForm.get('email')?.hasError('required')) {
+                        <span class="text-danger small">Email is required</span>
+                    }
+                    @else if(registerSellerForm.get('email')?.hasError('email')) {
+                        <span class="text-danger small">Invalid email format</span>
+                    }
+                    }
+
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"> Phone Number </label>
+                    <input type="text" class="form-control" formControlName="phoneNumber">
+                    @if(registerSellerForm.get('phoneNumber')?.invalid && registerSellerForm.get('phoneNumber')?.touched) {
+                    @if(registerSellerForm.get('phoneNumber')?.hasError('required')) {
+                        <span class="text-danger small">Phone number is required</span>
+                    } @else if(registerSellerForm.get('phoneNumber')?.hasError('pattern')) {
+                        <span class="text-danger small">Invalid Egyptian phone number</span>
+                    }
+                    }
+
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"> Store Name </label>
+                    <input type="text" class="form-control" formControlName="storeName">
+                    @if(registerSellerForm.get('storeName')?.invalid && registerSellerForm.get('storeName')?.touched) {
+                    @if(registerSellerForm.get('storeName')?.hasError('required')) {
+                        <span class="text-danger small">Store name is required</span>
+                    } @else if(registerSellerForm.get('storeName')?.hasError('minlength')) {
+                    <span class="text-danger small">Minimum 3 characters</span>
+                    }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"> Store Description </label>
+                    <input type="text" class="form-control" formControlName="storeDescription">
+                    @if(registerSellerForm.get('storeDescription')?.invalid && registerSellerForm.get('storeDescription')?.touched) {
+                    @if(registerSellerForm.get('storeDescription')?.hasError('storeDescription')) {
+                        <span class="text-danger small">Description is required</span>
+                    } @else if(registerSellerForm.get('storeDescription')?.hasError('minlength')) {
+                    <span class="text-danger small">Minimum 3 characters</span>
+                    }
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"> Password </label>
+                    <input type="password" class="form-control" formControlName="password">
+                    @if(registerSellerForm.get('password')?.invalid && registerSellerForm.get('password')?.touched) {
+                    @if(registerSellerForm.get('password')?.hasError('required')) {
+                        <span class="text-danger small">Password is required</span>
+                    } @else if(registerSellerForm.get('password')?.hasError('minlength')) {
+                        <span class="text-danger small">Minimum 6 characters</span>
+                    }
+                    }
+
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"> Confirm Password </label>
+                    <input type="password" class="form-control" formControlName="confirmPassword">
+                    @if(registerSellerForm.get('confirmPassword')?.touched) {
+                    @if(registerSellerForm.get('confirmPassword')?.hasError('required')) {
+                        <span class="text-danger small">Please confirm your password</span>
+                    } @else if(registerSellerForm.get('confirmPassword')?.hasError('passwordMismatch')) {
+                        <span class="text-danger small">Passwords do not match</span>
+                    }
+                    }
+
+                </div>
+                <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
+                    {{ isLoading ? 'Registering...' : 'Register' }}
+                </button>
+            </form>
+        
+        </div>
+
+    </div>
+
+</div>

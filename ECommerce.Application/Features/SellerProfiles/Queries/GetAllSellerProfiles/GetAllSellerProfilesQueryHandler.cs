@@ -18,19 +18,21 @@ namespace ECommerce.Application.Features.SellerProfiles.Queries.GetAllSellerProf
 
         public async Task<List<SellerProfileDto>> Handle(GetAllSellerProfilesQuery request, CancellationToken cancellationToken)
         {
-            var profiles = await _repository.GetAllAsync();
+            var profiles = await _repository.GetAllWithUserAsync();
 
-            return profiles
-                .Where(p => !p.IsDeleted)
-                .Select(p => new SellerProfileDto
-                {
-                    Id = p.Id,
-                    StoreName = p.StoreName,
-                    StoreDescription = p.StoreDescription,
-                    LogoUrl = p.LogoUrl,
-                    IsApproved = p.IsApproved,
-                    TotalEarnings = p.TotalEarnings
-                }).ToList();
+            return profiles.Select(p => new SellerProfileDto
+            {
+                Id = p.Id,
+                StoreName = p.StoreName,
+                StoreDescription = p.StoreDescription,
+                LogoUrl = p.LogoUrl,
+                IsApproved = p.IsApproved,
+                TotalEarnings = p.TotalEarnings,
+                IsDeleted = p.IsDeleted,
+                UserId = p.UserId,
+                FullName = p.User.FullName,
+                Email = p.User.Email
+            }).ToList();
         }
     }
 }

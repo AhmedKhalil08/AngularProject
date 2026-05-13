@@ -20,7 +20,7 @@ namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   //  [Authorize(Roles = nameof(UserRole.Admin))]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public class AdminController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -40,7 +40,10 @@ namespace ECommerce.API.Controllers
                 FullName = u.FullName,
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
-                Role = u.Role.ToString()
+                Role = u.Role.ToString(),
+                IsActive=u.IsActive,
+                 IsDeleted=u.IsDeleted
+
             }).ToList();
             return Ok(users);
         }
@@ -67,6 +70,55 @@ namespace ECommerce.API.Controllers
             user.IsDeleted = true;
             await _userManager.UpdateAsync(user);
             return NoContent();
+        }
+
+        [HttpGet("customers")]
+        public IActionResult GetAllCustomers([FromQuery] string? search,
+                    [FromQuery] string? status,
+                    [FromQuery] int page = 1,
+                    [FromQuery] int pageSize = 9)
+        {
+            var query = _userManager.Users.Where(u => u.Role == UserRole.Customer);
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(u => u.FullName.Contains(search) || u.Email.Contains(search));
+
+            query = status switch
+            {
+                "active" => query.Where(u => u.IsActive && !u.IsDeleted),
+                "banned" => query.Where(u => !u.IsActive && !u.IsDeleted),
+                "deleted" => query.Where(u => u.IsDeleted),
+                _ => query
+            };
+
+            var totalCount = query.Count();
+            var items = query.Skip((page - 1) * pageSize).Take(pageSize).Select(u => new UserDto
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                Email = u.Email,
+                PhoneNumber = u.PhoneNumber,
+                ProfileImageUrl = u.ProfileImageUrl,
+                Role = u.Role.ToString(),
+                IsActive = u.IsActive,
+                IsDeleted = u.IsDeleted
+            }).ToList();
+            return Ok(new PagedResult<UserDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize
+            });
+        }
+        [HttpPut("users/{id}/restore")]
+        public async Task<IActionResult> RestoreUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) throw new NotFoundException("User Not Found");
+            user.IsActive = true;
+            user.IsDeleted = false;
+            await _userManager.UpdateAsync(user);
+            return Ok(new { message = "User Restored" });
         }
 
         [HttpGet("sellers")]
