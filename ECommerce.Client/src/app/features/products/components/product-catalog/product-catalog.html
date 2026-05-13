@@ -1,0 +1,160 @@
+<div class="catalog-container">
+    <div class="catalog-wrapper">
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar">
+            <div class="filters-card">
+                <div class="filters-header">
+                    <h4>Filters</h4>
+                    <button class="clear-btn" (click)="clearFilters()"
+                        [class.visible]="searchTerm() !== '' || selectedCategory() !== null || minPrice() !== 0 || maxPrice() !== 50000 || selectedRating() !== null">
+                        Clear All
+                    </button>
+                </div>
+
+                <!-- Search Filter -->
+                <div class="filter-section">
+                    <label for="search" class="filter-label">Search</label>
+                    <input type="text" id="search" class="filter-input" [value]="searchTerm()"
+                        (input)="onSearchChange($event)" placeholder="Search products..." aria-label="Search products">
+                </div>
+
+                <!-- Category Filter -->
+                <div class="filter-section">
+                    <label class="filter-label">Categories</label>
+                    <div class="category-list">
+                        <button class="category-item" [class.active]="selectedCategory() === null"
+                            (click)="selectCategory(null)" [attr.aria-pressed]="selectedCategory() === null">
+                            All Categories
+                        </button>
+                        @for (cat of categories(); track cat.id) {
+                        <button class="category-item" [class.active]="selectedCategory() === cat.id"
+                            (click)="selectCategory(cat.id)" [attr.aria-pressed]="selectedCategory() === cat.id">
+                            {{ cat.name }}
+                        </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div class="filter-section">
+                    <label class="filter-label">Price Range (EGP)</label>
+                    <div class="price-inputs">
+                        <input type="number" class="price-input" [value]="minPrice()" (input)="onMinPriceChange($event)"
+                            [min]="minRangePrice" [max]="maxPrice()" placeholder="Min" aria-label="Minimum price">
+                        <span class="price-separator">-</span>
+                        <input type="number" class="price-input" [value]="maxPrice()" (input)="onMaxPriceChange($event)"
+                            [min]="minPrice()" [max]="maxRangePrice" placeholder="Max" aria-label="Maximum price">
+                    </div>
+                    <div class="price-display">
+                        Range: <strong>{{ minPrice() | number }}</strong> - <strong>{{ maxPrice() | number }}</strong>
+                        EGP
+                    </div>
+                    <input type="range" class="price-range" [min]="minRangePrice" [max]="maxRangePrice"
+                        [value]="maxPrice()" (input)="onRangeSliderChange($event)" aria-label="Price range slider">
+                </div>
+
+                <!-- Rating Filter -->
+                <div class="filter-section">
+                    <label class="filter-label">Rating</label>
+                    <div class="rating-list">
+                        <button class="rating-item" [class.active]="selectedRating() === 5"
+                            (click)="selectStarRating(5)" [attr.aria-pressed]="selectedRating() === 5">
+                            <span class="stars">⭐⭐⭐⭐⭐</span> (5)
+                        </button>
+                        <button class="rating-item" [class.active]="selectedRating() === 4"
+                            (click)="selectStarRating(4)" [attr.aria-pressed]="selectedRating() === 4">
+                            <span class="stars">⭐⭐⭐⭐☆</span> (4 & up)
+                        </button>
+                        <button class="rating-item" [class.active]="selectedRating() === 3"
+                            (click)="selectStarRating(3)" [attr.aria-pressed]="selectedRating() === 3">
+                            <span class="stars">⭐⭐⭐☆☆</span> (3 & up)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Products Section -->
+        <main class="products-section">
+            <!-- Header -->
+            <div class="products-header">
+                <h3 class="products-title">Our Products</h3>
+                <p class="products-count">Showing <strong>{{ filteredProducts().length }}</strong> products</p>
+            </div>
+
+            <!-- Error Message -->
+            @if (error()) {
+            <div class="alert alert-error">
+                <span>⚠️</span> {{ error() }}
+            </div>
+            }
+
+            <!-- Loading State -->
+            @if (isLoading()) {
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading products...</p>
+            </div>
+            } @else if (products().length === 0) {
+            <div class="empty-state">
+                <div class="empty-icon">📦</div>
+                <h4>No products available</h4>
+                <p>Please check back later or contact support</p>
+            </div>
+            } @else {
+            <!-- Products Grid -->
+            <div class="products-grid">
+                @for (product of filteredProducts(); track product.id) {
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <img [src]="getProductImage(product)" [alt]="product.name" class="product-image" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="btn-add-cart" aria-label="Add {{ product.name }} to cart">
+                                <span>🛒</span> Add to Cart
+                            </button>
+                        </div>
+                        @if (product.stock <= 5 && product.stock> 0) {
+                            <div class="stock-badge low-stock">Low Stock</div>
+                            } @else if (product.stock === 0) {
+                            <div class="stock-badge out-of-stock">Out of Stock</div>
+                            }
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">{{ getCategoryName(product.categoryId, product.categoryName) }}
+                        </div>
+                        <h5 class="product-name" [title]="product.name">{{ product.name || 'Product' }}</h5>
+
+                        @if (product.description) {
+                        <p class="product-description">{{ product.description | truncateWords:4 }}</p>
+                        } @else {
+                        <p class="product-description" style="color: #ccc;">No description</p>
+                        }
+
+                        <div class="product-meta">
+                            <span class="stock-info" [class.in-stock]="product.stock > 0"
+                                [class.out-of-stock]="product.stock === 0">
+                                Stock: {{ product.stock }}
+                            </span>
+                            @if (product.rating) {
+                            <span class="rating-badge">⭐ {{ product.rating.toFixed(1) }}</span>
+                            }
+                        </div>
+
+                        <div class="product-footer">
+                            <p class="product-price">{{ product.price | number:'1.0-0' }} EGP</p>
+                        </div>
+                    </div>
+                </div>
+                } @empty {
+                <div class="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <h4>No products found</h4>
+                    <p>Try adjusting your filters or search term</p>
+                    <button class="btn-clear-filters" (click)="clearFilters()">Clear All Filters</button>
+                </div>
+                }
+            </div>
+            }
+        </main>
+    </div>
+</div>

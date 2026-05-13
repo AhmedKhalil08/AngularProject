@@ -39,6 +39,8 @@ namespace ECommerce.Application.Mapping
                 .Map(dest => dest.CategoryName, src => src.Category.Name)
                 .Map(dest => dest.ImageUrls, src => src.Images.Select(img => img.ImageUrl).ToList())
                 .Map(dest => dest.SellerName, src => src.Seller.StoreName);
+            TypeAdapterConfig<Category,ProductDto>.NewConfig().
+                Map(dest => dest.CategoryName, src => src.Name);
         }
     }
 }

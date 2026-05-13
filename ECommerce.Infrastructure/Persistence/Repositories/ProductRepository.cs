@@ -34,5 +34,15 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(p => p.Id == productId && p.SellerId == userId);
             return product != null;
         }
+
+        public override async Task<IReadOnlyList<Product>> GetAllAsync()
+        {
+            return await _context.Set<Product>()
+        .Include(p => p.Images)
+        .Include(p => p.Category)
+        .Include(p => p.Seller) 
+        .ToListAsync();
+
+        }
     }
 }
