@@ -17,9 +17,11 @@ getCustomers(page = 1, pageSize = 9, search = '', status = '') {
     `admin/customers?page=${page}&pageSize=${pageSize}&search=${search}&status=${status}`
   );}
 
-  getSellers() {
-    return this.api.get<SellerProfileDto[]>('admin/sellers');
-  }
+getSellers(page = 1, pageSize = 9, search = '', status = '') {
+  return this.api.get<PagedResult<SellerProfileDto>>(
+    `admin/sellers?page=${page}&pageSize=${pageSize}&search=${search}&status=${status}`
+  );
+}
     toggleUserStatus(id: string, isActive: boolean) {
     return this.api.put<any>(`admin/users/${id}/status`, isActive);
   }
@@ -31,5 +33,11 @@ getCustomers(page = 1, pageSize = 9, search = '', status = '') {
   }
   restoreUser(id: string) {
   return this.api.put<any>(`admin/users/${id}/restore`, {});
+}
+getAdmins() {
+  return this.api.get<UserDto[]>('admin/admins');
+}
+createAdmin(dto: { fullName: string; email: string; password: string }) {
+  return this.api.post<any>('admin/admins', dto);
 }
 }

@@ -1,4 +1,5 @@
 ﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.DTOs.Auth;
 using ECommerce.Application.Exceptions;
 using ECommerce.Application.Features.Banners.Commands.CreateBanner;
 using ECommerce.Application.Features.Banners.Commands.DeleteBanner;
@@ -8,6 +9,7 @@ using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
 using ECommerce.Application.Features.PromoCodes.Commands.DeletePromoCode;
 using ECommerce.Application.Features.PromoCodes.Queries.GetAllPromoCodes;
 using ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerProfile;
+using ECommerce.Application.Features.SellerProfiles.Commands.DeleteSellerProfileByAdmin;
 using ECommerce.Application.Features.SellerProfiles.Queries.GetAllSellerProfiles;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
@@ -145,7 +147,44 @@ namespace ECommerce.API.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+        [HttpGet("admins")]
+        public IActionResult GetAllAdmins()
+        {
+            var admins = _userManager.Users
+                .Where(u => u.Role == UserRole.Admin)
+                .Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    ProfileImageUrl = u.ProfileImageUrl,
+                    Role = u.Role.ToString(),
+                    IsActive = u.IsActive,
+                    IsDeleted = u.IsDeleted
+                }).ToList();
+            return Ok(admins);
+        }
+        [HttpPost("admins")]
+        public async Task<IActionResult> CreateAdmin([FromBody] CreateAdminDto dto)
+        {
+            var admin = new ApplicationUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                FullName = dto.FullName,
+                Role = UserRole.Admin,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                EmailConfirmed = true
+            };
 
+            var result = await _userManager.CreateAsync(admin, dto.Password);
+            if (!result.Succeeded)
+                throw new BadRequestException(string.Join(", ", result.Errors.Select(e => e.Description)));
+
+            return Ok(new { message = "Admin created successfully" });
+        }
         // --------------------------------------------------Banner -----------------------------------------------
         #region Banners
 

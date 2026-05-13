@@ -1,0 +1,34 @@
+<div class="admins-page">
+
+  <div class="page-header">
+    <h2 class="page-title">🛡️ Admins</h2>
+    <div class="header-actions">
+      <span class="admin-count">{{ admins().length }} total</span>
+      <button class="create-btn" (click)="openCreateModal()">
+        <i class="bi bi-plus-circle"></i> New Admin
+      </button>
+    </div>
+  </div>
+
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      @for(admin of admins(); track admin.id) {
+        <div class="col">
+          <app-customer-card
+            [customer]="admin"
+            (onToggleStatus)="toggleStatus($event)"
+            (onDelete)="deleteAdmin($event)"
+            (onRestore)="restoreAdmin($event)">
+          </app-customer-card>
+        </div>
+      } @empty {
+        <p class="no-data">No admins found.</p>
+      }
+    </div>
+  }
+
+</div>
