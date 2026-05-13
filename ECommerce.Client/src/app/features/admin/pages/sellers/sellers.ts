@@ -81,21 +81,6 @@ export class Sellers implements OnInit {
     });
   }
 
-  deleteSeller(seller: SellerProfileDto) {
-    const modal = this.modalService.open(ConfirmModal, { centered: true });
-    modal.componentInstance.title = 'Delete Seller';
-    modal.componentInstance.message = `Are you sure you want to delete ${seller.storeName}?`;
-    modal.componentInstance.confirmText = 'Delete';
-    modal.componentInstance.confirmClass = 'danger';
-
-    modal.result.then((confirmed) => {
-      if (confirmed) {
-        this.adminService.deleteUser(seller.userId).subscribe({
-          next: () => this.loadSellers()
-        });
-      }
-    }).catch(() => {});
-  }
  restoreSeller(seller: SellerProfileDto) {
     this.adminService.restoreUser(seller.userId).subscribe({
       next: () => {
@@ -106,4 +91,22 @@ export class Sellers implements OnInit {
       }
     });
   }
+
+  
+  deleteSeller(seller: SellerProfileDto) {
+  const modal = this.modalService.open(ConfirmModal, { centered: true });
+  modal.componentInstance.title = 'Delete Seller';
+  modal.componentInstance.message = `Are you sure you want to delete ${seller.storeName}?`;
+  modal.componentInstance.confirmText = 'Delete';
+  modal.componentInstance.confirmClass = 'danger';
+
+  modal.result.then((confirmed) => {
+    if (confirmed) {
+      this.adminService.deleteUser(seller.userId).subscribe({
+        next: () => this.loadSellers()
+      });
+    }
+  }).catch(() => {});
+}
+  
 }

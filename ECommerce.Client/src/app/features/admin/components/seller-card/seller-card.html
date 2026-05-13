@@ -8,16 +8,17 @@
         <span>{{ getInitials(seller.storeName) }}</span>
       }
     </div>
-    <div class="badges">
-      @if(seller.isDeleted) {
-        <span class="badge deleted-badge">Deleted</span>
-      } @else if(seller.isApproved) {
-        <span class="badge approved-badge">Approved</span>
-      } @else {
-        <span class="badge pending-badge">Pending</span>
-      }
-    </div>
-  </div>
+<div class="badges">
+  <span class="badge" [class.active-badge]="seller.isActive" [class.banned-badge]="!seller.isActive">
+    {{ seller.isActive ? 'Active' : 'Banned' }}
+  </span>
+  <span class="badge" [class.approved-badge]="seller.isApproved" [class.pending-badge]="!seller.isApproved">
+    {{ seller.isApproved ? 'Approved' : 'Pending' }}
+  </span>
+  @if(seller.isDeleted) {
+    <span class="badge deleted-badge">Deleted</span>
+  }
+</div></div>
 
   <div class="card-info">
     <h5>{{ seller.storeName }}</h5>
@@ -26,26 +27,35 @@
     <p><i class="bi bi-cash-stack"></i> ${{ seller.totalEarnings | number:'1.2-2' }}</p>
   </div>
 
-  <div class="card-actions">
-    @if(seller.isDeleted) {
-      <button class="action-btn restore-btn" (click)="onRestore.emit(seller)">
-        <i class="bi bi-arrow-counterclockwise"></i> Restore
-      </button>
-    } @else {
-      <button class="action-btn"
-        [class.approve-btn]="!seller.isApproved"
-        [class.reject-btn]="seller.isApproved"
-        (click)="onApprove.emit(seller)">
-        @if(!seller.isApproved) {
-          <i class="bi bi-check-circle"></i> Approve
-        } @else {
-          <i class="bi bi-x-circle"></i> Reject
-        }
-      </button>
-      <button class="action-btn delete-btn" (click)="onDelete.emit(seller)">
-        <i class="bi bi-trash3"></i> Delete
-      </button>
-    }
-  </div>
-
+<div class="card-actions">
+  @if(seller.isDeleted) {
+    <button class="action-btn restore-btn" (click)="onRestore.emit(seller)">
+      <i class="bi bi-arrow-counterclockwise"></i> Restore
+    </button>
+  } @else {
+    <button class="action-btn"
+      [class.approve-btn]="!seller.isApproved"
+      [class.reject-btn]="seller.isApproved"
+      (click)="onApprove.emit(seller)">
+      @if(!seller.isApproved) {
+        <i class="bi bi-check-circle"></i> Approve
+      } @else {
+        <i class="bi bi-x-circle"></i> Reject
+      }
+    </button>
+    <button class="action-btn"
+      [class.ban-btn]="seller.isActive"
+      [class.activate-btn]="!seller.isActive"
+      (click)="onToggleStatus.emit(seller)">
+      @if(seller.isActive) {
+        <i class="bi bi-slash-circle"></i> Ban
+      } @else {
+        <i class="bi bi-check-circle"></i> Activate
+      }
+    </button>
+    <button class="action-btn delete-btn" (click)="onDelete.emit(seller)">
+      <i class="bi bi-trash3"></i> Delete
+    </button>
+  }
+</div>
 </div>

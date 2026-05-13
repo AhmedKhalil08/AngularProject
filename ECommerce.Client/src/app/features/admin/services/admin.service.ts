@@ -34,4 +34,10 @@ getSellers(page = 1, pageSize = 9, search = '', status = '') {
   restoreUser(id: string) {
   return this.api.put<any>(`admin/users/${id}/restore`, {});
 }
+getAdmins() {
+  return this.api.get<UserDto[]>('admin/admins');
+}
+createAdmin(dto: { fullName: string; email: string; password: string }) {
+  return this.api.post<any>('admin/admins', dto);
+}
 }

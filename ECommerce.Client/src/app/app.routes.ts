@@ -12,6 +12,7 @@ import { adminGuard } from './core/guards/admin-guard';
 import { Overview } from './features/admin/pages/overview/overview';
 import { Customers } from './features/admin/pages/customers/customers';
 import { Sellers } from './features/admin/pages/sellers/sellers';
+import { Admins } from './features/admin/pages/admins/admins';
 
 export const routes: Routes = [
   {
@@ -41,6 +42,7 @@ export const routes: Routes = [
     { path: 'overview', component: Overview },
     { path: 'customers', component: Customers },
     { path: 'sellers', component: Sellers },
+    { path: 'admins', component: Admins },
     { path: '', redirectTo: 'overview', pathMatch: 'full' }
   ]
 },
