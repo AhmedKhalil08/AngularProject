@@ -36,8 +36,7 @@ namespace ECommerce.Application.Features.OrderItems.Commands.CreateOrderItem
             await _unitOfWork.SaveChangesAsync();
             return new OrderItemDto
             {
-                Id = item.Id,
-                OrderId = item.OrderId,
+                //Id = item.Id,
                 ProductId = item.ProductId,
                 Quantity = item.Quantity
             };

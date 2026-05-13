@@ -26,8 +26,7 @@ namespace ECommerce.Application.Features.Products.Queries.GetProductById
                 .Where(p => p.Id == request.Id)
                 .ProjectToType<ProductDto>()
                 .FirstOrDefaultAsync(cancellationToken);
-               
-
+              
             return product;
         }
     }

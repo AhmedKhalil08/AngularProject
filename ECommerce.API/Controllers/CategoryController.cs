@@ -43,10 +43,15 @@ namespace ECommerce.API.Controllers
             return NoContent();
         }
         //Update Category
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Update(int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryCommand command)
         {
-            var result = await Mediator.Send(new UpdateCategoryCommand { Id = id });
+            if (id != command.Id)
+            {
+                return BadRequest("ID mismatch.");
+            }
+
+            var result = await Mediator.Send(command);
 
             if (result == null)
             {

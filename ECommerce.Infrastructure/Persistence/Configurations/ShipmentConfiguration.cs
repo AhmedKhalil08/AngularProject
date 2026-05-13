@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ECommerce.Infrastructure.Persistence.Configurations
 {
-    public class ShipmentConfiguration
+    public class ShipmentConfiguration : IEntityTypeConfiguration<Shipment>
     {
         public void Configure(EntityTypeBuilder<Shipment> builder)
         {

@@ -18,11 +18,10 @@ namespace ECommerce.Application.Features.OrderItems.Queries.GetAllOrderItems
             var items = await _repository.GetAllAsync();
             return items.Select(item => new OrderItemDto
             {
-                Id = item.Id,
+                //Id = item.Id,
                 Quantity = item.Quantity,
                 ProductId = item.ProductId,
                
-                OrderId = item.OrderId
             }).ToList();
         }
     }

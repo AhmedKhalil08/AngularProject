@@ -29,7 +29,7 @@ namespace ECommerce.Application.Features.CartItems.Commands.CreateCartItem
             return new CartItemDto
             {
                 Id = item.Id,
-                CartId = item.CartId,
+                //CartId = item.CartId,
                 ProductId = item.ProductId,
                 Quantity = item.Quantity
             };

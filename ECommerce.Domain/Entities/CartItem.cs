@@ -8,9 +8,9 @@ namespace ECommerce.Domain.Entities
         public int CartId { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }
-        public OrderStatus Status { get; set; } = OrderStatus.Pending;
+        public OrderStatus Status { get; set; }
         public Product Product { get; set; }
 
-         public Cart Cart { get; set; }
+        public Cart Cart { get; set; }
     }
 }

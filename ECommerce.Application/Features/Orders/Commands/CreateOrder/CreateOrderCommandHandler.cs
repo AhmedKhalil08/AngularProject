@@ -17,6 +17,8 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
         private readonly IPaymentService _paymentService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IShipmentRepository _shipmentRepository;
+        private readonly ICartRepository _cartRepository;
+        private readonly ICartItemRepository _cartItemRepository;
 
         public CreateOrderCommandHandler(
             IOrderRepository orderRepository,
@@ -24,7 +26,9 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             ICurrentUserService currentUserService,
             IPaymentService paymentService,
             IUnitOfWork unitOfWork,
-            IShipmentRepository shipmentRepository)
+            IShipmentRepository shipmentRepository,
+            ICartRepository cartRepository,
+            ICartItemRepository cartItemRepository)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
@@ -32,88 +36,106 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             _paymentService = paymentService;
             _shipmentRepository = shipmentRepository;
             _unitOfWork = unitOfWork;
+            _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
         }
 
         public async Task<PaymentResultDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var itemsBySeller = new Dictionary<string, List<OrderItem>>();
-            var allOrderItems = new List<OrderItem>();
             var userId = _currentUserService.UserId;
             if (string.IsNullOrEmpty(userId))
                 throw new UnauthorizedAccessException("Must be logged in.");
 
+            var carts = await _cartRepository.GetByConditionAsync(
+                c => c.UserId == userId && !c.IsDeleted,
+                includeProperties: "CartItems,CartItems.Product"
+            );
+            var cart = carts.FirstOrDefault();
+
+            if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
+                throw new Exception("Your cart is empty.");
+
+            var itemsBySeller = new Dictionary<string, List<OrderItem>>();
+            var allOrderItems = new List<OrderItem>();
             decimal totalAmount = 0;
-            var orderItems = new List<OrderItem>();
 
-            foreach (var item in request.Items)
+            foreach (var cartItem in cart.CartItems)
             {
-                var product = await _productRepository.GetByIdAsync(item.ProductId);
-                if (product == null) throw new Exception($"Product with ID {item.ProductId} not found.");
-                if (product.Stock == 0) continue;
-                if (product.Stock < item.Quantity) throw new Exception($"The stock of {product.Name} is insufficient.");
+                var product = cartItem.Product;
 
-                totalAmount += product.Price * item.Quantity;
-                product.Stock -= item.Quantity;
+                if (product.Stock == 0) continue;
+                if (product.Stock < cartItem.Quantity) throw new Exception($"The stock of {product.Name} is insufficient.");
+
+                totalAmount += product.Price * cartItem.Quantity;
+                product.Stock -= cartItem.Quantity;
                 await _productRepository.UpdateAsync(product);
 
                 var orderItem = new OrderItem
                 {
-                    ProductId = item.ProductId,
-                    Quantity = item.Quantity,
+                    ProductId = product.Id,
+                    Quantity = cartItem.Quantity,
                     UnitPrice = product.Price
                 };
 
-                // 2. تصنيف الـ OrderItem ووضعه في القائمة الخاصة بالبائع بتاعه
                 if (!itemsBySeller.ContainsKey(product.SellerId))
                 {
                     itemsBySeller[product.SellerId] = new List<OrderItem>();
                 }
                 itemsBySeller[product.SellerId].Add(orderItem);
-                allOrderItems.Add(orderItem); // إضافته للقائمة الكلية أيضاً
+                allOrderItems.Add(orderItem);
             }
 
-            // 3. تحويل التجميعة إلى شحنات (Shipments) حقيقية
             var shipments = new List<Shipment>();
+            var shipingFee = 50;
+            var orderTotalAmount = totalAmount + (itemsBySeller.Count * shipingFee);
+
             foreach (var sellerGroup in itemsBySeller)
             {
+                decimal totalItemsAmount = sellerGroup.Value.Sum(oi => oi.UnitPrice * oi.Quantity);
                 var shipment = new Shipment
                 {
                     SellerId = sellerGroup.Key,
                     Status = ShipmentStatus.Pending,
-                    ShippingFee = 50, // تقدر تخليها ديناميك لو كل بائع له سعر شحن مختلف
-                    OrderItems = sellerGroup.Value // ربط المنتجات بالشحنة
+                    ShippingFee = shipingFee,
+                    TotalAmount = totalItemsAmount + shipingFee,
+                    OrderItems = sellerGroup.Value
                 };
                 shipments.Add(shipment);
             }
 
-            // PromoCode (إذا وجد)
-
             // 4. بناء الأوردر الأساسي
+            var shippingAddress = request.Address.Adapt<Address>();
+            shippingAddress.UserId = userId;
+
             var order = new Order
             {
                 UserId = userId,
                 OrderDate = DateTime.UtcNow,
-                TotalAmount = totalAmount,
+                TotalAmount = orderTotalAmount,
                 Status = OrderStatus.Pending,
                 PaymentMethod = request.PaymentMethod,
-                ShippingAddress = request.Address.Adapt<Address>(),
-
-                OrderItems = allOrderItems, 
-                Shipments = shipments,      
-
+                ShippingAddress = shippingAddress,
+                OrderItems = allOrderItems,
+                Shipments = shipments,
                 Payment = new Payment
                 {
-                    Amount = totalAmount,
+                    Amount = orderTotalAmount,
                     Method = request.PaymentMethod,
                     Status = PaymentStatus.Pending
                 }
             };
 
             await _orderRepository.AddAsync(order);
-            await _unitOfWork.SaveChangesAsync(); // الـ EF Core هيربط الـ Ids تلقائياً
 
-            // 6. معالجة الدفع
-            var paymentResult = await _paymentService.ProcessPaymentAsync(totalAmount, request.PaymentMethod, order.Id);
+
+            foreach (var item in cart.CartItems)
+            {
+                await _cartItemRepository.DeleteAsync(item.Id);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            var paymentResult = await _paymentService.ProcessPaymentAsync(orderTotalAmount, request.PaymentMethod, order.Id);
 
             return paymentResult;
         }

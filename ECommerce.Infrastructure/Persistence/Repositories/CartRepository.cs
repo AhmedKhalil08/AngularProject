@@ -11,6 +11,7 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
     {
         public CartRepository(ApplicationDbContext context) : base(context)
         {
+            
         }
     }
 }

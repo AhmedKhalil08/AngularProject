@@ -13,10 +13,10 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.Property(ci => ci.Quantity)
                    .IsRequired();
 
-            builder.HasOne(ci => ci.Product)
-                   .WithMany()
-                   .HasForeignKey(ci => ci.ProductId)
-                   .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(ci => ci.Product)       // CartItem has one Product
+            .WithMany(p => p.CartItems)     //
+                                            //.HasForeignKey(ci => ci.ProductId) // The FK is ProductId
+            .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(ci => ci.Cart)
                    .WithMany(c => c.CartItems)

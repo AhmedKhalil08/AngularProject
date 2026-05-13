@@ -32,15 +32,14 @@ namespace ECommerce.API.Controllers
                     _stripeSecret
                 );
 
-                // 2. معالجة نجاح الدفع
                 if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
                 {
-                    // حول الأوبجيكت لـ Session بدل PaymentIntent
+                    
+
                     var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
-                    // بنجيب الـ OrderId من الميتا داتا اللي إحنا بعتناها
                     var orderId = int.Parse(session.Metadata["OrderId"]);
-                    var transactionId = session.PaymentIntentId; // ده رقم العملية المالي
+                    var transactionId = session.PaymentIntentId; 
 
                     await Mediator.Send(new ConfirmPaymentCommand
                     {

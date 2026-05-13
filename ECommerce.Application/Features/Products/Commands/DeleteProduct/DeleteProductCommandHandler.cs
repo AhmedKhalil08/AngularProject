@@ -11,6 +11,7 @@ namespace ECommerce.Application.Features.Products.Commands.DeleteProduct
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFileService _fileService;
+        private readonly ICurrentUserService _currentUserService;
 
         public DeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork, IFileService fileService)
         {
@@ -21,6 +22,11 @@ namespace ECommerce.Application.Features.Products.Commands.DeleteProduct
 
         public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
+            if (string.IsNullOrEmpty(_currentUserService.UserId))
+                throw new UnauthorizedAccessException("Must be logged in.");
+            if (!await _productRepository.IsUserOwnerOfProductAsync(request.Id, _currentUserService.UserId)&&(_currentUserService.Role!="Admin"))
+                throw new UnauthorizedAccessException("You can only delete your own products.");
+
             var product = await _productRepository.GetByIdAsync(request.Id);
             if (product == null) return false;
 

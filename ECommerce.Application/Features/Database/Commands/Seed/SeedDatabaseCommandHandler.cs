@@ -17,13 +17,14 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
 {
     private readonly IApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-
+    //private readonly RoleManager<IdentityRole> _roleManager;
     public SeedDatabaseCommandHandler(
         IApplicationDbContext context,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
+        //_roleManager = roleManager;
     }
 
     public async Task<bool> Handle(SeedDatabaseCommand request, CancellationToken cancellationToken)
@@ -31,12 +32,13 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
         try
         {
             // Check if data already exists to prevent duplication
-            if (request.SkipIfDataExists && await _context.Categories.AnyAsync(cancellationToken))
-            {
-                return true; // Data already seeded
-            }
+            //if (request.SkipIfDataExists && await _context.Categories.AnyAsync(cancellationToken))
+            //{
+            //    return true; // Data already seeded
+            //}
 
             // Seed data in the correct order based on dependencies
+            //await SeedApplicationRoles(cancellationToken);
             await SeedApplicationUsers(cancellationToken);
             await SeedCategories(cancellationToken);
             await SeedSellerProfiles(cancellationToken);
@@ -49,7 +51,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             await SeedReviews(cancellationToken);
             await SeedWishlists(cancellationToken);
             await SeedOrders(cancellationToken);
-            await SeedOrderItems(cancellationToken);
+            await SeedOrderItemsWithShipments(cancellationToken);
             await SeedPayments(cancellationToken);
 
             return true;
@@ -64,6 +66,26 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
     /// <summary>
     /// Seed ApplicationUser data with different roles.
     /// </summary>
+    /// 
+    //private async Task SeedApplicationRoles(CancellationToken cancellationToken)
+    //{
+
+
+    //    var roleNames = Enum.GetNames(typeof(UserRole));
+
+    //    foreach (var roleName in roleNames)
+    //    {
+    //        if (!await _roleManager.RoleExistsAsync(roleName))
+    //        {
+    //            await _roleManager.CreateAsync(new IdentityRole
+    //            {
+    //                Name = roleName,
+    //                NormalizedName = roleName.ToUpper()
+    //            });
+    //        }
+
+    //    }
+    //}
     private async Task SeedApplicationUsers(CancellationToken cancellationToken)
     {
         if (await _context.Users.AnyAsync(cancellationToken))
@@ -177,10 +199,19 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
 
         foreach (var user in users)
         {
-            await _userManager.CreateAsync(user, "P@ssw0rd_123Eco!");
+            var result = await _userManager.CreateAsync(user, "P@ssw0rd_123Eco!");
+            if (result.Succeeded)
+            {
+                // Optionally assign roles if not using the Role property directly
+                await _userManager.AddToRoleAsync(user, user.Role.ToString());
+            }
+            else
+            {
+                // Handle creation failure (e.g., log errors)
+                throw new InvalidOperationException($"Failed to create user {user.UserName}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
         }
     }
-
     /// <summary>
     /// Seed Category data with hierarchical structure.
     /// </summary>
@@ -892,64 +923,52 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
     /// <summary>
     /// Seed OrderItem data linking orders to products.
     /// </summary>
-    private async Task SeedOrderItems(CancellationToken cancellationToken)
+    private async Task SeedOrderItemsWithShipments(CancellationToken cancellationToken)
     {
-        if (await _context.OrderItems.AnyAsync(cancellationToken))
-            return;
+        if (await _context.OrderItems.AnyAsync(cancellationToken)) return;
 
         var orders = await _context.Orders.ToListAsync(cancellationToken);
         var products = await _context.Products.ToListAsync(cancellationToken);
 
-        if (orders.Count < 5 || products.Count < 8)
-            return; // لازم العدد ده على الأقل عشان السطور اللي تحت متضربش
-
-        var orderItems = new List<OrderItem>
+        foreach (var order in orders)
         {
-            new OrderItem
-            {
-                OrderId = orders[0].Id,
-                ProductId = products[0].Id,
-                Quantity = 1,
-                UnitPrice = products[0].Price
-            },
-            new OrderItem
-            {
-                OrderId = orders[0].Id,
-                ProductId = products[1].Id,
-                Quantity = 1,
-                UnitPrice = products[1].Price
-            },
-            new OrderItem
-            {
-                OrderId = orders[1].Id,
-                ProductId = products[5].Id,
-                Quantity = 3,
-                UnitPrice = products[5].Price
-            },
-            new OrderItem
-            {
-                OrderId = orders[2].Id,
-                ProductId = products[2].Id,
-                Quantity = 1,
-                UnitPrice = products[2].Price
-            },
-            new OrderItem
-            {
-                OrderId = orders[3].Id,
-                ProductId = products[7].Id,
-                Quantity = 2,
-                UnitPrice = products[7].Price
-            },
-            new OrderItem
-            {
-                OrderId = orders[4].Id,
-                ProductId = products[6].Id,
-                Quantity = 1,
-                UnitPrice = products[6].Price
-            }
-        };
+            // 1. اختار عينة منتجات للأوردر ده (مثلاً أول 6 منتجات)
+            var orderProducts = products.Take(6).ToList();
 
-        await _context.OrderItems.AddRangeAsync(orderItems, cancellationToken);
+            // 2. تجميع المنتجات حسب البائع
+            var sellerGroups = orderProducts.GroupBy(p => p.SellerId);
+
+            foreach (var group in sellerGroups)
+            {
+                // 3. لكل بائع في الأوردر، نكريت شحنة واحدة
+                var shipment = new Shipment
+                {
+                    OrderId = order.Id,
+                    SellerId = group.Key, // الـ SellerId
+                    Status = ShipmentStatus.Processing,
+                    TrackingNumber = $"TRK-{order.Id}-{group.Key.Substring(0, 4)}",
+                    ShippingFee = 10.00m,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Shipments.Add(shipment);
+                await _context.SaveChangesAsync(cancellationToken); // عشان الـ ShipmentId يتولد
+
+                // 4. نضيف المنتجات كـ OrderItems مربوطة بالشحنة دي
+                foreach (var product in group)
+                {
+                    var orderItem = new OrderItem
+                    {
+                        OrderId = order.Id,
+                        ProductId = product.Id,
+                        Quantity = 1,
+                        UnitPrice = product.Price,
+                        ShipmentId = shipment.Id // الربط السليم
+                    };
+                    _context.OrderItems.Add(orderItem);
+                }
+            }
+        }
         await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -1018,4 +1037,9 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
         await _context.Payments.AddRangeAsync(payments, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    /// <summary>
+    /// Seed Shipment data for orders from each seller.
+    /// </summary>
+    
 }

@@ -22,31 +22,35 @@ namespace ECommerce.Application.Features.Payments.Commands.UpdatePayment
 
         public async Task<bool> Handle(ConfirmPaymentCommand request, CancellationToken cancellationToken)
         {
-            // 1. نجيب الأوردر مع الـ Payment باستخدام الـ Table والـ Include
             var order = await _orderRepository
                 .Table
                 .Include(o => o.Payment)
+                .Include(o => o.Shipments) 
                 .FirstOrDefaultAsync(o => o.Id == request.OrderId, cancellationToken);
 
             if (order == null || order.Payment == null)
                 return false;
 
-            // 💡 2. الحماية من تكرار الـ Webhook (Idempotency)
             if (order.Payment.Status == PaymentStatus.completed)
-                return true; // نرجع true عشان بوابة الدفع تسكت ومتبعتش تاني
+                return true;
 
-            // 3. تحديث حالة الدفع
             order.Payment.Status = PaymentStatus.completed;
             order.Payment.PaidAt = DateTime.UtcNow;
             order.Payment.TransactionId = request.TransactionId;
 
-            // 4. تحديث حالة الطلب لـ "جاري التجهيز" (وليس تم الشحن)
-            order.Status = OrderStatus.Shipped;
+            order.Status = OrderStatus.Confirmed;
 
-            // 5. حفظ التعديلات في الداتابيز
-            // بنستخدم Repository الـ Order من الـ UnitOfWork عشان الـ Update
+            if (order.Shipments != null && order.Shipments.Any())
+            {
+                foreach (var shipment in order.Shipments)
+                {
+                    shipment.Status = ShipmentStatus.Shipped;
+                }
+            }
+
             await _orderRepository.UpdateAsync(order);
             await _unitOfWork.SaveChangesAsync();
+
             return true;
         }
     }

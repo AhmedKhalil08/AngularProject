@@ -1,12 +1,9 @@
 ﻿using ECommerce.Domain.Common;
 using ECommerce.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ECommerce.Domain.Entities
 {
-    public class Shipment :AuditableEntity<int>
+    public class Shipment : AuditableEntity<int>
     {
         public int OrderId { get; set; }
 
@@ -16,8 +13,9 @@ namespace ECommerce.Domain.Entities
         public ShipmentStatus Status { get; set; } = ShipmentStatus.Pending;
 
         public string? TrackingNumber { get; set; }
-        public decimal ShippingFee { get; set; }
 
+        public decimal ShippingFee { get; set; }
+        public decimal TotalAmount { get; set; }
         // Navigation Properties
         public Order Order { get; set; }
         public SellerProfile Seller { get; set; }
