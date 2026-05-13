@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
-import { SellerProfileDto, UserDto } from '../../../core/models/auth.model';
+import { OverviewStatsDto, SellerProfileDto, UserDto } from '../../../core/models/auth.model';
 import { PagedResult } from '../../../core/models/pagination.model';
 
 @Injectable({
@@ -40,4 +40,8 @@ getAdmins() {
 createAdmin(dto: { fullName: string; email: string; password: string }) {
   return this.api.post<any>('admin/admins', dto);
 }
+getOverviewStats() {
+  return this.api.get<OverviewStatsDto>('admin/overview');
 }
+}
+

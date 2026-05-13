@@ -4,7 +4,9 @@ using System.Text;
 
 namespace ECommerce.Application.DTOs
 {
-    internal class OrderStatusStatsDto
+    public class OrderStatusStatsDto
     {
+        public string Status { get; set; }
+        public int Count { get; set; }
     }
 }

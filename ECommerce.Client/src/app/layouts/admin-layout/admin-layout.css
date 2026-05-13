@@ -6,7 +6,7 @@
 .admin-content {
   margin-left: 260px;
   flex: 1;
-  padding: 2rem;
+  padding: 0;
   background: #f0f4ff;
   color: #2d2b55;
   min-height: 100vh;

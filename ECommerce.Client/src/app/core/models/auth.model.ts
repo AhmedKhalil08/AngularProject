@@ -63,3 +63,33 @@ export interface SellerProfileDto {
   isDeleted: boolean;
     isActive: boolean; 
 }
+export interface OverviewStatsDto {
+  totalCustomers: number;
+  totalSellers: number;
+  totalAdmins: number;
+  totalOrders: number;
+  totalProducts: number;
+  totalCategories: number;
+  totalRevenue: number;
+  pendingSellers: number;
+  bannedUsers: number;
+  monthlySales: MonthlySalesDto[];
+  orderStatusStats: OrderStatusStatsDto[];
+    topProducts: TopProductDto[]; 
+}
+
+export interface MonthlySalesDto {
+  month: string;
+  revenue: number;
+  orders: number;
+}
+
+export interface OrderStatusStatsDto {
+  status: string;
+  count: number;
+}
+export interface TopProductDto {
+  productName: string;
+  totalSold: number;
+  revenue: number;
+}
