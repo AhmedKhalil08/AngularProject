@@ -1,0 +1,26 @@
+<div class="product-card">
+  <div class="product-image">
+    <img [src]="getMainImage()" [alt]="product.name" />
+    <div class="image-overlay">
+      <button class="overlay-btn edit-btn" (click)="onEdit.emit(product)">
+        <i class="bi bi-pencil"></i>
+      </button>
+      <button class="overlay-btn delete-btn" (click)="onDelete.emit(product)">
+        <i class="bi bi-trash3"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="product-info">
+    <h5 class="product-name">{{ product.name }}</h5>
+    <p class="product-category">{{ product.categoryName }}</p>
+    <p class="product-description">{{ product.description }}</p>
+
+    <div class="product-footer">
+      <span class="product-price">{{ product.price | currency:'EGP':'symbol':'1.0-0' }}</span>
+      <span class="stock-badge" [class.low-stock]="product.stock < 10">
+        {{ product.stock }} in stock
+      </span>
+    </div>
+  </div>
+</div>
