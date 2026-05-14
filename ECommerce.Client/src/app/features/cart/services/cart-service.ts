@@ -77,11 +77,11 @@ export class CartService {
         console.log('البيانات كاملة:', res);
 
         // تحديث المنتجات
-        this.cartItemsSignal.set(res.items || []);
+        this.cartItemsSignal.set(res?.items || []);
 
         // 💡 تحديث السعر الإجمالي مباشرة من الـ Object اللي جاي من الباك إيند
         // تأكد إن المسمى في الباك إيند totalPrice (زي ما ظهر في الـ Console عندك)
-        this.cartTotalSignal.set(res.totalPrice || 0);
+        this.cartTotalSignal.set(res?.totalPrice || 0);
       },
       error: (err) => {
         console.error('Error loading cart', err);
