@@ -18,6 +18,9 @@ import { SellerLayout } from './layouts/seller-layout/seller-layout';
 import { sellerGuard } from './core/guards/seller-guard';
 import { SellerOverview } from './features/seller/pages/seller-overview/seller-overview';
 import { MyProducts } from './features/seller/pages/my-products/my-products';
+import { Profile } from './features/profile/pages/profile/profile';
+import { ProfileLayout } from './layouts/profile-layout/profile-layout';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -26,7 +29,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'products', component: ProductCatalog },
-      { path: 'cart', component: CartComp },
+      { path: 'cart', component: CartComp }
     ],
   },
   {
@@ -62,5 +65,16 @@ export const routes: Routes = [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
+  {
+  path: 'profile',
+  component: ProfileLayout,
+  canActivate: [authGuard],
+  children: [
+    { path: 'info', component: Profile },
+    { path: 'password', component: Profile }, // placeholder for now
+    { path: 'addresses', component: Profile }, // placeholder for now
+    { path: '', redirectTo: 'info', pathMatch: 'full' }
+  ]
+},
   { path: '**', redirectTo: '' },
 ];

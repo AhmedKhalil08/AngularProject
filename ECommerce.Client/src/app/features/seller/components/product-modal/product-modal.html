@@ -1,1 +1,84 @@
-<p>product-modal works!</p>
+<form [formGroup]="form">
+  <div class="product-modal">
+    <div class="modal-header">
+      <h5 class="modal-title">{{ isEditMode ? '✏️ Edit Product' : '➕ Add Product' }}</h5>
+      <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" class="form-input" formControlName="name" placeholder="Enter product name"
+          [class.is-invalid]="name?.invalid && name?.touched" />
+        @if(name?.invalid && name?.touched) {
+          @if(name?.errors?.['required']) { <span class="error">Name is required</span> }
+          @else if(name?.errors?.['minlength']) { <span class="error">Minimum 3 characters</span> }
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price (EGP)</label>
+          <input type="number" class="form-input" formControlName="price" placeholder="0.00"
+            [class.is-invalid]="price?.invalid && price?.touched" />
+          @if(price?.invalid && price?.touched) {
+            <span class="error">Valid price is required</span>
+          }
+        </div>
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" class="form-input" formControlName="stock" placeholder="0"
+            [class.is-invalid]="stock?.invalid && stock?.touched" />
+          @if(stock?.invalid && stock?.touched) {
+            <span class="error">Valid stock is required</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select class="form-input" formControlName="categoryId"
+          [class.is-invalid]="categoryId?.invalid && categoryId?.touched">
+          <option value="">Select category</option>
+          @for(cat of categories; track cat.id) {
+            <option [value]="cat.id">{{ cat.name }}</option>
+          }
+        </select>
+        @if(categoryId?.invalid && categoryId?.touched) {
+          <span class="error">Category is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-input" formControlName="description" placeholder="Enter product description"
+          rows="3" [class.is-invalid]="description?.invalid && description?.touched"></textarea>
+        @if(description?.invalid && description?.touched) {
+          @if(description?.errors?.['required']) { <span class="error">Description is required</span> }
+          @else if(description?.errors?.['minlength']) { <span class="error">Minimum 10 characters</span> }
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Images</label>
+        <input type="file" class="form-input" multiple accept="image/*" (change)="onImagesSelected($event)" />
+        @if(previewUrls.length > 0) {
+          <div class="image-previews">
+            @for(url of previewUrls; track url) {
+              <img [src]="url" class="preview-img" />
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="action-btn cancel-btn" type="button" (click)="activeModal.dismiss()">
+        <i class="bi bi-x-circle"></i> Cancel
+      </button>
+      <button class="action-btn confirm-btn" type="button" (click)="submit()">
+        <i class="bi bi-check-circle"></i> {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+    </div>
+  </div>
+</form>
