@@ -1,0 +1,60 @@
+<form [formGroup]="form">
+  <div class="edit-store-modal">
+    <div class="modal-header">
+      <h5 class="modal-title">✏️ Edit Store Info</h5>
+      <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="logo-upload">
+        <div class="logo-preview">
+          @if(previewUrl) {
+            <img [src]="previewUrl" alt="Store Logo" />
+          } @else {
+            <div class="logo-placeholder">
+              <i class="bi bi-shop"></i>
+            </div>
+          }
+        </div>
+        <div class="logo-upload-info">
+          <label class="upload-btn">
+            <i class="bi bi-upload"></i> Upload Logo
+            <input type="file" accept="image/*" (change)="onLogoSelected($event)" hidden />
+          </label>
+          <p class="upload-hint">Or enter a URL below</p>
+          <input type="text" class="form-input" formControlName="logoUrl"
+            placeholder="https://..." />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Store Name</label>
+        <input type="text" class="form-input" formControlName="storeName"
+          placeholder="Enter store name"
+          [class.is-invalid]="storeName?.invalid && storeName?.touched" />
+        @if(storeName?.invalid && storeName?.touched) {
+          @if(storeName?.errors?.['required']) { <span class="error">Store name is required</span> }
+          @else if(storeName?.errors?.['minlength']) { <span class="error">Minimum 3 characters</span> }
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Store Description</label>
+        <textarea class="form-input" formControlName="storeDescription"
+          placeholder="Describe your store..."
+          rows="3"></textarea>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="action-btn cancel-btn" type="button" (click)="activeModal.dismiss()">
+        <i class="bi bi-x-circle"></i> Cancel
+      </button>
+      <button class="action-btn confirm-btn" type="button" (click)="submit()">
+        <i class="bi bi-check-circle"></i> Save
+      </button>
+    </div>
+  </div>
+</form>

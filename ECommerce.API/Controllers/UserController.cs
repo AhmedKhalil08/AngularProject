@@ -16,11 +16,14 @@ namespace ECommerce.API.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUserService _currentUser;
+        private readonly IFileService _fileService;
         public UserController(UserManager<ApplicationUser> userManager,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IFileService fileService)
         {
             _userManager = userManager;
             _currentUser = currentUser;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -39,13 +42,20 @@ namespace ECommerce.API.Controllers
             });
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateProfileDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateMyProfile([FromForm] UpdateProfileDto dto)
         {
             var user = await _userManager.FindByIdAsync(_currentUser.UserId);
             if (user == null) throw new NotFoundException("UserNotFound");
-            user.FullName= dto.FullName;
-            user.PhoneNumber= dto.PhoneNumber;
-            user.ProfileImageUrl= dto.ProfileImageUrl;
+
+            user.FullName = dto.FullName;
+            user.PhoneNumber = dto.PhoneNumber;
+
+            if (dto.ProfileImage != null)
+                user.ProfileImageUrl = await _fileService.UploadFileAsync(dto.ProfileImage, "profiles");
+            else if (dto.ProfileImageUrl != null)
+                user.ProfileImageUrl = dto.ProfileImageUrl;
+
             await _userManager.UpdateAsync(user);
             return Ok(new UserDto
             {
