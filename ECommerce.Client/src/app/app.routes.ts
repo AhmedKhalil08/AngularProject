@@ -23,6 +23,9 @@ import { ProfileLayout } from './layouts/profile-layout/profile-layout';
 import { authGuard } from './core/guards/auth-guard';
 import { ChangePassword } from './features/profile/pages/change-password/change-password';
 import { Addresses } from './features/profile/pages/addresses/addresses';
+import { Messages } from './features/admin/pages/messages/messages';
+import { HelpCenter } from './features/contact/pages/help-center/help-center';
+import { CustomerService } from './features/contact/pages/customer-service/customer-service';
 
 export const routes: Routes = [
   {
@@ -31,7 +34,9 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'products', component: ProductCatalog },
-      { path: 'cart', component: CartComp }
+      { path: 'cart', component: CartComp },
+      { path: 'help-center', component: HelpCenter },
+      { path: 'contact', component: CustomerService },
     ],
   },
   {
@@ -55,6 +60,7 @@ export const routes: Routes = [
       { path: 'sellers', component: Sellers },
       { path: 'admins', component: Admins },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'messages', component: Messages }
     ],
   },
   {

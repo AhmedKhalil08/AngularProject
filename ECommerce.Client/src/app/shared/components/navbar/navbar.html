@@ -32,6 +32,8 @@
         }
         <span class="cart-total">{{ cartService.cartTotal() === 0 ? 'Empty' : (cartService.cartTotal() | number:'1.0-0') + ' EGP' }}</span>
       </a>
+      <a routerLink="/help-center" routerLinkActive="active" class="nav-link">Help Center </a>
+
     </div>
 
     @if(isLoggedIn()) {

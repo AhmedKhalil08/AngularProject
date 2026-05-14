@@ -30,7 +30,7 @@ onSubmit() {
 
   this.authService.login(this.loginForm.value).subscribe({
     next: () => {
-      this.router.navigate(['/']);
+      // this.router.navigate(['/']);
     },
     error: (err) => {
       this.isLoading = false;

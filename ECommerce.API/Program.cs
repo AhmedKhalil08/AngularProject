@@ -1,8 +1,11 @@
 
 using ECommerce.API.Extensions;
+using ECommerce.API.Hubs;
 using ECommerce.API.Middlewares;
+using ECommerce.API.Services;
 using ECommerce.Application;
 using ECommerce.Application.Extensions;
+using ECommerce.Application.Interfaces.Services;
 using ECommerce.Application.Mapping;
 using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure;
@@ -52,6 +55,8 @@ namespace ECommerce.API
             builder.Services.AddProblemDetails();
             // For User Services
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSignalR();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             var app = builder.Build();
             await app.ExecuteDatabaseSeedingAsync();
             MapsterConfig.RegisterMappings();
@@ -77,6 +82,7 @@ namespace ECommerce.API
             app.UseAuthorization();
             app.UseStaticFiles();
             app.MapControllers();
+            app.MapHub<NotificationHub>("/hubs/notifications");
             app.Run();
         }
     }

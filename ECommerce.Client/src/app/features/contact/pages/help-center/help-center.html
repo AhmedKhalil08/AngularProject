@@ -1,0 +1,87 @@
+<div class="help-center-page">
+
+<div class="hero-section">
+  <h1>How can we help you?</h1>
+  <p>Find answers to common questions or contact our support team</p>
+  <div class="hero-actions">
+    <div class="search-wrapper">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search for answers..." [(ngModel)]="searchTerm" />
+    </div>
+    <a routerLink="/contact" class="contact-btn-hero">
+      <i class="bi bi-envelope"></i> Contact Us
+    </a>
+  </div>
+</div>
+
+  <div class="faq-section">
+    <div class="faq-category">
+      <h3><i class="bi bi-truck"></i> Shipping & Delivery</h3>
+      <div class="faq-list">
+        <div class="faq-item" *ngFor="let faq of getFiltered(shippingFaqs)" (click)="toggle(faq)">
+          <div class="faq-question">
+            {{ faq.question }}
+            <i [class]="faq.open ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+          </div>
+          @if(faq.open) {
+            <div class="faq-answer">{{ faq.answer }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-category">
+      <h3><i class="bi bi-arrow-return-left"></i> Returns & Refunds</h3>
+      <div class="faq-list">
+        <div class="faq-item" *ngFor="let faq of getFiltered(returnFaqs)" (click)="toggle(faq)">
+          <div class="faq-question">
+            {{ faq.question }}
+            <i [class]="faq.open ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+          </div>
+          @if(faq.open) {
+            <div class="faq-answer">{{ faq.answer }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-category">
+      <h3><i class="bi bi-credit-card"></i> Payments</h3>
+      <div class="faq-list">
+        <div class="faq-item" *ngFor="let faq of getFiltered(paymentFaqs)" (click)="toggle(faq)">
+          <div class="faq-question">
+            {{ faq.question }}
+            <i [class]="faq.open ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+          </div>
+          @if(faq.open) {
+            <div class="faq-answer">{{ faq.answer }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-category">
+      <h3><i class="bi bi-person-circle"></i> Account</h3>
+      <div class="faq-list">
+        <div class="faq-item" *ngFor="let faq of getFiltered(accountFaqs)" (click)="toggle(faq)">
+          <div class="faq-question">
+            {{ faq.question }}
+            <i [class]="faq.open ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+          </div>
+          @if(faq.open) {
+            <div class="faq-answer">{{ faq.answer }}</div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-banner">
+    <h3>Still have questions?</h3>
+    <p>Our support team is ready to help you</p>
+    <a routerLink="/contact" class="contact-btn">
+      <i class="bi bi-envelope"></i> Contact Us
+    </a>
+  </div>
+
+</div>
