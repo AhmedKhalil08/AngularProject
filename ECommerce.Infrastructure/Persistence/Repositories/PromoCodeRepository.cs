@@ -34,7 +34,7 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
 
         public override async Task<IReadOnlyList<PromoCode>> GetAllAsync()
         {
-            return await _context.Set<PromoCode>().ToListAsync();
+            return await _context.Set<PromoCode>().Where(e=>e.IsDeleted==false).ToListAsync();
         }
 
         public override async Task<PromoCode> GetByIdAsync(int id)

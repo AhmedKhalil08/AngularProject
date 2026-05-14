@@ -23,7 +23,7 @@ namespace ECommerce.API.Controllers
         //Create Category
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateCategoryCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateCategoryCommand command)
         {
             var result = await Mediator.Send(command);
 
@@ -43,22 +43,16 @@ namespace ECommerce.API.Controllers
             return NoContent();
         }
         //Update Category
-        [HttpPut("{id}")]
+        [HttpPost("id/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest("ID mismatch.");
-            }
-
-            var result = await Mediator.Send(command);
-
+            command.Id = id;
+            var result = await _mediator.Send(command);
+        
             if (result == null)
             {
                 return NotFound($"Category with ID {id} not found.");
             }
-
-
             return Ok(result);
         }
 
