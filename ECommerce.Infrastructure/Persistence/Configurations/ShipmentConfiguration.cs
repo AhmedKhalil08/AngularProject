@@ -15,7 +15,7 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
 
             builder.Property(s => s.TrackingNumber).HasMaxLength(100);
             builder.Property(s => s.ShippingFee).HasColumnType("decimal(18,2)");
-
+            builder.Property(s=>s.TotalAmount).HasColumnType("decimal(18,2)");
             // Relation with Order (If Order is deleted, delete shipments)
             builder.HasOne(s => s.Order)
                    .WithMany(o => o.Shipments)

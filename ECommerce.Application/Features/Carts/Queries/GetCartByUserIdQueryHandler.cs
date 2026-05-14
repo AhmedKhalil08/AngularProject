@@ -23,13 +23,12 @@ namespace ECommerce.Application.Features.Carts.Queries
 
         public async Task<CartDto> Handle(GetCartByUserIdQuery request, CancellationToken cancellationToken)
         {
-            //var userId = _currentUser.UserId;
-            //if (string.IsNullOrEmpty(userId))
-            //throw new UnauthorizedAccessException("Must be logged in.");
-            var userId = "c43c69b5-9fd5-40d1-b91b-caa888ed98e8";
+            var userId = _currentUser.UserId;
+            if (string.IsNullOrEmpty(userId))
+            throw new UnauthorizedAccessException("Must be logged in.");
+            //var userId = "c43c69b5-9fd5-40d1-b91b-caa888ed98e8";
             var carts = await _repository.GetByConditionAsync(
         c => c.UserId == userId && !c.IsDeleted,
-        // 👈 زودنا Images هنا عشان نقدر نوصل لصورة المنتج
         includeProperties: "CartItems,CartItems.Product,CartItems.Product.Images",
         trackChanges: false
     );
