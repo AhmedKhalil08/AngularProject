@@ -17,6 +17,7 @@ currentUser = this.currentUserSignal.asReadonly();
 isLoggedIn = computed(() => !!this.currentUserSignal());
 isAdmin = computed(() => this.currentUserSignal()?.role === 'Admin');
 isSeller = computed(() => this.currentUserSignal()?.role === 'Seller');
+
 login(dto: LoginDto) {
   return this.api.post<AuthResponse>('auth/login', dto).pipe(
     tap(res => {
@@ -27,6 +28,15 @@ login(dto: LoginDto) {
         expiration: res.expiration
       };
       this.currentUserSignal.set(user);
+
+       // redirect based on role
+      if (res.role === 'Admin') {
+        this.router.navigate(['/admin/overview']);
+      } else if (res.role === 'Seller') {
+        this.router.navigate(['/seller/overview']);
+      } else {
+        this.router.navigate(['/']);
+      }
     })
   );
 }

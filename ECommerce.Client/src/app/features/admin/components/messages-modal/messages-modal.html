@@ -1,0 +1,37 @@
+<div class="message-modal">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <i class="bi bi-envelope-open"></i> {{ message.subject }}
+    </h5>
+    <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="message-meta">
+      <div class="meta-row">
+        <span class="meta-label"><i class="bi bi-person"></i> From</span>
+        <span class="meta-value">{{ message.name }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label"><i class="bi bi-envelope"></i> Email</span>
+        <span class="meta-value">{{ message.email }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label"><i class="bi bi-clock"></i> Sent</span>
+        <span class="meta-value">{{ message.sentAt | date:'MMM d, y HH:mm' }}</span>
+      </div>
+    </div>
+
+    <div class="message-divider"></div>
+
+    <div class="message-body">
+      {{ message.message }}
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="action-btn close-btn" (click)="activeModal.dismiss()">
+      <i class="bi bi-x-circle"></i> Close
+    </button>
+  </div>
+</div>
