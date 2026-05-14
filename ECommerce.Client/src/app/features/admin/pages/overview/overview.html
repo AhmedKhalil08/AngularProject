@@ -1,1 +1,130 @@
-<p>overview works!</p>
+<div class="overview-page">
+
+  <div class="stats-section">
+    <ngx-particles
+      [id]="particlesId"
+      [options]="particlesOptions"
+      [particlesInit]="particlesInit">
+    </ngx-particles>
+
+    <div class="page-header">
+      <h2 class="page-title">📊 Overview</h2>
+    </div>
+
+    @if(loading()) {
+      <div class="text-center mt-5">
+        <div class="spinner-border" role="status"></div>
+      </div>
+    } @else {
+      <div class="row row-cols-2 row-cols-md-4 g-4">
+        <div class="col">
+          <div class="stat-card customers">
+            <i class="bi bi-people stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()?.totalCustomers ?? 0 }}</span>
+              <span class="stat-label">Customers</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stat-card sellers">
+            <i class="bi bi-shop stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()?.totalSellers ?? 0 }}</span>
+              <span class="stat-label">Sellers</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stat-card orders">
+            <i class="bi bi-receipt stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()?.totalOrders ?? 0 }}</span>
+              <span class="stat-label">Orders</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stat-card revenue">
+            <i class="bi bi-cash-stack stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">${{ stats()?.totalRevenue ?? 0 }}</span>
+              <span class="stat-label">Revenue</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stat-card products">
+            <i class="bi bi-box-seam stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()?.totalProducts ?? 0 }}</span>
+              <span class="stat-label">Products</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stat-card categories">
+            <i class="bi bi-tags stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()?.totalCategories ?? 0 }}</span>
+              <span class="stat-label">Categories</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stat-card pending">
+            <i class="bi bi-hourglass-split stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()?.pendingSellers ?? 0 }}</span>
+              <span class="stat-label">Pending Sellers</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stat-card banned">
+            <i class="bi bi-slash-circle stat-icon"></i>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()?.bannedUsers ?? 0 }}</span>
+              <span class="stat-label">Banned Users</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+<div class="charts-section">
+  <div class="row g-4">
+    <div class="col-md-8">
+      <div class="chart-card">
+        <h5 class="chart-title">📈 Monthly Sales</h5>
+        <canvas baseChart
+          [data]="salesChartData()"
+          [options]="salesChartOptions"
+          type="line">
+        </canvas>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="chart-card">
+        <h5 class="chart-title">🥧 Orders by Status</h5>
+        <canvas baseChart
+          [data]="ordersChartData()"
+          type="doughnut">
+        </canvas>
+      </div>
+    </div>
+<div class="row g-4 mt-4 chart-card top-products-card">
+  <div class="col-12">
+    <div class="chart-card">
+      <h5 class="chart-title">📦 Top Products</h5>
+      <canvas baseChart
+        [data]="topProductsChartData()"
+        [options]="topProductsChartOptions"
+        type="bar">
+      </canvas>
+    </div>
+  </div>
+</div>  </div>
+</div>
+</div>

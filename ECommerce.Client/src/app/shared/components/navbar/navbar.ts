@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -7,7 +7,7 @@ import { CartService } from '../../../features/cart/services/cart-service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, NgbModule, CommonModule],
+  imports: [RouterLink, NgbModule, CommonModule,RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

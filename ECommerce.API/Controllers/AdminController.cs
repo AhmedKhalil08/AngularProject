@@ -11,12 +11,14 @@ using ECommerce.Application.Features.PromoCodes.Queries.GetAllPromoCodes;
 using ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerProfile;
 using ECommerce.Application.Features.SellerProfiles.Commands.DeleteSellerProfileByAdmin;
 using ECommerce.Application.Features.SellerProfiles.Queries.GetAllSellerProfiles;
+using ECommerce.Application.Interfaces.Persistence;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.API.Controllers
 {
@@ -27,10 +29,12 @@ namespace ECommerce.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly UserManager<ApplicationUser> _userManager;
-        public AdminController(IMediator mediator, UserManager<ApplicationUser> userManager)
+        private readonly IApplicationDbContext _context;
+        public AdminController(IMediator mediator, UserManager<ApplicationUser> userManager, IApplicationDbContext context)
         {
             _mediator = mediator;
             _userManager = userManager;
+            _context= context;
         }
 
         [HttpGet("users")]
@@ -185,6 +189,79 @@ namespace ECommerce.API.Controllers
 
             return Ok(new { message = "Admin created successfully" });
         }
+        // CHARTS
+        [HttpGet("overview")]
+        public async Task<IActionResult> GetOverviewStats()
+        {
+            var totalCustomers = await _userManager.Users.CountAsync(u => u.Role == UserRole.Customer && !u.IsDeleted);
+            var totalSellers = await _userManager.Users.CountAsync(u => u.Role == UserRole.Seller && !u.IsDeleted);
+            var totalAdmins = await _userManager.Users.CountAsync(u => u.Role == UserRole.Admin && !u.IsDeleted);
+            var bannedUsers = await _userManager.Users.CountAsync(u => !u.IsActive && !u.IsDeleted);
+            var pendingSellers = await _context.SellerProfiles.CountAsync(s => !s.IsApproved && !s.IsDeleted);
+            var totalOrders = await _context.Orders.CountAsync();
+            var totalProducts = await _context.Products.CountAsync(p => !p.IsDeleted);
+            var totalCategories = await _context.Categories.CountAsync();
+            var totalRevenue = await _context.Orders
+                .Where(o => o.Status == OrderStatus.Delivered)
+                .SumAsync(o => o.TotalAmount);
+
+            var monthlySales = await _context.Orders
+                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Revenue = g.Sum(o => o.TotalAmount),
+                    Orders = g.Count()
+                })
+                .OrderBy(m => m.Year).ThenBy(m => m.Month)
+                .ToListAsync();
+
+
+            var monthlySalesDto = monthlySales.Select(m => new MonthlySalesDto
+            {
+                Month = $"{m.Year}-{m.Month:D2}",
+                Revenue = m.Revenue,
+                Orders = m.Orders
+            }).ToList();
+
+            var orderStatusStats = await _context.Orders
+                .GroupBy(o => o.Status)
+                .Select(g => new OrderStatusStatsDto
+                {
+                    Status = g.Key.ToString(),
+                    Count = g.Count()
+                }).ToListAsync();
+            var topProducts = await _context.OrderItems
+                .GroupBy(oi => oi.Product.Name)
+                 .Select(g => new TopProductDto
+                {
+                  ProductName = g.Key,
+                 TotalSold = g.Sum(oi => oi.Quantity),
+                 Revenue = g.Sum(oi => oi.Quantity * oi.UnitPrice)
+                     })
+                .OrderByDescending(p => p.TotalSold)
+                .Take(5)
+                .ToListAsync();
+
+            return Ok(new OverviewStatsDto
+            {
+                TotalCustomers = totalCustomers,
+                TotalSellers = totalSellers,
+                TotalAdmins = totalAdmins,
+                TotalOrders = totalOrders,
+                TotalProducts = totalProducts,
+                TotalCategories = totalCategories,
+                TotalRevenue = totalRevenue,
+                PendingSellers = pendingSellers,
+                BannedUsers = bannedUsers,
+                MonthlySales = monthlySalesDto,
+                OrderStatusStats = orderStatusStats,
+                TopProducts = topProducts
+            });
+        }
+
+
         // --------------------------------------------------Banner -----------------------------------------------
         #region Banners
 
