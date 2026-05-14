@@ -21,9 +21,9 @@
     <li class="nav-item"><a class="nav-link" routerLink="/wishlist">Wishlist</a></li>
     @if(isAdmin()) {
 <li class="nav-item"><a class="nav-link" routerLink="/admin/overview">Admin</a></li>    }
-    @if(isSeller()) {
-      <li class="nav-item"><a class="nav-link" routerLink="/seller/dashboard">Seller</a></li>
-    }
+@if(isSeller()) {
+  <li class="nav-item"><a class="nav-link" routerLink="/seller/overview">Seller Dashboard</a></li>
+}
     <li class="nav-item">
       <button class="btn btn-outline-light ms-2" (click)="logout()">Logout</button>
     </li>

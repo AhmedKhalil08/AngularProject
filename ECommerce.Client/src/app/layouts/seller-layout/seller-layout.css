@@ -1,0 +1,13 @@
+.seller-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.seller-content {
+  margin-left: 260px;
+  flex: 1;
+  padding: 2rem;
+  background: #f0f4ff;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
