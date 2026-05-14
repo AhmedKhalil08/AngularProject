@@ -1,7 +1,7 @@
 ﻿using ECommerce.Application.Features.Payments.Commands.UpdatePayment; // 👈 اتأكد من الـ Namespace بتاعك
+using ECommerce.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
-using Stripe.V2.Core;
 
 namespace ECommerce.API.Controllers
 {
@@ -9,11 +9,12 @@ namespace ECommerce.API.Controllers
     public class PaymentsController : ApiControllerBase
     {
         private readonly string _stripeSecret;
-
-        public PaymentsController(IConfiguration configuration)
+        private readonly IPaymentService _paymentService;
+        public PaymentsController(IConfiguration configuration, IPaymentService paymentService)
         {
-            
-            _stripeSecret = configuration["Stripe:WebhookSecret"];
+
+            _stripeSecret = configuration["StripeSettings:WebhookSecret"];
+            _paymentService = paymentService;
         }
 
         // ==========================================
@@ -34,12 +35,12 @@ namespace ECommerce.API.Controllers
 
                 if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
                 {
-                    
+
 
                     var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
                     var orderId = int.Parse(session.Metadata["OrderId"]);
-                    var transactionId = session.PaymentIntentId; 
+                    var transactionId = session.PaymentIntentId;
 
                     await Mediator.Send(new ConfirmPaymentCommand
                     {
@@ -47,17 +48,19 @@ namespace ECommerce.API.Controllers
                         TransactionId = transactionId
                     });
                 }
-                // (اختياري) ممكن تضيف معالجة لـ Events.PaymentIntentPaymentFailed لو حابب تسجل إن الدفع فشل
 
                 return Ok();
             }
-            catch (StripeException)
+            catch (StripeException e)
             {
-                // الـ Exception ده بيحصل لو التوقيع (Signature) مش متطابق، يعني الريكويست مش من Stripe
+                Console.WriteLine($"🚨 Stripe Signature Error: {e.Message}");
                 return BadRequest("Invalid Stripe Signature");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // السطرين دول هيطبعوا الإيرور بالتفصيل في شاشة الكونسول عندك
+                Console.WriteLine($"🚨 الكود ضرب هنا: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
                 return StatusCode(500, "Internal Server Error");
             }
         }
@@ -100,5 +103,32 @@ namespace ECommerce.API.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("/api/auth/checkout/paypal-success")]
+        public async Task<IActionResult> PayPalSuccess([FromQuery] string token, [FromQuery] string PayerID, [FromQuery] int orderId)
+        {
+            // 1. سحب الفلوس
+            var isCaptured = await _paymentService.CapturePayPalPaymentAsync(token);
+
+            if (isCaptured)
+            {
+
+                await Mediator.Send(new ConfirmPaymentCommand
+                {
+                    OrderId = orderId,
+                    TransactionId = token
+                });
+
+                return Redirect("http://localhost:4200/checkout/success");
+            }
+
+            return Redirect("http://localhost:4200/checkout/failed");
+        }
+        [HttpGet("/api/auth/checkout/cancel")]
+        public IActionResult PayPalCancel()
+        {
+            return Redirect("http://localhost:4200/checkout/failed");
+        }
     }
+
+
 }

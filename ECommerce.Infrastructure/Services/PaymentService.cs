@@ -78,8 +78,8 @@ namespace ECommerce.Infrastructure.Services
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = domain + "/payment/success",
-                CancelUrl = domain + "/payment/cancel",
+                SuccessUrl = "http://localhost:4200/checkout/success",
+                CancelUrl = "http://localhost:4200/checkout/failed",
                 // 💡 الربط السحري مع الـ Webhook
                 Metadata = new Dictionary<string, string>
                 {

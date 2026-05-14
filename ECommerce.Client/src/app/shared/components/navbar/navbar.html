@@ -1,38 +1,122 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-  <a class="navbar-brand" routerLink="/">Vortex </a>
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="navbar-brand">
+      <a routerLink="/" class="logo-link">
+        <span class="logo-icon">🛍️</span>
+        <span class="logo-text">Vortex</span>
+      </a>
+    </div>
 
-  <button class="navbar-toggler" type="button" 
-    [attr.aria-expanded]="isMenuOpen"
-    (click)="isMenuOpen = !isMenuOpen">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <!-- Desktop Menu -->
+    <div class="nav-menu">
+      <div class="nav-links">
+        <a routerLink="/" routerLinkActive="active" class="nav-link">Home</a>
+        <a routerLink="/products" routerLinkActive="active" class="nav-link">Products</a>
+      </div>
 
-  <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
-    <ul class="navbar-nav me-auto">
-      <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/products">Products</a></li>
-    </ul>
+      <!-- User Actions -->
+      @if(isLoggedIn()) {
+      <div class="nav-actions">
+        <!-- Wishlist with Badge -->
+        <a routerLink="/wishlist" class="wishlist-link">
+          <span class="wishlist-icon">❤️</span>
+          @if(wishlistCount() > 0) {
+          <span class="wishlist-badge">{{ wishlistCount() }}</span>
+          }
+          <div class="wishlist-info">
+            <span class="wishlist-label">Wishlist</span>
+            <span class="wishlist-count">{{ wishlistCount() === 0 ? 'Empty' : wishlistCount() + ' items' }}</span>
+          </div>
+        </a>
 
-@if(isLoggedIn()) {
-  <ul class="navbar-nav ms-auto">
-    <li class="nav-item"><a class="nav-link" routerLink="/orders">Orders</a></li>
-    <li class="nav-item"><a class="nav-link" routerLink="/profile">Profile</a></li>
-    <li class="nav-item"><a class="nav-link" routerLink="/cart">Cart</a></li>
-    <li class="nav-item"><a class="nav-link" routerLink="/wishlist">Wishlist</a></li>
+        <!-- Cart with Badge -->
+        <a routerLink="/cart" class="cart-link">
+          <span class="cart-icon">🛒</span>
+          @if(cartService.cartCount() > 0) {
+          <span class="cart-badge">{{cartService.cartCount() }}</span>
+          }
+          <div class="cart-info">
+            <span class="cart-label">Cart</span>
+            <span class="cart-total">{{ cartService.cartTotal() === 0 ? 'Empty' : (cartService.cartTotal() |
+              number:'1.0-0') + ' EGP' }}</span>
+          </div>
+        </a>
+
+        <div class="nav-divider"></div>
+
+        <a routerLink="/orders" class="nav-text-link">Orders</a>
+        <a routerLink="/profile" class="nav-text-link">Profile</a>
+
+        @if(isAdmin()) {
+        <a routerLink="/admin/overview" class="nav-text-link admin-link">
+          <span>👨‍💼</span> Admin
+        </a>
+        }
+
+        @if(isSeller()) {
+        <a routerLink="/seller/dashboard" class="nav-text-link seller-link">
+          <span>🏪</span> Seller
+        </a>
+        }
+
+        <button class="btn-logout" (click)="logout()">
+          <span>🚪</span> Logout
+        </button>
+      </div>
+      } @else {
+      <div class="nav-actions">
+        <a routerLink="/auth/login" class="btn-signin">Sign In</a>
+        <a routerLink="/auth/register-type" class="btn-signup">Sign Up</a>
+      </div>
+      }
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="hamburger" (click)="toggleMenu()" [class.active]="isMenuOpen()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  @if(isMenuOpen()) {
+  <div class="mobile-menu">
+    <a routerLink="/" (click)="toggleMenu()" class="mobile-link">Home</a>
+    <a routerLink="/products" (click)="toggleMenu()" class="mobile-link">Products</a>
+
+    @if(isLoggedIn()) {
+    <a routerLink="/wishlist" (click)="toggleMenu()" class="mobile-action-link mobile-wishlist">
+      <span>❤️</span>
+      <span>Wishlist</span>
+      @if(wishlistCount() > 0) {
+      <span class="mobile-badge">{{ wishlistCount() }}</span>
+      }
+    </a>
+    <a routerLink="/cart" (click)="toggleMenu()" class="mobile-action-link mobile-cart">
+      <span>🛒</span>
+      <span>Cart</span>
+      @if(cartCount() > 0) {
+      <span class="mobile-badge">{{ cartCount() }}</span>
+      }
+    </a>
+    <a routerLink="/orders" (click)="toggleMenu()" class="mobile-link">Orders</a>
+    <a routerLink="/profile" (click)="toggleMenu()" class="mobile-link">Profile</a>
+
     @if(isAdmin()) {
-<li class="nav-item"><a class="nav-link" routerLink="/admin/overview">Admin</a></li>    }
-    @if(isSeller()) {
-      <li class="nav-item"><a class="nav-link" routerLink="/seller/dashboard">Seller</a></li>
+    <a routerLink="/admin/overview" (click)="toggleMenu()" class="mobile-link">👨‍💼 Admin</a>
     }
-    <li class="nav-item">
-      <button class="btn btn-outline-light ms-2" (click)="logout()">Logout</button>
-    </li>
-  </ul>
-} @else {
-  <ul class="navbar-nav ms-auto">
-    <li class="nav-item"><a class="nav-link" routerLink="/auth/login">Login</a></li>
-    <li class="nav-item"><a class="nav-link" routerLink="/auth/register-type">Register</a></li>
-  </ul>
-}
-</div>
+
+    @if(isSeller()) {
+    <a routerLink="/seller/dashboard" (click)="toggleMenu()" class="mobile-link">🏪 Seller</a>
+    }
+
+    <button class="mobile-logout" (click)="logout()">Logout</button>
+    } @else {
+    <a routerLink="/auth/login" (click)="toggleMenu()" class="mobile-link">Sign In</a>
+    <a routerLink="/auth/register-type" (click)="toggleMenu()" class="mobile-link">Sign Up</a>
+    }
+  </div>
+  }
 </nav>

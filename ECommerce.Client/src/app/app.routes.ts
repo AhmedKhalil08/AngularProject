@@ -12,47 +12,50 @@ import { adminGuard } from './core/guards/admin-guard';
 import { Overview } from './features/admin/pages/overview/overview';
 import { Customers } from './features/admin/pages/customers/customers';
 import { Sellers } from './features/admin/pages/sellers/sellers';
+import { ProductCatalog } from './features/products/components/product-catalog/product-catalog';
 import { Admins } from './features/admin/pages/admins/admins';
+import { CartComp } from './features/cart/components/cart-comp/cart-comp';
 
 export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
     children: [
-      { path: '', component: Home }
-    ]
+      { path: '', component: Home },
+      { path: 'products', component: ProductCatalog },
+      { path: 'cart', component: CartComp },
+    ],
   },
-  
-{
+
+  {
     path: 'auth',
     component: AuthLayout,
     children: [
-    { path: 'login', component: Login },
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'register-type', component: RegisterType },
+      { path: 'login', component: Login },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'register-type', component: RegisterType },
       { path: 'register', component: Register },
       { path: 'register-seller', component: RegisterSeller },
-    ]
+    ],
   },
-{
-  path: 'admin',
-  component: AdminLayout,
-  canActivate: [adminGuard],
-  children: [
-    { path: 'overview', component: Overview },
-    { path: 'customers', component: Customers },
-    { path: 'sellers', component: Sellers },
-    { path: 'admins', component: Admins },
-    { path: '', redirectTo: 'overview', pathMatch: 'full' }
-  ]
-},
-//   {
-//     path: 'seller',
-//     component: MainLayoutComponent,
-//     canActivate: [sellerGuard],
-//     children: []
-//   },
-//   { path: 'unauthorized', component: MainLayoutComponent },
-  { path: '**', redirectTo: '' }
-
+  {
+    path: 'admin',
+    component: AdminLayout,
+    canActivate: [adminGuard],
+    children: [
+      { path: 'overview', component: Overview },
+      { path: 'customers', component: Customers },
+      { path: 'sellers', component: Sellers },
+      { path: 'admins', component: Admins },
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+    ],
+  },
+  //   {
+  //     path: 'seller',
+  //     component: MainLayoutComponent,
+  //     canActivate: [sellerGuard],
+  //     children: []
+  //   },
+  //   { path: 'unauthorized', component: MainLayoutComponent },
+  { path: '**', redirectTo: '' },
 ];
