@@ -1,13 +1,10 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Application.Features.Reviews.Commands.CreateReview;
 using ECommerce.Application.Features.Reviews.Commands.DeleteReview;
-using ECommerce.Application.Features.Reviews.Commands.UpdateReview;
 using ECommerce.Application.Features.Reviews.Queries.GetAllReviews;
 using ECommerce.Application.Features.Reviews.Queries.GetReviewById;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 
 
@@ -68,10 +65,10 @@ namespace ECommerce.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ReviewDto>> GetReviewById(int id)
         {
-            return Ok(await Mediator.Send(new GetReviewByIdQuery{Id=id}));
+            return Ok(await Mediator.Send(new GetReviewByIdQuery { Id = id }));
         }
 
-        
+
 
 
     }

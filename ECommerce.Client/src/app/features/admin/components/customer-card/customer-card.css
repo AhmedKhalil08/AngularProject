@@ -1,0 +1,157 @@
+.customer-card {
+  background: #ffffff;
+  border: 1px solid #e8e4ff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  height: 100%;
+  box-shadow: 0 2px 12px #7c6ff711;
+}
+
+.customer-card:hover {
+  border-color: #7c6ff7;
+  box-shadow: 0 8px 25px #7c6ff722;
+  transform: translateY(-3px);
+}
+
+.customer-card.banned {
+  border-color: #ffb3c6;
+  opacity: 0.85;
+}
+
+.customer-card.deleted {
+  border-color: #e0e0e0;
+  opacity: 0.5;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.active-badge {
+  background: #d4f7e7;
+  color: #1a7f4b;
+  border: 1px solid #a8edcc;
+}
+
+.banned-badge {
+  background: #ffd6e0;
+  color: #c0392b;
+  border: 1px solid #ffb3c6;
+}
+
+.deleted-badge {
+  background: #f0f0f0;
+  color: #888;
+  border: 1px solid #ddd;
+}
+
+.card-info {
+  margin-bottom: 1rem;
+}
+
+.card-info h5 {
+  color: #2d2b55;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+    word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-info p {
+  color: #7a7a9d;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+    word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+.card-info i {
+  margin-right: 0.4rem;
+  color: #7c6ff7;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1rem;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  letter-spacing: 0.5px;
+}
+
+.ban-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #ffffff;
+  box-shadow: 0 4px 12px #f59e0b55;
+}
+
+.ban-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px #f59e0b77;
+}
+
+.activate-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 4px 12px #10b98155;
+}
+
+.activate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px #10b98177;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  color: #ffffff;
+  box-shadow: 0 4px 12px #f43f5e55;
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px #f43f5e77;
+}
+
+.restore-btn

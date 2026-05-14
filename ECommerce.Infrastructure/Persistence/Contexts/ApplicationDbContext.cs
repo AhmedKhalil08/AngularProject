@@ -1,11 +1,12 @@
-﻿using ECommerce.Domain.Entities;
+﻿using ECommerce.Application.Interfaces.Persistence;
+using ECommerce.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace ECommerce.Infrastructure.Persistence.Contexts
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -21,6 +22,7 @@ namespace ECommerce.Infrastructure.Persistence.Contexts
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Shipment> Shipments { get; set; }
 
         // Ahmed 
         public DbSet<Address> Addresses { get; set; }

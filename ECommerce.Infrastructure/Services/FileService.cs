@@ -17,13 +17,18 @@ namespace ECommerce.Infrastructure.Services
         public async Task<string> UploadFileAsync(IFormFile file, string folderName)
         {
             if (file == null) return null;
+            // 1. التأكد إن الـ WebRootPath مش بـ null (لو مش موجود بنوجهه للـ ContentRootPath + wwwroot)
+            var webRootPath = _webHostEnvironment.WebRootPath ?? Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot");
 
-            // 1. تحديد مسار الفولدر اللي هنحفظ فيه (wwwroot/uploads/products)
-            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", folderName);
+            // 2. تجميع المسار بالكامل
+            var uploadsFolder = Path.Combine(webRootPath, "uploads", folderName);
 
-            // لو الفولدر مش موجود.. نكريته
+            // 3. السحر هنا: لو الفولدر ده مش موجود، خليه يتكريت أوتوماتيك
             if (!Directory.Exists(uploadsFolder))
+            {
                 Directory.CreateDirectory(uploadsFolder);
+            }
+           
 
             // 2. عمل اسم فريد للملف عشان لو يوزرين رفعوا صورتين بنفس الاسم ميمسحوش بعض
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";

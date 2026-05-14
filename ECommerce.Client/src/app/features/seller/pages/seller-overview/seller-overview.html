@@ -1,0 +1,89 @@
+<div class="seller-overview">
+
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if(profile()) {
+
+    <div class="store-header">
+      <div class="store-logo">
+        <img [src]="getLogoUrl()" [alt]="profile()!.storeName" />
+      </div>
+      <div class="store-info">
+        <h2 class="store-name">{{ profile()!.storeName }}</h2>
+        <p class="store-description">{{ profile()!.storeDescription ?? 'No description yet' }}</p>
+        <div class="store-badges">
+          @if(profile()!.isApproved) {
+            <span class="badge approved-badge"> <i class="bi bi-patch-check-fill"></i> Approved</span>
+          } @else {
+            <span class="badge pending-badge"><i class="bi bi-hourglass-split"></i>  Pending Approval</span>
+          }
+        </div>
+      </div>
+      <button class="edit-btn" (click)="openEditModal()">
+        <i class="bi bi-pencil"></i> Edit Store
+      </button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <i class="bi bi-box-seam stat-icon"></i>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.totalProducts ?? 0 }}</span>
+          <span class="stat-label">Products</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="bi bi-receipt stat-icon"></i>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.totalOrders ?? 0 }}</span>
+          <span class="stat-label">Orders</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="bi bi-cash-stack stat-icon"></i>
+        <div class="stat-info">
+          <span class="stat-value">${{ stats()?.totalEarnings ?? 0 | number:'1.0-0' }}</span>
+          <span class="stat-label">Total Earnings</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-section">
+      <div class="row g-4">
+        <div class="col-md-8">
+          <div class="chart-card">
+<h5 class="chart-title"><i class="bi bi-graph-up-arrow"></i> Monthly Revenue</h5>
+            <canvas baseChart
+              [data]="salesChartData()"
+              [options]="salesChartOptions"
+              type="line">
+            </canvas>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="chart-card">
+<h5 class="chart-title"><i class="bi bi-pie-chart"></i> Orders by Status</h5>
+            <canvas baseChart
+              [data]="ordersChartData()"
+              type="doughnut">
+            </canvas>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="chart-card top-products-card">
+<h5 class="chart-title"><i class="bi bi-box-seam"></i> Top Products</h5>
+            <canvas baseChart
+              [data]="topProductsChartData()"
+              [options]="topProductsChartOptions"
+              type="bar">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  }
+
+</div>

@@ -4,27 +4,28 @@ using ECommerce.Application.Features.Addresses.Commands.UpdateAddress;
 using ECommerce.Application.Features.Addresses.Queries.GetAddressById;
 using ECommerce.Application.Features.Addresses.Queries.GetAllAddresses;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AddressesController : ControllerBase
     {
         private readonly IMediator _mediator;
         public AddressesController(IMediator mediator)
         {
-            _mediator= mediator;
+            _mediator = mediator;
         }
 
         #region GetAll
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string userId)
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllAddressesQuery { UserId= userId});
-                return Ok(result);
+            var result = await _mediator.Send(new GetAllAddressesQuery());
+            return Ok(result);
         }
         #endregion
 
@@ -32,7 +33,7 @@ namespace ECommerce.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _mediator.Send(new GetAddressByIdQuery { Id= id });
+            var result = await _mediator.Send(new GetAddressByIdQuery { Id = id });
             if (result == null) return NotFound();
             return Ok(result);
         }
@@ -49,7 +50,7 @@ namespace ECommerce.API.Controllers
 
         #region Update Address 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id , UpdateAddressCommand command)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateAddressCommand command)
         {
             command.Id = id;
             var result = await _mediator.Send(command);
@@ -62,7 +63,7 @@ namespace ECommerce.API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _mediator.Send(new DeleteAddressCommand { Id = id });
-            if(!result)return NotFound();
+            if (!result) return NotFound();
             return NoContent();
         }
         #endregion

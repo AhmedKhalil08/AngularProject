@@ -1,0 +1,128 @@
+.sellers-page {
+  padding: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e8e4ff;
+  padding-bottom: 1rem;
+}
+
+.page-title {
+  color: #2d2b55;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.seller-count {
+  background: #e8e4ff;
+  color: #7c6ff7;
+  border: 1px solid #c4b8ff;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7c6ff7;
+  font-size: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  border: 2px solid #e8e4ff;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  color: #2d2b55;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #7c6ff7;
+  box-shadow: 0 0 0 4px #7c6ff722;
+}
+
+.status-select {
+  padding: 0.85rem 1.25rem;
+  border: 2px solid #e8e4ff;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  color: #2d2b55;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  min-width: 170px;
+}
+
+.status-select:focus {
+  border-color: #7c6ff7;
+  box-shadow: 0 0 0 4px #7c6ff722;
+}
+
+.no-data {
+  color: #7a7a9d;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.pagination-bar {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.page-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #e8e4ff;
+  background: #ffffff;
+  color: #2d2b55;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+  border-color: #7c6ff7;
+  color: #7c6ff7;
+}
+
+.page-btn.active {
+  background: linear-gradient(135deg, #7c6ff7, #6d28d9);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 12px #7c6ff755;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

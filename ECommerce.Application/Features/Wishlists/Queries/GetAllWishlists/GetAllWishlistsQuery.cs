@@ -10,6 +10,6 @@ namespace ECommerce.Application.Features.Wishlists.Queries.GetAllWishlists
         public class GetAllWishlistsQuery : IRequest<List<WishlistDto>>
         {
             public string UserId { get; set; }
-        }
+    }
     
 }

@@ -1,9 +1,12 @@
-﻿using ECommerce.Application.DTOs.Auth;
+using ECommerce.Application.DTOs;
+using ECommerce.Application.DTOs.Auth;
 using ECommerce.Application.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using ECommerce.Domain.Entities;
+using System.Security.Claims;
 
 namespace ECommerce.API.Controllers
 {
@@ -18,7 +21,7 @@ namespace ECommerce.API.Controllers
         {
             _authService = authService;
             _mailconfservice = mailconfservice;
-           
+
         }
 
         #region Register Customer 
@@ -26,15 +29,8 @@ namespace ECommerce.API.Controllers
         [HttpPost("register/customer")]
         public async Task<IActionResult> RegisterCustomer([FromBody] RegisterDto model)
         {
-            try
-            {
-                var result = await _authService.RegisterCustomerAsync(model);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.RegisterCustomerAsync(model);
+            return Ok(result);
         }
         #endregion
 
@@ -44,15 +40,8 @@ namespace ECommerce.API.Controllers
         [HttpPost("register/seller")]
         public async Task<IActionResult> RegisterSeller([FromBody] RegisterSellerDto model)
         {
-            try
-            {
-                var result = await _authService.RegisterSellerAsync(model);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.RegisterSellerAsync(model);
+            return Ok(result);
         }
 
         #endregion
@@ -62,54 +51,117 @@ namespace ECommerce.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
-            try
-            {
-                var result = await _authService.LoginAsync(model);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.LoginAsync(model);
+            return Ok(result);
         }
         #endregion
 
-        #region Arwa:confirm email
+        #region Google Login
+
+        [HttpGet("google-login")]
+        public IActionResult GoogleLogin()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleCallback", "Auth", null, Request.Scheme)
+            };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("google-callback")]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var result = await _authService.ExternalLoginAsync();
+            return Redirect("http://localhost:4200");
+        }
+
+        #endregion
+
+        #region Change PAssword
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
+        {
+            var result = await _authService.ChangePasswordAsync(model);
+            return Ok(new { message = "Password Changed Successfuly" });
+        }
+        #endregion
+
+        #region confirm email
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string token)
         {
-            var result = await _mailconfservice.ConfirmEmail(userId,token);
-            return Ok(result);
+            var result = await _mailconfservice.ConfirmEmail(userId, token);
 
+            if (result.IsSuccess)
+                return Content($@"<html><body style='font-family:sans-serif;text-align:center;padding:50px'>
+                <h2 style='color:green'> {result.Data}</h2>
+                <p>You can now <a href='http://localhost:4200/auth/login'>login</a></p>
+                </body></html>", "text/html");
+
+            return Content($@"<html><body style='font-family:sans-serif;text-align:center;padding:50px'>
+            <h2 style='color:red'>{result.Error}</h2>
+            </body></html>", "text/html");
+        }
+        #endregion
+
+
+        #region Logout
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("token");
+            return Ok();
+        }
+        #endregion
+
+
+        [HttpPost("become-seller")]
+        [Authorize]
+        public async Task<IActionResult> BecomeSeller([FromBody] BecomeSellerDto model)
+        {
+            await _authService.BecomeSellerAsync(model);
+            return Ok(new { message = "You are now a seller!" });
         }
 
+        #region Facebook 
 
-        //[HttpPost("resend-confirmation")]
-        //public async Task<IActionResult> ResendConfirmation([FromBody] string email)
-        //{
-        //    var user = await _userManager.FindByEmailAsync(email);
-        //    if (user is null)
-        //        return NotFound("User not found");
+        [HttpGet("facebook-login")]
+        public IActionResult FacebookLogin()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("FacebookCallback", "Auth", null, Request.Scheme)
+            };
+            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
+        }
 
-        //    if (user.EmailConfirmed)
-        //        return BadRequest("Email is already confirmed");
+        [HttpGet("facebook-callback")]
+        public async Task<IActionResult> FacebookCallback()
+        {
+            var result = await _authService.ExternalLoginAsync();
+            return Redirect("http://localhost:4200");
+        }
+        #endregion
 
-        //    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        //    var encodedToken = Uri.EscapeDataString(token);
-        //    var clientUrl = _config["ClientUrl"];
-        //    var confirmationLink = $"{clientUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
+        #region ME
+        [HttpGet("me")]
+        [Authorize]
+        public IActionResult Me()
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var fullName = User.FindFirst(ClaimTypes.Name)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            var expiration = User.FindFirst("exp")?.Value;
 
-        //    await _emailService.SendEmailAsync(new EmailDto
-        //    {
-        //        To = user.Email,
-        //        Subject = "Resend - Confirm Your Email",
-        //        Body = $"<p>Click <a href='{confirmationLink}'>here</a> to confirm your email.</p>"
-        //    });
-
-        //    return Ok("Confirmation email resent. Please check your inbox.");
-        //}
-
-
+            return Ok(new AuthResponseDto
+            {
+                Email = email,
+                FullName = fullName,
+                Role = role,
+                Expiration = DateTime.UtcNow.AddDays(7)
+            });
+        }
         #endregion
     }
 }

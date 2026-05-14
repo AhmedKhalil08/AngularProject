@@ -1,9 +1,11 @@
 ﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.Exceptions;
 using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Channels;
 
 namespace ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerProfile
 {
@@ -20,8 +22,10 @@ namespace ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerPr
 
         public async Task<SellerProfileDto> Handle(ApproveSellerProfileCommand request, CancellationToken cancellationToken)
         {
-            var profile = await _repository.GetByIdAsync(request.Id);
+            var profile = await _repository.GetByIdWithUserAsync(request.Id);
 
+            if (profile == null)
+                throw new NotFoundException("Seller profile not found");
             profile.IsApproved = request.IsApproved;
 
             await _repository.UpdateAsync(profile);
@@ -34,7 +38,10 @@ namespace ECommerce.Application.Features.SellerProfiles.Commands.ApproveSellerPr
                 StoreDescription = profile.StoreDescription,
                 LogoUrl = profile.LogoUrl,
                 IsApproved = profile.IsApproved,
-                TotalEarnings = profile.TotalEarnings
+                TotalEarnings = profile.TotalEarnings,
+                UserId = profile.UserId,        
+                FullName = profile.User.FullName, 
+                Email = profile.User.Email
             };
         }
     }

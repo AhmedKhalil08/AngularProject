@@ -50,42 +50,61 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IFileService, FileService>();
 
             // Ahmed
-            
+
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ISellerProfileRepository, SellerProfileRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthService, AuthService>();
-            
 
-            
+
+
             // JWT Auth
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-             .AddJwtBearer(options =>
-             {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                 ValidateIssuer = true,
-                 ValidateAudience = true,
-                 ValidateLifetime = true,
-                 ValidateIssuerSigningKey = true,
-                 ValidIssuer = configuration["Jwt:Issuer"],
-                 ValidAudience = configuration["Jwt:Audience"],
-                 IssuerSigningKey = new SymmetricSecurityKey(
-                 Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
-                 };
+           .AddJwtBearer(options =>
+           {
+               options.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuer = true,
+                   ValidateAudience = true,
+                   ValidateLifetime = true,
+                   ValidateIssuerSigningKey = true,
+                   ValidIssuer = configuration["Jwt:Issuer"],
+                   ValidAudience = configuration["Jwt:Audience"],
+                   IssuerSigningKey = new SymmetricSecurityKey(
+                       Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+               };
+               options.Events = new JwtBearerEvents
+               {
+                   OnMessageReceived = context =>
+                   {
+                       context.Token = context.Request.Cookies["token"];
+                       return Task.CompletedTask;
+                   }
+               };
+           }).AddGoogle(options =>
+                  {
+                      options.ClientId = configuration["Authentication:Google:ClientId"];
+                      options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+                  }).AddFacebook(options =>
+                  {
+                      options.AppId = configuration["Authentication:Facebook:AppId"];
+                      options.AppSecret = configuration["Authentication:Facebook:AppSecret"];
                   });
             //
-        
 
+            services.AddScoped<IBannerRepository, BannerRepository>();
+            services.AddScoped<IPromoCodeRepository, PromoCodeRepository>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
 
 

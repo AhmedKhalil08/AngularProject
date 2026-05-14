@@ -29,8 +29,7 @@ namespace ECommerce.Application.Features.OrderItems.Commands.UpdateOrderItem
             await _unitOfWork.SaveChangesAsync();
             return new OrderItemDto
             {
-                Id = item.Id,
-                OrderId = item.OrderId,
+                //Id = item.Id,
                 Quantity = item.Quantity,
 
             };

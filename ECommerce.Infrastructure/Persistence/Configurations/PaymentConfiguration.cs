@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ECommerce.Infrastructure.Persistence.Configurations
 {
-    public class PaymentConfiguration: IEntityTypeConfiguration<Payment>
+    public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
     {
 
         public void Configure(EntityTypeBuilder<Payment> builder)
@@ -15,6 +15,7 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.HasKey(oi => oi.Id);
 
             builder.Property(oi => oi.Amount)
+                .HasColumnType("decimal(18,2)")
             .IsRequired();
 
             builder.HasOne(c => c.Order)

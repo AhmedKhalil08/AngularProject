@@ -19,7 +19,7 @@ namespace ECommerce.Application.Features.CartItems.Queries.GetAllCartItems
             return items.Select(i => new CartItemDto
             {
                 Id = i.Id,
-                CartId = i.CartId,
+                //CartId = i.CartId,
                 ProductId = i.ProductId,
                 Quantity = i.Quantity
             }).ToList();

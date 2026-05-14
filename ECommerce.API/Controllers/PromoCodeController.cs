@@ -4,17 +4,15 @@ using ECommerce.Application.Features.PromoCodes.Commands.DeletePromoCode;
 using ECommerce.Application.Features.PromoCodes.Commands.UpdatePromoCode;
 using ECommerce.Application.Features.PromoCodes.Queries.GetAllPromoCodes;
 using ECommerce.Application.Features.PromoCodes.Queries.GetPromoCodeById;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PromoCodeController:ApiControllerBase
+    public class PromoCodeController : ApiControllerBase
     {
 
         private IMediator _mediator;
@@ -24,7 +22,7 @@ namespace ECommerce.API.Controllers
         }
         //Create Banner
         [HttpPost]
-        public async Task <IActionResult> Create([FromForm] CreatePromoCodeCommand command)
+        public async Task<IActionResult> Create([FromForm] CreatePromoCodeCommand command)
         {
             //var result =;
 
@@ -44,29 +42,26 @@ namespace ECommerce.API.Controllers
             return NoContent();
         }
         //Update PromoCode
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Update(int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id ,UpdatePromoCodeCommand command )
         {
-            var result = await Mediator.Send(new UpdatePromoCodeCommand { Id = id });
-
+            if (id != command.Id)
+            {
+                return BadRequest("ID mismatch.");
+            }
+            var result = await Mediator.Send(command);
             if (result == null)
             {
                 return NotFound($"PromoCode with ID {id} not found.");
             }
-
-
             return Ok(result);
         }
-
         //Get All PromoCodes
-
         [HttpGet]
         public async Task<ActionResult<List<PromoCodeDto>>> GetAllPromoCodes()
         {
             return Ok(await Mediator.Send(new GetAllPromoCodesQuery()));
         }
-
-
 
         //Get PromoCode By Id
         [HttpGet("get/{id}")]
@@ -76,8 +71,6 @@ namespace ECommerce.API.Controllers
         }
         //Create PromoCode
 
-
-      
         //Get PromoCode By Code
 
     }

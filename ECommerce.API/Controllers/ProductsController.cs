@@ -37,7 +37,7 @@ namespace ECommerce.API.Controllers
         {
             var result = await Mediator.Send(command);
 
-            return Ok(result);
+            return Ok(new { Success = true, Message = "Product created successfully", ProductId = result.Id }); 
         }
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
@@ -67,6 +67,6 @@ namespace ECommerce.API.Controllers
             }
             return NoContent();
         }
-        
+
     }
 }

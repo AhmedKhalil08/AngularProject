@@ -16,13 +16,14 @@ namespace ECommerce.Application.DTOs
         public OrderStatus Status { get; set; }
 
         public string? Notes { get; set; }
+        public bool IsDeleted { get; set; }
 
         public string UserName { get; set; }
 
         public AddressDto Address { get; set; }
 
         public PromoCodeDto? PromoCode { get; set; }
-        public List<OrderItemDto> OrderItems { get; set; }=new List<OrderItemDto>();
+        public List<OrderItemDto> OrderItems { get; set; }
         public PaymentDto Payment { get; set; }
     }
 }

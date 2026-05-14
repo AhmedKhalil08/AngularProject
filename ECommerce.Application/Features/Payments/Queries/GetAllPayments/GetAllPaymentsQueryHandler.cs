@@ -22,12 +22,12 @@ namespace ECommerce.Application.Features.Payments.Queries.GetAllPayments
             var items = await _repository.GetAllAsync();
             return items.Select(item => new PaymentDto
             {
-                Id = item.Id,
+                //Id = item.Id,
                 Amount = item.Amount,
                 Method = item.Method,
                 Status = item.Status,
                 PaidAt = item.PaidAt,
-                OrderId = item.OrderId
+                //OrderId = item.OrderId
             }).ToList();
         }
     }

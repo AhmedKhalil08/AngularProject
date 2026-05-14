@@ -13,12 +13,12 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
             builder.HasOne(w => w.User)
                 .WithMany(u => u.Wishlists)
                 .HasForeignKey(w => w.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(w => w.Product)
                 .WithMany()
                 .HasForeignKey(w => w.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasIndex(w => new { w.UserId, w.ProductId })
                 .IsUnique()

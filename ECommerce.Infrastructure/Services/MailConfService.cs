@@ -60,7 +60,7 @@ namespace ECommerce.Infrastructure.Services
             if (!result.Succeeded)
                 return  Result<string>.Failure("Invalid confirmation link");
 
-             return Result<string>.Success("Email already confirmed");
+             return Result<string>.Success("Email confirmed successfully. You can now log in.");
         }
     }
 }

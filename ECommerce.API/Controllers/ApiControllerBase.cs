@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
@@ -8,7 +7,7 @@ namespace ECommerce.API.Controllers
     [ApiController]
     public class ApiControllerBase : ControllerBase
     {
-        private  IMediator _mediator;
+        private IMediator _mediator;
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
     }
 }

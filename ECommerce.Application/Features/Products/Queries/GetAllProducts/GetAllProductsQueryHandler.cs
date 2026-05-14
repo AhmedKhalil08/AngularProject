@@ -1,10 +1,7 @@
 using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Persistence;
 using MediatR;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Mapster; // 👈 1. لازم نعمل Import للـ Mapster
 
 namespace ECommerce.Application.Features.Products.Queries.GetAllProducts
 {
@@ -19,16 +16,11 @@ namespace ECommerce.Application.Features.Products.Queries.GetAllProducts
 
         public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
+         
+
             var products = await _productRepository.GetAllAsync();
-            return products.Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Stock = p.Stock,
-                Description = p.Description,
-                ImageUrls = p.Images.Select(i => i.ImageUrl).ToList()
-            }).ToList();
+
+            return products.Adapt<List<ProductDto>>();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace ECommerce.Domain.Entities
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsDeleted { get; set; }
+       
 
         /*-------------------------------------------------------------------------*/
         //                          Navigation Props 

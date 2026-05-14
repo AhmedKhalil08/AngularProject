@@ -5,6 +5,7 @@ namespace ECommerce.Application.Interfaces.Persistence
     public interface IProductRepository : IGenericRepository<Product,int>
     {
         Task<IReadOnlyList<Product>> GetProductsByCategoryIdAsync(int categoryId);
+        Task<bool> IsUserOwnerOfProductAsync(int productId, string userId);
     }
 
 }

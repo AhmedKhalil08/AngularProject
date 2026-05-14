@@ -17,6 +17,7 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
                 .WithMany(u => u.Orders)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.Property(c => c.TotalAmount).HasColumnType("decimal(18,2)");
 
             builder.HasMany(c => c.OrderItems)
                 .WithOne(ci => ci.Order)
