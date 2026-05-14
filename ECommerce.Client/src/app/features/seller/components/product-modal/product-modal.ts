@@ -8,8 +8,8 @@ import { Category } from '../../../../core/models/category';
   selector: 'app-product-modal',
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './product-modal.component.html',
-  styleUrl: './product-modal.component.css'
+templateUrl: './product-modal.html',
+styleUrl: './product-modal.css'
 })
 export class ProductModal implements OnInit {
   @Input() product: Product | null = null;
