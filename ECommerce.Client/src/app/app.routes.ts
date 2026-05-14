@@ -21,6 +21,8 @@ import { MyProducts } from './features/seller/pages/my-products/my-products';
 import { Profile } from './features/profile/pages/profile/profile';
 import { ProfileLayout } from './layouts/profile-layout/profile-layout';
 import { authGuard } from './core/guards/auth-guard';
+import { ChangePassword } from './features/profile/pages/change-password/change-password';
+import { Addresses } from './features/profile/pages/addresses/addresses';
 
 export const routes: Routes = [
   {
@@ -71,8 +73,8 @@ export const routes: Routes = [
   canActivate: [authGuard],
   children: [
     { path: 'info', component: Profile },
-    { path: 'password', component: Profile }, // placeholder for now
-    { path: 'addresses', component: Profile }, // placeholder for now
+{ path: 'password', component: ChangePassword },// placeholder for now
+{ path: 'addresses', component: Addresses }, // placeholder for now
     { path: '', redirectTo: 'info', pathMatch: 'full' }
   ]
 },
