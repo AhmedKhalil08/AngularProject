@@ -1,6 +1,565 @@
-.active{
-    background-color: #198754;
-    /* لون أخضر مناسب لـ Ecobazar */
-    color: white;
-    border-color: #198754;
+/* Modern Navbar Design */
+
+:host {
+  display: block;
+}
+
+.navbar {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid #e9ecef;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Logo Section */
+.navbar-brand {
+  flex-shrink: 0;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.logo-link:hover {
+  transform: translateY(-2px);
+}
+
+.logo-icon {
+  font-size: 1.75rem;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Main Menu */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 2rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: #2c3e50;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #198754;
+  background: rgba(25, 135, 84, 0.05);
+}
+
+.nav-link.active {
+  color: #198754;
+  font-weight: 600;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  height: 3px;
+  background: #198754;
+  border-radius: 2px;
+}
+
+/* User Actions Section */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+/* Wishlist Link with Badge */
+.wishlist-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ff6b9d 0%, #e63a6d 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.wishlist-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(255, 107, 157, 0.35);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.wishlist-link:active {
+  transform: translateY(-1px);
+}
+
+.wishlist-icon {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  animation: heart-beat 0.6s ease-in-out;
+}
+
+.wishlist-link:hover .wishlist-icon {
+  animation: heart-pulse 0.6s ease-in-out;
+}
+
+@keyframes heart-beat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes heart-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.wishlist-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.3rem 0.6rem;
+  border-radius: 50%;
+  min-width: 22px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+  animation: badge-pop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid white;
+}
+
+.wishlist-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: white;
+}
+
+.wishlist-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wishlist-count {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Cart Link with Badge */
+.cart-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.cart-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(25, 135, 84, 0.35);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cart-link:active {
+  transform: translateY(-1px);
+}
+
+.cart-icon {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  animation: cart-roll 0.6s ease-in-out;
+}
+
+.cart-link:hover .cart-icon {
+  animation: cart-bounce 0.6s ease-in-out;
+}
+
+@keyframes cart-roll {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes cart-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-4px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  75% {
+    transform: translateY(-2px);
+  }
+}
+
+.cart-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.3rem 0.6rem;
+  border-radius: 50%;
+  min-width: 22px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+  animation: badge-pop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid white;
+}
+
+@keyframes badge-pop {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.3) rotate(15deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.cart-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: white;
+}
+
+.cart-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cart-total {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Divider */
+.nav-divider {
+  width: 1px;
+  height: 24px;
+  background: #dee2e6;
+}
+
+/* Text Links */
+.nav-text-link {
+  color: #2c3e50;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-text-link:hover {
+  color: #198754;
+  background: rgba(25, 135, 84, 0.05);
+}
+
+.admin-link {
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.admin-link:hover {
+  background: rgba(25, 135, 84, 0.2);
+}
+
+.seller-link {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ff9800;
+}
+
+.seller-link:hover {
+  background: rgba(255, 193, 7, 0.2);
+}
+
+/* Buttons */
+.btn-logout {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(220, 53, 69, 0.25);
+}
+
+.btn-signin {
+  color: #198754;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-signin:hover {
+  border-color: #198754;
+  background: rgba(25, 135, 84, 0.05);
+}
+
+.btn-signup {
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-signup:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(25, 135, 84, 0.25);
+}
+
+/* Hamburger Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: #2c3e50;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(0.6rem, 0.6rem);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(0.6rem, -0.6rem);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #e9ecef;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-link {
+  color: #2c3e50;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: block;
+}
+
+.mobile-link:hover {
+  background: rgba(25, 135, 84, 0.05);
+  color: #198754;
+}
+
+/* Mobile Action Links (Cart & Wishlist) */
+.mobile-action-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.mobile-wishlist {
+  color: white;
+  background: linear-gradient(135deg, #ff6b9d 0%, #e63a6d 100%);
+}
+
+.mobile-wishlist:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+}
+
+.mobile-cart {
+  color: white;
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
+}
+
+.mobile-cart:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+}
+
+.mobile-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-left: auto;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+}
+
+.mobile-logout {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.mobile-logout:hover {
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0.75rem 1rem;
+    gap: 1rem;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: flex;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+  }
 }

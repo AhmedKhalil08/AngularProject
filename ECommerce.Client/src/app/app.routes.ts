@@ -14,6 +14,7 @@ import { Customers } from './features/admin/pages/customers/customers';
 import { Sellers } from './features/admin/pages/sellers/sellers';
 import { ProductCatalog } from './features/products/components/product-catalog/product-catalog';
 import { Admins } from './features/admin/pages/admins/admins';
+import { CartComp } from './features/cart/components/cart-comp/cart-comp';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'products', component: ProductCatalog },
+      { path: 'cart', component: CartComp },
     ],
   },
 

@@ -108,10 +108,32 @@
                 <div class="product-card">
                     <div class="product-image-wrapper">
                         <img [src]="getProductImage(product)" [alt]="product.name" class="product-image" loading="lazy">
+
+                        <!-- Wishlist Button -->
+                        <button class="wishlist-btn" [class.in-wishlist]="isInWishlist(product.id)"
+                            (click)="toggleWishlist(product.id)"
+                            [attr.aria-label]="isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'">
+                            <span class="heart-icon">{{ isInWishlist(product.id) ? '❤️' : '🤍' }}</span>
+                        </button>
+
                         <div class="product-overlay">
-                            <button class="btn-add-cart" aria-label="Add {{ product.name }} to cart">
-                                <span>🛒</span> Add to Cart
-                            </button>
+                            <div class="product-add-section">
+                                @if (product.stock > 0) {
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" (click)="decrementQuantity(product.id)"
+                                        [disabled]="getProductQuantity(product.id) === 1"
+                                        aria-label="Decrease quantity">−</button>
+                                    <span class="qty-display">{{ getProductQuantity(product.id) }}</span>
+                                    <button class="qty-btn" (click)="incrementQuantity(product.id)"
+                                        [disabled]="getProductQuantity(product.id) >= product.stock"
+                                        aria-label="Increase quantity">+</button>
+                                </div>
+                                <button class="btn-add-cart" aria-label="Add {{ product.name }} to cart"
+                                    (click)="CartService.addToCart(product, getProductQuantity(product.id))">
+                                    <span>🛒</span> Add to Cart
+                                </button>
+                                }
+                            </div>
                         </div>
                         @if (product.stock <= 5 && product.stock> 0) {
                             <div class="stock-badge low-stock">Low Stock</div>

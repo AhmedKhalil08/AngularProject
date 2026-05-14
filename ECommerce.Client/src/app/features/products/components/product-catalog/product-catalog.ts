@@ -13,6 +13,7 @@ import { Category } from '../../../../core/models/category';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TruncateWordsPipe } from '../../../../shared/pipes/truncate-words.pipe';
+import { CartService } from '../../../cart/services/cart-service';
 
 @Component({
   selector: 'app-product-catalog',
@@ -24,6 +25,7 @@ import { TruncateWordsPipe } from '../../../../shared/pipes/truncate-words.pipe'
 export class ProductCatalog implements OnInit {
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
+  public CartService = inject(CartService);
   private readonly backendUrl = 'https://localhost:7018/';
   readonly minRangePrice = 0;
   readonly maxRangePrice = 7000;
@@ -38,6 +40,12 @@ export class ProductCatalog implements OnInit {
   selectedRating = signal<number | null>(null);
   isLoading = signal<boolean>(true);
   error = signal<string | null>(null);
+
+  // Track quantity for each product
+  productQuantities = signal<Map<number, number>>(new Map());
+
+  // Track wishlist items
+  wishlistItems = signal<Set<number>>(new Set());
 
   // Computed - Get filtered products based on all filter signals
   filteredProducts = computed(() => {
@@ -216,5 +224,44 @@ export class ProductCatalog implements OnInit {
     this.minPrice.set(this.minRangePrice);
     this.maxPrice.set(this.maxRangePrice);
     this.selectedRating.set(null);
+  }
+
+  // Quantity management
+  getProductQuantity(productId: number): number {
+    return this.productQuantities().get(productId) ?? 1;
+  }
+
+  incrementQuantity(productId: number): void {
+    const current = this.getProductQuantity(productId);
+    const product = this.products().find((p) => p.id === productId);
+    if (product && current < product.stock) {
+      const newMap = new Map(this.productQuantities());
+      newMap.set(productId, current + 1);
+      this.productQuantities.set(newMap);
+    }
+  }
+
+  decrementQuantity(productId: number): void {
+    const current = this.getProductQuantity(productId);
+    if (current > 1) {
+      const newMap = new Map(this.productQuantities());
+      newMap.set(productId, current - 1);
+      this.productQuantities.set(newMap);
+    }
+  }
+
+  // Wishlist management
+  isInWishlist(productId: number): boolean {
+    return this.wishlistItems().has(productId);
+  }
+
+  toggleWishlist(productId: number): void {
+    const newSet = new Set(this.wishlistItems());
+    if (newSet.has(productId)) {
+      newSet.delete(productId);
+    } else {
+      newSet.add(productId);
+    }
+    this.wishlistItems.set(newSet);
   }
 }
