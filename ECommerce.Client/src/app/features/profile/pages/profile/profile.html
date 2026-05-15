@@ -76,5 +76,30 @@
     }
 
   }
+  <div class="danger-zone">
+  <h4><i class="bi bi-exclamation-triangle"></i> Account Actions</h4>
+  
+  @if(user()?.role === 'Customer') {
+    <div class="action-item">
+      <div>
+        <h5>Become a Seller</h5>
+        <p>Start selling your products on Vortex</p>
+      </div>
+      <button class="become-seller-btn" (click)="openBecomeSellerModal()">
+        <i class="bi bi-shop"></i> Become Seller
+      </button>
+    </div>
+  }
+
+  <div class="action-item danger">
+    <div>
+      <h5>Delete Account</h5>
+      <p>Permanently delete your account and all data</p>
+    </div>
+    <button class="delete-account-btn" (click)="confirmDeleteAccount()">
+      <i class="bi bi-trash3"></i> Delete Account
+    </button>
+  </div>
+</div>
 
 </div>

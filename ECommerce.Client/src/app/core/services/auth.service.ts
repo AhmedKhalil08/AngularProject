@@ -73,20 +73,24 @@ export class AuthService {
     return this.api.post<AuthResponse>('auth/register/seller', dto);
   }
 
-  changePassword(dto: ChangePasswordDto) {
-    return this.api.post<void>('auth/change-password', dto);
-  }
-  loadCurrentUser() {
-    return this.api.get<AuthResponse>('auth/me').pipe(
-      tap((res) => {
-        const user: CurrentUser = {
-          email: res.email,
-          fullName: res.fullName,
-          role: res.role,
-          expiration: res.expiration,
-        };
-        this.currentUserSignal.set(user);
-      }),
-    );
-  }
+changePassword(dto: ChangePasswordDto) {
+  return this.api.post<void>('auth/change-password', dto);
+}
+loadCurrentUser() {
+  return this.api.get<AuthResponse>('auth/me').pipe(
+    tap(res => {
+      const user: CurrentUser = {
+        email: res.email,
+        fullName: res.fullName,
+        role: res.role,
+        expiration: res.expiration
+      };
+      this.currentUserSignal.set(user);
+    })
+  );
+}
+clearUser() {
+  this.currentUserSignal.set(null);
+  this.router.navigate(['/']);
+}
 }

@@ -16,14 +16,14 @@
       <div class="banner-slider">
         @for(banner of banners(); track banner.id; let i = $index) {
           <div class="banner-slide" [class.active]="i === currentBannerIndex()">
+            <a [routerLink]="banner.link || '/products'" class="banner-link">
             <img [src]="banner.imageUrl" [alt]="banner.title" />
             <div class="banner-overlay">
-              <h2>{{ banner.title }}</h2>
-              @if(banner.link) {
-                <a [href]="banner.link" class="banner-btn">Shop Now <i class="bi bi-arrow-right"></i></a>
-              }
-            </div>
-          </div>
+            <h2>{{ banner.title }}</h2>
+            <span class="banner-btn">Shop Now <i class="bi bi-arrow-right"></i></span>
+        </div>
+        </a>
+</div>
         }
 
         <button class="slider-btn prev-btn" (click)="prevBanner()">
@@ -105,6 +105,7 @@
           <div class="product-info">
             <h5>{{ product.name }}</h5>
             <span class="product-price">EGP {{ product.price | number:'1.0-0' }}</span>
+              <button class="add-to-cart-btn" (click)="addToCart(product); $event.preventDefault()">                    <i class="bi bi-cart-plus"></i></button>
           </div>
         </a>
       }
