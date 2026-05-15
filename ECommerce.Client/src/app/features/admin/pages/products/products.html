@@ -1,0 +1,82 @@
+<div class="products-page">
+
+  <div class="page-header">
+    <h2 class="page-title"><i class="bi bi-box-seam"></i> Products</h2>
+    <span class="product-count">{{ filteredProducts().length }} products</span>
+  </div>
+
+  <div class="filters-bar">
+    <div class="search-wrapper">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search products..." 
+        [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+    </div>
+
+    <select class="filter-select" [value]="selectedCategory()" 
+      (change)="selectedCategory.set($any($event.target).value)">
+      <option value="">All Categories</option>
+      @for(cat of categories(); track cat) {
+        <option [value]="cat">{{ cat }}</option>
+      }
+    </select>
+
+    <select class="filter-select" [value]="selectedStatus()" 
+      (change)="selectedStatus.set($any($event.target).value)">
+      <option value="all">All Status</option>
+      <option value="active">Active</option>
+      <option value="deleted">Deleted</option>
+    </select>
+  </div>
+
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="products-table">
+      <div class="table-header">
+        <span>Product</span>
+        <span>Category</span>
+        <span>Seller</span>
+        <span>Price</span>
+        <span>Stock</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+
+      @for(product of filteredProducts(); track product.id) {
+        <div class="table-row" [class.deleted-row]="product.isDeleted">
+          <div class="product-cell">
+            <img [src]="getProductImage(product)" [alt]="product.name" />
+            <span>{{ product.name }}</span>
+          </div>
+          <span class="category-badge">{{ product.categoryName }}</span>
+          <span class="seller-name">{{ product.sellerName }}</span>
+          <span class="price">EGP {{ product.price | number:'1.0-0' }}</span>
+          <span class="stock" [class.low-stock]="product.stock <= 5">{{ product.stock }}</span>
+          @if(product.isDeleted) {
+            <span class="status-badge deleted-badge">Deleted</span>
+          } @else {
+            <span class="status-badge active-badge">Available</span>
+          }
+<div class="actions">
+  @if(!product.isDeleted) {
+    <button class="action-btn delete-btn" (click)="deleteProduct(product.id)">
+      <i class="bi bi-trash3"></i>
+    </button>
+  } @else {
+    <button class="action-btn restore-btn" (click)="restoreProduct(product.id)">
+      <i class="bi bi-arrow-counterclockwise"></i>
+    </button>
+  }
+</div>        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="bi bi-box-seam"></i>
+          <p>No products found</p>
+        </div>
+      }
+    </div>
+  }
+
+</div>

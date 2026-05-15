@@ -55,5 +55,15 @@ getMessageById(id: number) {
 markAsRead(id: number) {
   return this.api.put<any>(`admin/messages/${id}/read`, {});
 }
+getProducts() {
+  return this.api.get<any[]>('products');
+}
+
+deleteProduct(id: number) {
+  return this.api.delete<any>(`products/${id}`);
+}
+restoreProduct(id: number) {
+  return this.api.put<any>(`admin/products/${id}/restore`, {});
+}
 }
 

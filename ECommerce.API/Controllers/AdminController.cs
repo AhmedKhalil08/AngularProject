@@ -9,6 +9,7 @@ using ECommerce.Application.Features.ContactMessages.Commands.MarkAsRead;
 using ECommerce.Application.Features.ContactMessages.Queries;
 using ECommerce.Application.Features.ContactMessages.Queries.GetAllMessages;
 using ECommerce.Application.Features.ContactMessages.Queries.GetMessageById;
+using ECommerce.Application.Features.Products.Commands.RestoreProduct;
 using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
 using ECommerce.Application.Features.PromoCodes.Commands.DeletePromoCode;
 using ECommerce.Application.Features.PromoCodes.Queries.GetAllPromoCodes;
@@ -350,5 +351,13 @@ namespace ECommerce.API.Controllers
             return Ok(result);
         }
         #endregion
+
+
+        [HttpPut("products/{id}/restore")]
+        public async Task<IActionResult> RestoreProduct(int id)
+        {
+            var result = await _mediator.Send(new RestoreProductCommand { Id = id });
+            return Ok(result);
+        }
     }
 }

@@ -31,6 +31,7 @@ import { HelpCenter } from './features/contact/pages/help-center/help-center';
 import { CustomerService } from './features/contact/pages/customer-service/customer-service';
 import { MyOrders } from './features/profile/pages/my-orders/my-orders';
 import { Shipment } from './features/seller/pages/shipment/shipment';
+import { Products } from './features/admin/pages/products/products';
 
 export const routes: Routes = [
   {
@@ -72,6 +73,7 @@ export const routes: Routes = [
       { path: 'admins', component: Admins },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'messages', component: Messages },
+      { path: 'products', component: Products }
     ],
   },
   {
