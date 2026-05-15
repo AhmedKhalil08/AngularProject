@@ -21,4 +21,12 @@ export class ProfileService {
     else if (data.profileImageUrl) formData.append('profileImageUrl', data.profileImageUrl);
     return this.api.put<UserDto>('user', formData);
   }
+
+  deleteAccount() {
+  return this.api.delete<any>('user');
+}
+
+becomeSeller(dto: { storeName: string; storeDescription?: string }) {
+  return this.api.post<any>('auth/become-seller', dto);
+}
 }

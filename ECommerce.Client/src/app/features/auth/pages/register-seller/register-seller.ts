@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { matchPassword } from '../../validators/password-match.validator';
 
 @Component({
   selector: 'app-register-seller',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './register-seller.html',
   styleUrl: './register-seller.css',
 })
@@ -33,23 +33,28 @@ export class RegisterSeller {
   isLoading =false;
   errorMessage='';
   
-  onSubmit(){
-    if(this.registerSellerForm.invalid){return;}
+onSubmit(){
+  if(this.registerSellerForm.invalid){ return; }
 
-    this.isLoading=true;
-    this.errorMessage='';
+  this.isLoading = true;
+  this.errorMessage = '';
 
-    const {confirmPassword , ...registerData} = this.registerSellerForm.value;
+  const { confirmPassword, ...registerData } = this.registerSellerForm.value;
 
-    this.authService.registerSeller(registerData).subscribe({
-      next:()=>{
-        this.router.navigate(['/auth/login'])
-      },
-      error: (err)=>{
-        this.isLoading=false;
-        this.errorMessage=err.error?.message || "Registrationg Failed";
-        this.cd.detectChanges();
-      }
-    })
-  }
-}
+  this.authService.registerSeller(registerData).subscribe({
+    next: () => {
+      this.authService.login({
+        emailOrUserName: registerData.email,
+        password: registerData.password
+      }).subscribe({
+        next: () => { this.isLoading = false; },
+        error: () => { this.router.navigate(['/auth/login']); }
+      });
+    },
+    error: (err) => {
+      this.isLoading = false;
+      this.errorMessage = err.error?.message || 'Registration Failed';
+      this.cd.detectChanges();
+    }
+  });
+}}

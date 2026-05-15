@@ -79,4 +79,8 @@ loadCurrentUser() {
     })
   );
 }
+clearUser() {
+  this.currentUserSignal.set(null);
+  this.router.navigate(['/']);
+}
 }
