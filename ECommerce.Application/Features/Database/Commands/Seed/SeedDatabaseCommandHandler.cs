@@ -227,35 +227,35 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             {
                 Name = "Electronics",
                 Description = "Latest electronic devices, gadgets, and accessories for tech enthusiasts.",
-                ImageUrl = "https://via.placeholder.com/200?text=Electronics",
+                ImageUrl = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Fashion",
                 Description = "Trendy clothing, footwear, and fashion accessories for all seasons.",
-                ImageUrl = "https://via.placeholder.com/200?text=Fashion",
+                ImageUrl = "https://images.unsplash.com/photo-1445205170230-053b83016050?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Home & Kitchen",
                 Description = "Everything for your home and kitchen, from furniture to appliances.",
-                ImageUrl = "https://via.placeholder.com/200?text=Home",
+                ImageUrl = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Sports & Outdoors",
                 Description = "Sports equipment, outdoor gear, and fitness accessories.",
-                ImageUrl = "https://via.placeholder.com/200?text=Sports",
+                ImageUrl = "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Books & Media",
                 Description = "Books, e-books, audiobooks, and multimedia content.",
-                ImageUrl = "https://via.placeholder.com/200?text=Books",
+                ImageUrl = "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             }
         };
