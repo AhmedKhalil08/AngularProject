@@ -1,0 +1,117 @@
+<div class="modal fade" [class.show]="isOpen" [style.display]="isOpen ? 'block' : 'none'" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Order Details #{{ order?.id }}</h5>
+                <button type="button" class="btn-close" (click)="onClose()" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- 1. Order Summary -->
+                @if (order) {
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-body bg-light rounded">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-primary border-bottom pb-2">Order Information</h6>
+                                <small class="text-muted d-block">Date: <strong>{{ order.orderDate | date:'short'
+                                        }}</strong></small>
+                                <small class="text-muted d-block">Status: <span class="badge bg-info text-dark">{{
+                                        order.status }}</span></small>
+                                <small class="text-muted d-block">Customer: {{ order.userName }}</small>
+                            </div>
+
+                            @if (order.payment) {
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-primary border-bottom pb-2">Payment Information</h6>
+                                <small class="text-muted d-block">Method: <strong>{{ order.payment.method
+                                        }}</strong></small>
+                                <small class="text-muted d-block">Status: <span class="badge bg-success">{{
+                                        order.payment.status }}</span></small>
+                                <small class="text-muted d-block">Amount Paid: {{ order.payment.amount | currency:"EGP"
+                                    }}</small>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <h5 class="mb-3 border-bottom pb-2">Shipment Details</h5>
+
+                <!-- Loading / Shipments Logic -->
+                @if (!orderDetails) {
+                <!-- Loading Spinner -->
+                <div class="text-center my-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading shipments...</p>
+                </div>
+                } @else {
+                <!-- 2. Shipments Loop -->
+                @for (shipment of orderDetails.shipments; track shipment.id; let i = $index) {
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                        <h6 class="mb-0 text-primary">
+                            <i class="bi bi-box-seam me-2"></i> Shipment {{ i + 1 }}
+                        </h6>
+                        <span class="badge"
+                            [ngClass]="{'bg-primary': shipment.status === 'Shipped', 'bg-warning text-dark': shipment.status !== 'Shipped'}">
+                            {{ shipment.status }}
+                        </span>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-3">Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Items Loop -->
+                                    @for (item of shipment.items; track item.productId) {
+                                    <tr>
+                                        <td class="ps-3">{{ item.productName }}</td>
+                                        <td>{{ item.price | currency:"EGP" }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ (item.price * item.quantity) | currency:"EGP" }}</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-white text-end py-2">
+                        <small class="text-muted me-3">Shipping Fee: {{ shipment.shippingFee | currency:"EGP" }}</small>
+                        <strong>Shipment Total: <span class="text-primary">{{ shipment.totalAmount | currency:"EGP"
+                                }}</span></strong>
+                    </div>
+                </div>
+                } @empty {
+                <div class="alert alert-warning text-center mt-3">
+                    No shipments available for this order.
+                </div>
+                }
+                }
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="onClose()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isOpen) {
+<div class="modal-backdrop fade show" (click)="onClose()"></div>
+}

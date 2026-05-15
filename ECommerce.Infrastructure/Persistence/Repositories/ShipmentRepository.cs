@@ -17,5 +17,18 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
                 .Where(s => s.SellerId == sellerId)
                 .ToListAsync();
         }
-    }
+        public override async Task<Shipment> GetByIdAsync(int id)
+        {
+            return await _context.Shipments
+                .Include(s => s.OrderItems) // 
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+        public async Task<IEnumerable<Shipment>> GetByOrderIdAsync(int orderId)
+        {
+            return await _context.Shipments
+                .Where(s => s.OrderId == orderId)
+                .Include(s=>s.OrderItems)
+                .ToListAsync();
+        }
+        }
 }

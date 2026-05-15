@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from './api.service';
 import {
@@ -10,6 +10,7 @@ import {
   RegisterSellerDto,
 } from '../models/auth.model';
 import { tap } from 'rxjs';
+import { CartService } from '../../features/cart/services/cart-service';
 
 @Injectable({
   providedIn: 'root',

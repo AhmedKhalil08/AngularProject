@@ -1,4 +1,4 @@
-import { OrderItemDetail } from './order-item-detail';
+import { shipementItem } from './Shipement-item-detail';
 
 export interface Shipment {
   id: number;
@@ -6,5 +6,5 @@ export interface Shipment {
   status: string;
   shippingFee: number;
   totalAmount: number;
-  items: OrderItemDetail[];
+  items: shipementItem[];
 }

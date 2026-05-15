@@ -98,16 +98,12 @@ export class ProductCatalog implements OnInit {
   loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
-        console.log('✅ Products loaded successfully:', data);
-        console.log('📊 Total products:', data.length);
         if (data.length > 0) {
-          console.log('📦 Product sample:', data[0]);
         }
         this.products.set(data);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('❌ Error loading products:', err);
         this.error.set('Failed to load products. Please try again.');
         this.isLoading.set(false);
       },
@@ -117,12 +113,9 @@ export class ProductCatalog implements OnInit {
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
-        console.log('✅ Categories loaded successfully:', data);
-        console.log('📊 Total categories:', data.length);
         this.categories.set(data);
       },
       error: (err) => {
-        console.error('❌ Error loading categories:', err);
         this.error.set('Failed to load categories.');
       },
     });

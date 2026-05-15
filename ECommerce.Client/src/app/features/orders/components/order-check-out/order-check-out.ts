@@ -55,6 +55,7 @@ export class OrderCheckOut implements OnInit {
   onSubmit() {
     if (this.checkoutForm.valid) {
       const orderData: OrderRequest = this.checkoutForm.value;
+      console.log('Order Data:', orderData);
       this.orderService.placeOrder(orderData);
     }
   }

@@ -19,16 +19,13 @@ namespace ECommerce.Application.Features.Orders.Queries.GetSellerShipments
 
         public async Task<List<SellerShipmentDto>> Handle(GetSellerShipmentsQuery request, CancellationToken cancellationToken)
         {
-            // السيلر الحالي اللي عامل Login
             var sellerId = _currentUserService.UserId;
 
-            // بنجيب الشحنات الخاصة بيه هو بس، ونجيب معاها الأوردر الأصلي والمنتجات
             var shipments = await _shipmentRepository.GetByConditionAsync(
                 s => s.SellerId == sellerId,
                 includeProperties: "Order,OrderItems,OrderItems.Product"
             );
 
-            // Mapster هيقوم بالواجب ويحولها لـ DTO
             var shipmentDtos = shipments.Adapt<List<SellerShipmentDto>>();
 
             return shipmentDtos;

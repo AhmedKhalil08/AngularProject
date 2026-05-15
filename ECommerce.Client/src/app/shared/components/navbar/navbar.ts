@@ -18,8 +18,7 @@ export class Navbar {
   isMenuOpen = signal(false);
 
   // Placeholder cart and wishlist data (will be replaced with service)
-  cartCount = signal(0);
-  cartTotal = signal(0);
+
   wishlistCount = signal(0);
 
   constructor(
@@ -31,10 +30,17 @@ export class Navbar {
     this.isLoggedIn = this.authService.isLoggedIn;
     this.isSeller = this.authService.isSeller;
   }
+  ngOnInit() {
+    // Load cart and wishlist counts on init
+    // this.cartService.loadCart();
+    // this.cartService.cartCount = signal(0);
+    // this.cartService.cartTotal = signal(0);
+    // this.cartService.loadWishlist();
+  }
 
   logout() {
     this.authService.logout();
-    // this.cartService.clearLocalCart(); // Clear local cart on logout
+    this.cartService.clearLocalCart(); // Clear local cart on logout
   }
 
   toggleMenu() {

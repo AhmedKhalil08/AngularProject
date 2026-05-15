@@ -67,11 +67,9 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
                 var product = cartItem.Product;
 
                 if (product.Stock == 0) continue;
-                if (product.Stock < cartItem.Quantity) throw new Exception($"The stock of {product.Name} is insufficient.");
-
+                if (product.Stock < cartItem.Quantity) continue;
                 totalAmount += product.Price * cartItem.Quantity;
 
-                // 2. خصم المخزون فوراً "فقط" لو الدفع كاش
                 if (isCashOnDelivery)
                 {
                     product.Stock -= cartItem.Quantity;

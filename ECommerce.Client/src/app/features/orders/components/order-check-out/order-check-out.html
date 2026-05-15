@@ -98,7 +98,7 @@
             <hr>
             <div class="total-row">
                 <span>Total:</span>
-                <span class="final-price">${{ cartservice.cartTotal()| number:'1.2-2' }}</span>
+                <span class="final-price">Egp{{ cartservice.cartTotal()| number:'1.2-2' }}</span>
             </div>
 
             <button type="submit" class="btn-place-order" [disabled]="checkoutForm.invalid">

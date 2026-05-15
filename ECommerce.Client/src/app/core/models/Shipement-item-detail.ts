@@ -1,4 +1,4 @@
-export interface OrderItemDetail {
+export interface shipementItem {
   quantity: number;
   productId: number;
   productName: string;

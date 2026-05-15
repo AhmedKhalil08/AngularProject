@@ -36,10 +36,9 @@ export class Login {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.cartService.loadCartFromApi(); // Load cart from API after login
-        // this.cartService.syncLocalCartToDb();
-
+        this.cartService.syncLocalCartToDb();
         // Sync local cart with API on login
-        // this.router.navigate(['/']);
+        this.router.navigate(['/']);
       },
       error: (err) => {
         this.isLoading = false;

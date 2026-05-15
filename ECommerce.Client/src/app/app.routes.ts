@@ -30,6 +30,7 @@ import { Messages } from './features/admin/pages/messages/messages';
 import { HelpCenter } from './features/contact/pages/help-center/help-center';
 import { CustomerService } from './features/contact/pages/customer-service/customer-service';
 import { MyOrders } from './features/profile/pages/my-orders/my-orders';
+import { Shipment } from './features/seller/pages/shipment/shipment';
 
 export const routes: Routes = [
   {
@@ -80,6 +81,7 @@ export const routes: Routes = [
     children: [
       { path: 'overview', component: SellerOverview },
       { path: 'products', component: MyProducts },
+      { path: 'shipments', component: Shipment },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
