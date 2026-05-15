@@ -38,22 +38,22 @@ namespace ECommerce.API
             //Swagger test
             builder.Services.AddSwaggerGen();
             // CORS for Angular later
-        //    builder.Services.AddCors(options =>
-        //     {
-        //         options.AddPolicy("AllowAngular", policy =>
-        //                     policy.WithOrigins("http://localhost:4200")
-        //                         .AllowAnyHeader()
-        //                         .AllowAnyMethod()
-        //                         .AllowCredentials());
-        //      });
+            builder.Services.AddCors(options =>
+             {
+                 options.AddPolicy("AllowAngular", policy =>
+                             policy.WithOrigins("http://localhost:4200")
+                                 .AllowAnyHeader()
+                                 .AllowAnyMethod()
+                                 .AllowCredentials());
+             });
 
-        builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod());
-});
+            //        builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAll", policy =>
+            //        policy.AllowAnyOrigin()
+            //              .AllowAnyHeader()
+            //              .AllowAnyMethod());
+            //});
             builder.Services.AddDatabaseSeeding();
             // Global Exception 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -80,8 +80,8 @@ namespace ECommerce.API
                 app.UseSwaggerUI();
             }
             app.UseHttpsRedirection();
-         //   app.UseCors("AllowAngular");
-         app.UseCors("AllowAll");
+           app.UseCors("AllowAngular");
+         //app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();

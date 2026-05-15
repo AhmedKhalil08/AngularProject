@@ -24,7 +24,7 @@ namespace ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = nameof(UserRole.Admin))]
+   // [Authorize(Roles = nameof(UserRole.Admin))]
     public class AdminController : ControllerBase
     {
         private readonly IMediator _mediator;

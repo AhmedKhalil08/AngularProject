@@ -15,7 +15,16 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 
 @Component({
   selector: 'app-category',
-  imports: [CommonModule, NgStyle, NgClass, FormsModule, NgbPagination, NgbInputDatepicker, NgbAlert, JsonPipe, NgbToast, DateCleanPipe],
+  imports: [
+    CommonModule, 
+    NgStyle, 
+    NgClass, 
+    FormsModule, 
+    NgbPagination, 
+    NgbInputDatepicker, 
+    NgbAlert, 
+    NgbToast, 
+    DateCleanPipe],
   templateUrl: './category.html',
   styleUrl: './category.css',
   providers: [CategoryService]

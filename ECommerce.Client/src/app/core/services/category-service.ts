@@ -28,8 +28,8 @@ export class CategoryService {
     return this.httpClient.delete(this.apiUrl.concat('/', Id));
   }
 
-  updateCatg(data: any): Observable<any> {
-    return this.httpClient.post(this.apiUrl, data);
+  updateCatg(id:any,data: any): Observable<any> {
+    return this.httpClient.post(this.apiUrl.concat('/', id), data);
   }
 
 
