@@ -1,0 +1,169 @@
+<div class="my-orders-container">
+    <!-- Header Section -->
+    <div class="orders-header">
+        <h1>📦 My Orders</h1>
+        <p class="header-subtitle">Track and manage all your purchases</p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="orders-stats">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+                <p class="stat-label">Total Orders</p>
+                <p class="stat-value">{{ totalOrderCount() }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-content">
+                <p class="stat-label">Total Spent</p>
+                <p class="stat-value">{{ totalSpent() | currency:'EGP' }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <p class="stat-label">Completed</p>
+                <p class="stat-value">{{ completedCount() }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-content">
+                <p class="stat-label">Pending</p>
+                <p class="stat-value">{{ pendingCount() }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders List -->
+    <div class="orders-section">
+        <h2>Your Orders</h2>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="filter-card">
+                <h3>🔍 Filters & Sort</h3>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="startDate">From Date:</label>
+                        <input type="date" id="startDate" class="filter-input" [value]="startDate()"
+                            (change)="onStartDateChange($any($event).target.value)">
+                    </div>
+                    <div class="filter-group">
+                        <label for="endDate">To Date:</label>
+                        <input type="date" id="endDate" class="filter-input" [value]="endDate()"
+                            (change)="onEndDateChange($any($event).target.value)">
+                    </div>
+                    <div class="filter-group">
+                        <label for="status">Status:</label>
+                        <select id="status" class="filter-input" [value]="selectedStatus()"
+                            (change)="onStatusFilterChange($any($event).target.value)">
+                            <option value="">All Statuses</option>
+                            <option *ngFor="let status of getStatusOptions()" [value]="status">
+                                {{ status }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sortBy">Sort By:</label>
+                        <select id="sortBy" class="filter-input" [value]="sortBy()"
+                            (change)="onSortChange($any($event).target.value)">
+                            <option value="latest">⭐ Latest First</option>
+                            <option value="oldest">🕐 Oldest First</option>
+                            <option value="highest">💰 Highest Amount</option>
+                            <option value="lowest">💵 Lowest Amount</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn-reset" (click)="resetFilters()">
+                            <span>🔄 Reset Filters</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-info">
+                    <small>Showing {{ filteredOrders().length }} order(s) ({{ totalOrderCount() }} total)</small>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="paginatedOrders() && paginatedOrders().length > 0; else noOrders" class="orders-list">
+            <div *ngFor="let order of paginatedOrders()" class="order-card" (click)="onOrderClick(order)">
+                <div class="order-header">
+                    <div class="order-info">
+                        <h3 class="order-id">Order #{{ order.id }}</h3>
+                        <p class="order-date">{{ order.orderDate| date: 'MMM dd, yyyy · hh:mm a' }}</p>
+                    </div>
+                    <div class="order-status" [ngClass]="'status-' + order.status?.toLowerCase()">
+                        {{ order.status }}
+                    </div>
+                </div>
+
+                <div class="order-body">
+                    <div class="order-details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Items</span>
+                            <span class="detail-value">{{ order.orderItems.length }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total Amount</span>
+                            <span class="detail-value amount">{{ order.totalAmount| currency:'EGP' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <!-- <span class="detail-label">Shipping Address</span> -->
+                            <!-- <span class="detail-value">{{ order.shippingAddress }}, {{ order.shippingCountry }}</span> -->
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Payment Method</span>
+                            <span class="detail-value">{{ order.payment.method }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <span class="click-hint">👆 Click to view details</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div *ngIf="totalPages() > 1" class="pagination-container">
+            <div class="pagination-info">
+                <span class="page-display">Page {{ currentPage() }} of {{ totalPages() }} ({{ filteredOrders().length }}
+                    filtered
+                    orders)</span>
+            </div>
+
+            <div class="pagination-controls">
+                <button class="btn-pagination" [disabled]="currentPage() === 1" (click)="previousPage()">
+                    ← Previous
+                </button>
+
+                <div class="page-buttons">
+                    <button *ngFor="let page of getPageNumbers()" class="btn-page"
+                        [class.active]="page === currentPage()" (click)="goToPage(page)">
+                        {{ page }}
+                    </button>
+                </div>
+
+                <button class="btn-pagination" [disabled]="currentPage() === totalPages()" (click)="nextPage()">
+                    Next →
+                </button>
+            </div>
+        </div>
+
+        <ng-template #noOrders>
+            <div class="no-orders">
+                <div class="no-orders-icon">📭</div>
+                <h3>No Orders Yet</h3>
+                <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
+                <button class="btn-shop" (click)="navigateToProducts()">Start Shopping</button>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<app-order-modal [order]="selectedOrder()" [orderDetails]="selectedOrderDetails()" [isOpen]="isModalOpen()"
+    (closeModal)="closeOrderModal()">
+</app-order-modal>

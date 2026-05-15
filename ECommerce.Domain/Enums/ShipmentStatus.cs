@@ -7,6 +7,7 @@ namespace ECommerce.Domain.Enums
     public enum ShipmentStatus
     {
         Pending,
+        Confirmed,
         Processing,
         Shipped,
         Delivered,
