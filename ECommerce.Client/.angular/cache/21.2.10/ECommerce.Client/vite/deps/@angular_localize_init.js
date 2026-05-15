@@ -1,6 +1,6 @@
 import "./chunk-GOMI4DH3.js";
 
-// node_modules/@angular/localize/fesm2022/_localize-chunk.mjs
+// ../../../../node_modules/@angular/localize/fesm2022/_localize-chunk.mjs
 var BLOCK_MARKER$1 = ":";
 var Endian;
 (function(Endian2) {
@@ -34,7 +34,7 @@ function stripBlock(messagePart, rawMessagePart) {
   return rawMessagePart.charAt(0) === BLOCK_MARKER ? messagePart.substring(findEndOfBlock(messagePart, rawMessagePart) + 1) : messagePart;
 }
 
-// node_modules/@angular/localize/fesm2022/init.mjs
+// ../../../../node_modules/@angular/localize/fesm2022/init.mjs
 globalThis.$localize = $localize;
 export {
   $localize
