@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TruncateWordsPipe } from '../../../../shared/pipes/truncate-words.pipe';
 import { CartService } from '../../../cart/services/cart-service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-catalog',
@@ -29,6 +30,8 @@ export class ProductCatalog implements OnInit {
   private readonly backendUrl = 'https://localhost:7018/';
   readonly minRangePrice = 0;
   maxRangePrice = signal(100000);
+  private route=inject(ActivatedRoute);
+  private router = inject(Router);
 
   // Signals
   products = signal<Product[]>([]);
@@ -85,6 +88,11 @@ export class ProductCatalog implements OnInit {
     // Log selected category changes for debugging
     this.selectedCategory.set(null);
 
+      // read category query param
+  const categoryId = this.route.snapshot.queryParams['category'];
+  if (categoryId) {
+    this.selectedCategory.set(Number(categoryId));
+  }
     // Debug: Check data after 2 seconds
     setTimeout(() => {
       console.log('=== DEBUG INFO ===');
@@ -182,6 +190,10 @@ export class ProductCatalog implements OnInit {
     console.log('Products before filter:', this.products().length);
     console.log('Filtered products after selection:', this.filteredProducts().length);
     this.selectedCategory.set(categoryId);
+      this.router.navigate([], {
+    queryParams: { category: categoryId ?? null },
+    queryParamsHandling: 'merge'
+  });
   }
 
   selectStarRating(rating: number): void {
@@ -233,6 +245,10 @@ onRangeSliderChange(event: Event): void {
     this.minPrice.set(this.minRangePrice);
     this.maxPrice.set(this.maxRangePrice());
     this.selectedRating.set(null);
+      this.router.navigate([], {
+    queryParams: {},
+    queryParamsHandling: ''
+  });
   }
 
   // Quantity management

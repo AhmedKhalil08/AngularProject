@@ -1,0 +1,43 @@
+<form [formGroup]="form">
+  <div class="become-seller-modal">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <i class="bi bi-shop"></i> Become a Seller
+      </h5>
+      <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-description">
+        Fill in your store details to start selling on Vortex. Your account will need admin approval before you can list products.
+      </p>
+
+      <div class="form-group">
+        <label>Store Name</label>
+        <input type="text" class="form-input" formControlName="storeName"
+          placeholder="Enter your store name"
+          [class.is-invalid]="storeName?.invalid && storeName?.touched" />
+        @if(storeName?.invalid && storeName?.touched) {
+          @if(storeName?.errors?.['required']) { <span class="error">Store name is required</span> }
+          @else if(storeName?.errors?.['minlength']) { <span class="error">Minimum 3 characters</span> }
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Store Description <span class="optional">(optional)</span></label>
+        <textarea class="form-input" formControlName="storeDescription"
+          placeholder="Describe what you'll be selling..."
+          rows="3"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="action-btn cancel-btn" type="button" (click)="activeModal.dismiss()">
+        <i class="bi bi-x-circle"></i> Cancel
+      </button>
+      <button class="action-btn confirm-btn" type="button" (click)="submit()">
+        <i class="bi bi-shop"></i> Submit Application
+      </button>
+    </div>
+  </div>
+</form>

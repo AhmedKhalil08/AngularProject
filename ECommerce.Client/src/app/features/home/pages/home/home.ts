@@ -6,6 +6,7 @@ import { BannerDto } from '../../../../core/models/banner.model';
 import { Product } from '../../../../core/models/product';
 import { Category } from '../../../../core/models/category';
 import { ApiService } from '../../../../core/services/api.service';
+import { CartService } from '../../../cart/services/cart-service';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,7 @@ export class Home {
   showBackToTop = signal(false);
   autoSlideInterval: any;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private cartService : CartService) {}
 
   ngOnInit(): void {
     this.loadBanners();
@@ -95,4 +96,8 @@ export class Home {
     }
     return `https://ui-avatars.com/api/?name=${product.name}&background=7c6ff7&color=fff&size=300`;
   }  
+
+  addToCart(product: Product) {
+  this.cartService.addToCart(product, 1);
+}
 }

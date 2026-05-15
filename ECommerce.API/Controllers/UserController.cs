@@ -67,5 +67,21 @@ namespace ECommerce.API.Controllers
                 Role = user.Role.ToString()
             });
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteMyAccount()
+        {
+            var user = await _userManager.FindByIdAsync(_currentUser.UserId);
+            if (user == null) throw new NotFoundException("User Not Found");
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+            Response.Cookies.Delete("token", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+            return Ok(new { message = "Account deleted successfully" });
+        }
     }
 }

@@ -222,4 +222,89 @@
   font-size: 0.75rem;
   font-weight: 600;
   margin-left: 0.5rem;
+}.danger-zone {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #ffd6e0;
+}
+
+.danger-zone h4 {
+  color: #c0392b;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 12px;
+  background: #f8f6ff;
+  border: 1px solid #e8e4ff;
+  margin-bottom: 1rem;
+}
+
+.action-item.danger {
+  background: #fff5f5;
+  border-color: #ffd6e0;
+}
+
+.action-item h5 {
+  color: #2d2b55;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.action-item p {
+  color: #7a7a9d;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.become-seller-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #7c6ff7, #6d28d9);
+  color: #ffffff;
+  box-shadow: 0 4px 12px #7c6ff755;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.become-seller-btn:hover {
+  transform: translateY(-2px);
+}
+
+.delete-account-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  color: #ffffff;
+  box-shadow: 0 4px 12px #f43f5e55;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.delete-account-btn:hover {
+  transform: translateY(-2px);
 }
