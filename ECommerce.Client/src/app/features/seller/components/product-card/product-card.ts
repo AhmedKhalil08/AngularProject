@@ -12,10 +12,12 @@ export class ProductCard {
     @Input() product!: Product;
   @Output() onEdit = new EventEmitter<Product>();
   @Output() onDelete = new EventEmitter<Product>();
-  getMainImage(): string {
-    if (this.product.imageUrls && this.product.imageUrls.length > 0) {
-      return this.product.imageUrls[0];
-    }
-    return 'https://via.placeholder.com/300x200?text=No+Image';
+getMainImage(): string {
+  if (this.product.imageUrls && this.product.imageUrls.length > 0) {
+    const url = this.product.imageUrls[0];
+    if (url.startsWith('http')) return url;
+    return `https://localhost:7018/${url}`;
   }
+  return 'https://ui-avatars.com/api/?name=' + this.product.name + '&background=7c6ff7&color=fff&size=300';
+}
 }

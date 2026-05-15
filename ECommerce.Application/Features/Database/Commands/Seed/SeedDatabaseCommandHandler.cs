@@ -53,6 +53,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             await SeedOrders(cancellationToken);
             await SeedOrderItemsWithShipments(cancellationToken);
             await SeedPayments(cancellationToken);
+            await SeedContactMessages(cancellationToken);
 
             return true;
         }
@@ -1041,5 +1042,45 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
     /// <summary>
     /// Seed Shipment data for orders from each seller.
     /// </summary>
-    
+    /// 
+    private async Task SeedContactMessages(CancellationToken cancellationToken)
+    {
+        if (await _context.ContactMessages.AnyAsync(cancellationToken))
+            return;
+
+        var messages = new List<ContactMessage>
+    {
+        new ContactMessage
+        {
+            Name = "Ahmed Hassan",
+            Email = "ahmed@example.com",
+            Subject = "Order Delivery Issue",
+            Message = "My order has been delayed for 3 days, can you help?",
+            SentAt = DateTime.UtcNow.AddDays(-5),
+            IsRead = false
+        },
+        new ContactMessage
+        {
+            Name = "Sara Mohamed",
+            Email = "sara@example.com",
+            Subject = "Payment Problem",
+            Message = "I was charged twice for my last order.",
+            SentAt = DateTime.UtcNow.AddDays(-3),
+            IsRead = false
+        },
+        new ContactMessage
+        {
+            Name = "John Smith",
+            Email = "john@example.com",
+            Subject = "Return Request",
+            Message = "I would like to return a product I bought last week.",
+            SentAt = DateTime.UtcNow.AddDays(-1),
+            IsRead = true
+        }
+    };
+
+        await _context.ContactMessages.AddRangeAsync(messages, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
 }

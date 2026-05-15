@@ -25,6 +25,15 @@
     <div class="nav-links">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link">Home</a>
       <a routerLink="/products" routerLinkActive="active" class="nav-link">Products</a>
+            <a routerLink="/cart" class="action-btn cart-btn">
+        <span>🛒</span>
+        @if(cartService.cartCount() > 0) {
+          <span class="badge">{{ cartService.cartCount() }}</span>
+        }
+        <span class="cart-total">{{ cartService.cartTotal() === 0 ? 'Empty' : (cartService.cartTotal() | number:'1.0-0') + ' EGP' }}</span>
+      </a>
+      <a routerLink="/help-center" routerLinkActive="active" class="nav-link">Help Center </a>
+
     </div>
 
     @if(isLoggedIn()) {
@@ -36,13 +45,7 @@
         }
       </a>
 
-      <a routerLink="/cart" class="action-btn cart-btn">
-        <span>🛒</span>
-        @if(cartService.cartCount() > 0) {
-          <span class="badge">{{ cartService.cartCount() }}</span>
-        }
-        <span class="cart-total">{{ cartService.cartTotal() === 0 ? 'Empty' : (cartService.cartTotal() | number:'1.0-0') + ' EGP' }}</span>
-      </a>
+
 
       <a routerLink="/orders" class="nav-text-link">Orders</a>
       <a routerLink="/profile" class="nav-text-link">Profile</a>
@@ -72,11 +75,12 @@
   <div class="mobile-menu">
     <a routerLink="/" (click)="toggleMenu()" class="mobile-link">Home</a>
     <a routerLink="/products" (click)="toggleMenu()" class="mobile-link">Products</a>
+          <a routerLink="/cart" (click)="toggleMenu()" class="mobile-link">🛒 Cart</a>
     @if(isLoggedIn()) {
       <a routerLink="/wishlist" (click)="toggleMenu()" class="mobile-link">♥ Wishlist</a>
-      <a routerLink="/cart" (click)="toggleMenu()" class="mobile-link">🛒 Cart</a>
+
       <a routerLink="/orders" (click)="toggleMenu()" class="mobile-link">Orders</a>
-      <a routerLink="/profile" (click)="toggleMenu()" class="mobile-link">Profile</a>
+      <a routerLink="/profile/info" class="nav-text-link">Profile</a>
       @if(isAdmin()) {
         <a routerLink="/admin/overview" (click)="toggleMenu()" class="mobile-link"> Admin</a>
       }

@@ -93,3 +93,11 @@ export interface TopProductDto {
   totalSold: number;
   revenue: number;
 }
+export interface SellerStatsDto {
+  totalProducts: number;
+  totalEarnings: number;
+  totalOrders: number;
+  monthlySales: MonthlySalesDto[];
+  orderStatusStats: OrderStatusStatsDto[];
+  topProducts: TopProductDto[];
+}

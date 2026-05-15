@@ -1,7 +1,9 @@
 ﻿using ECommerce.Application.Features.SellerProfiles.Commands.CreateSellerProfile;
 using ECommerce.Application.Features.SellerProfiles.Commands.DeleteSellerProfile;
 using ECommerce.Application.Features.SellerProfiles.Commands.UpdateSellerProfile;
+using ECommerce.Application.Features.SellerProfiles.Queries.GetMySellerProfile;
 using ECommerce.Application.Features.SellerProfiles.Queries.GetSellerProfileById;
+using ECommerce.Application.Features.SellerProfiles.Queries.GetSellerStats;
 using ECommerce.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -44,7 +46,8 @@ namespace ECommerce.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = nameof(UserRole.Seller))]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateSellerProfileCommand command)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(int id, [FromForm] UpdateSellerProfileCommand command)
         {
             command.Id = id;
             var result = await _mediator.Send(command);
@@ -59,6 +62,23 @@ namespace ECommerce.API.Controllers
             var result = await _mediator.Send(new DeleteSellerProfileCommand { Id = id });
             if (!result) return NotFound();
             return NoContent();
+        }
+
+        [HttpGet("me")]
+        [Authorize(Roles = nameof(UserRole.Seller))]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            var result = await _mediator.Send(new GetMySellerProfileQuery());
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+
+        [HttpGet("stats")]
+        [Authorize(Roles = nameof(UserRole.Seller))]
+        public async Task<IActionResult> GetMyStats()
+        {
+            var result = await _mediator.Send(new GetSellerStatsQuery());
+            return Ok(result);
         }
 
     }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { Product } from '../../../core/models/product';
 import { Category } from '../../../core/models/category';
+import { SellerProfileDto, SellerStatsDto } from '../../../core/models/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,4 +26,19 @@ export class SellerService {
     deleteProduct(id: number) {
     return this.api.delete<boolean>(`products/${id}`);
   }
+  getMyProfile() {
+  return this.api.get<SellerProfileDto>('seller/me');
+}
+
+updateMyProfile(id: number, data: { storeName: string; storeDescription?: string; logoUrl?: string; logo?: File }) {
+  const formData = new FormData();
+  formData.append('storeName', data.storeName);
+  if (data.storeDescription) formData.append('storeDescription', data.storeDescription);
+  if (data.logo) formData.append('logo', data.logo);
+  else if (data.logoUrl) formData.append('logoUrl', data.logoUrl);
+  return this.api.put<SellerProfileDto>(`seller/${id}`, formData);
+}
+getMyStats() {
+  return this.api.get<SellerStatsDto>('seller/stats');
+}
 }

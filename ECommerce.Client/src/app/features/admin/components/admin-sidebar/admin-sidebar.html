@@ -9,6 +9,13 @@
       <i class="bi bi-grid-1x2"></i>
       <span>Overview</span>
     </a>
+    <a routerLink="/admin/messages" routerLinkActive="active" class="nav-item">
+  <i class="bi bi-envelope"></i>
+  <span>Messages</span>
+  @if(signalrService.unreadCount() > 0) {
+    <span class="notification-badge">{{ signalrService.unreadCount() }}</span>
+  }
+</a>
     <a routerLink="/admin/admins" routerLinkActive="active" class="nav-item">
   <i class="bi bi-shield-check"></i>
   <span>Admins</span>
