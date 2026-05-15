@@ -1,0 +1,117 @@
+<div class="my-orders-container">
+    <!-- Header Section -->
+    <div class="orders-header">
+        <h1>📦 My Orders</h1>
+        <p class="header-subtitle">Track and manage all your purchases</p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="orders-stats">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+                <p class="stat-label">Total Orders</p>
+                <p class="stat-value">{{ getTotalOrderCount() }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-content">
+                <p class="stat-label">Total Spent</p>
+                <p class="stat-value">{{ totalSpent() | currency:'EGP' }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <p class="stat-label">Completed</p>
+                <p class="stat-value">{{ completedCount() }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-content">
+                <p class="stat-label">Pending</p>
+                <p class="stat-value">{{ pendingCount() }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders List -->
+    <div class="orders-section">
+        <h2>Your Orders</h2>
+
+        <div *ngIf="paginatedOrders() && paginatedOrders().length > 0; else noOrders" class="orders-list">
+            <div *ngFor="let order of paginatedOrders()" class="order-card" (click)="onOrderClick(order.id)">
+                <div class="order-header">
+                    <div class="order-info">
+                        <h3 class="order-id">Order #{{ order.id }}</h3>
+                        <p class="order-date">{{ order.orderDate| date: 'MMM dd, yyyy · hh:mm a' }}</p>
+                    </div>
+                    <div class="order-status" [ngClass]="'status-' + order.status?.toLowerCase()">
+                        {{ order.status }}
+                    </div>
+                </div>
+
+                <div class="order-body">
+                    <div class="order-details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Items</span>
+                            <span class="detail-value">{{ order.orderItems.length }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total Amount</span>
+                            <span class="detail-value amount">{{ order.totalAmount| currency:'EGP' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <!-- <span class="detail-label">Shipping Address</span>
+                            <span class="detail-value">{{ order. }}, {{ order.shippingCountry }}</span> -->
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Payment Method</span>
+                            <span class="detail-value">{{ order.payment.method }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <span class="click-hint">👆 Click to view details</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div *ngIf="totalPages() > 1" class="pagination-container">
+            <div class="pagination-info">
+                <span class="page-display">Page {{ currentPage() }} of {{ totalPages() }} ({{ totalOrderCount() }} total
+                    orders)</span>
+            </div>
+
+            <div class="pagination-controls">
+                <button class="btn-pagination" [disabled]="currentPage() === 1" (click)="previousPage()">
+                    ← Previous
+                </button>
+
+                <div class="page-buttons">
+                    <button *ngFor="let page of getPageNumbers()" class="btn-page"
+                        [class.active]="page === currentPage()" (click)="goToPage(page)">
+                        {{ page }}
+                    </button>
+                </div>
+
+                <button class="btn-pagination" [disabled]="currentPage() === totalPages()" (click)="nextPage()">
+                    Next →
+                </button>
+            </div>
+        </div>
+
+        <ng-template #noOrders>
+            <div class="no-orders">
+                <div class="no-orders-icon">📭</div>
+                <h3>No Orders Yet</h3>
+                <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
+                <button class="btn-shop" (click)="navigateToProducts()">Start Shopping</button>
+            </div>
+        </ng-template>
+    </div>
+</div>

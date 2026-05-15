@@ -50,7 +50,6 @@ namespace ECommerce.Application.Features.Products.Commands.UpdateProduct
                     });
                 }
             }
-
             await _productRepository.UpdateAsync(product);
             await _unitOfWork.SaveChangesAsync();
 

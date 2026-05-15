@@ -29,6 +29,7 @@ import { Addresses } from './features/profile/pages/addresses/addresses';
 import { Messages } from './features/admin/pages/messages/messages';
 import { HelpCenter } from './features/contact/pages/help-center/help-center';
 import { CustomerService } from './features/contact/pages/customer-service/customer-service';
+import { MyOrders } from './features/profile/pages/my-orders/my-orders';
 
 export const routes: Routes = [
   {
@@ -89,7 +90,8 @@ export const routes: Routes = [
     children: [
       { path: 'info', component: Profile },
       { path: 'password', component: ChangePassword }, // placeholder for now
-      { path: 'addresses', component: Addresses }, // placeholder for now
+      { path: 'addresses', component: Addresses },
+      { path: 'myorders', component: MyOrders }, // placeholder for now
       { path: '', redirectTo: 'info', pathMatch: 'full' },
     ],
   },

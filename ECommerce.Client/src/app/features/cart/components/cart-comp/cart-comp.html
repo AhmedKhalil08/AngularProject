@@ -32,7 +32,7 @@
                 @for (item of Mycart().items; track $index) {
                 <div class="cart-item">
                     <div class="item-image-section">
-                        <!-- <img [src]="item.productImage" [alt]="item.productName" class="item-image"> -->
+                        <img [src]="backendUrl + item.productImage" [alt]="item.productName" class="item-image">
                     </div>
 
                     <div class="item-details">

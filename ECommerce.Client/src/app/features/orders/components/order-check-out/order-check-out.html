@@ -75,7 +75,7 @@
         <div class="checkout-section order-summary">
             @for(item of cartservice.cartItems(); track item.productId) {
             <div class="summary-item">
-                <img [src]="item.productImage" alt="Product">
+                <img [src]="BackendUrl + item.productImage" alt="Product">
 
                 <div class="item-details">
                     <p class="item-name">{{ item.productName }}</p>

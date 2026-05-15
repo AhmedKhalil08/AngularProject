@@ -158,6 +158,11 @@ export class CartService {
       localStorage.removeItem('cart');
     }
   }
+  clearLocalCart() {
+    this.cartItemsSignal.set([]);
+    localStorage.removeItem('cart');
+    this.cartTotalSignal.set(0);
+  }
 
   syncLocalCartToDb() {
     const storedCart = localStorage.getItem('cart');

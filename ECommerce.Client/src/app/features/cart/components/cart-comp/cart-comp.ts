@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './cart-comp.css',
 })
 export class CartComp {
+  backendUrl = 'https://localhost:7018/';
   public readonly CartService = inject(CartService);
   Mycart = computed(() => {
     const id = this.CartService.cartItems().map((item) => item.id);

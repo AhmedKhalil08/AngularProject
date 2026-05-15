@@ -7,7 +7,7 @@ import { CartService } from '../../../features/cart/services/cart-service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, NgbModule, CommonModule,RouterLinkActive],
+  imports: [RouterLink, NgbModule, CommonModule, RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -34,6 +34,7 @@ export class Navbar {
 
   logout() {
     this.authService.logout();
+    // this.cartService.clearLocalCart(); // Clear local cart on logout
   }
 
   toggleMenu() {

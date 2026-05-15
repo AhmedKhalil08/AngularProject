@@ -3,12 +3,15 @@ import { ApiService } from '../../../core/services/api.service';
 import { OrderResult } from '../../../core/models/order-result';
 import { OrderRequest } from '../../../core/models/order-request';
 import { Router } from '@angular/router';
+import { MyOrder } from '../../../core/models/my-order';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
   private orderEndpoint = 'Orders';
+  private MyorderResultSignal = signal<MyOrder[]>([]);
+  public myOrders = this.MyorderResultSignal.asReadonly();
 
   private orderResultSignal = signal<OrderResult | null>(null);
   public orderResult = this.orderResultSignal.asReadonly();
@@ -41,6 +44,18 @@ export class OrderService {
           isSuccess: false,
           message: 'Failed to place order. Please try again.',
         });
+      },
+    });
+  }
+
+  MyOrders() {
+    this.apiService.get<MyOrder[]>('Orders/MyOrder').subscribe({
+      next: (res) => {
+        console.log('My Orders:', res);
+        this.MyorderResultSignal.set(res || []);
+      },
+      error: (err) => {
+        console.error('Failed to load orders:', err);
       },
     });
   }

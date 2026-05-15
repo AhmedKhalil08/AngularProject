@@ -21,6 +21,7 @@ import { RedirectCommand } from '@angular/router';
   styleUrl: './order-check-out.css',
 })
 export class OrderCheckOut implements OnInit {
+  BackendUrl = 'https://localhost:7018/';
   checkoutForm: FormGroup;
   paymentMethods = PaymentMethod;
   cartservice = inject(CartService);
