@@ -113,16 +113,21 @@
   </section>
 
   <!-- Sign Up Banner -->
-  <section class="signup-banner">
-    <div class="signup-content">
-      <h2>Join Vortex Today!</h2>
-      <p>Create an account and get access to exclusive deals and offers</p>
-      <div class="signup-actions">
+<section class="signup-banner">
+  <div class="signup-content">
+    <h2>Join Vortex Today!</h2>
+    <p>Create an account and get access to exclusive deals and offers</p>
+    <div class="signup-actions">
+      @if(!isLoggedIn()) {
         <a routerLink="/auth/register-type" class="signup-btn">Get Started</a>
-        <a routerLink="/products" class="browse-btn">Browse Products</a>
-      </div>
+      } @else {
+        <a routerLink="/products" class="signup-btn">Shop Now</a>
+      }
+      <a routerLink="/products" class="browse-btn">Browse Products</a>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- Back to Top -->
   @if(showBackToTop()) {
