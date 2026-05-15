@@ -72,16 +72,14 @@ export class CartService {
   public cartTotal = this.cartTotalSignal.asReadonly();
 
   loadCartFromApi() {
-    this.apiService.get<any>(this.endpoint).subscribe({
+    this.apiService.get<Cart>(this.endpoint).subscribe({
       next: (res) => {
         console.log('البيانات كاملة:', res);
 
-        // تحديث المنتجات
         this.cartItemsSignal.set(res?.items || []);
 
-        // 💡 تحديث السعر الإجمالي مباشرة من الـ Object اللي جاي من الباك إيند
-        // تأكد إن المسمى في الباك إيند totalPrice (زي ما ظهر في الـ Console عندك)
-        this.cartTotalSignal.set(res?.totalPrice || 0);
+        const total = res?.totalPrice || 0;
+        this.cartTotalSignal.set(total);
       },
       error: (err) => {
         console.error('Error loading cart', err);

@@ -1,6 +1,7 @@
 ﻿using ECommerce.Application.DTOs;
 using ECommerce.Domain.Entities;
 using Mapster;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace ECommerce.Application.Mapping
 {
@@ -34,6 +35,7 @@ namespace ECommerce.Application.Mapping
          // لو الـ PaymentDto فيه UserName، هاته من المسار ده بالظبط:
          .Map(dest => dest.UserName, src => src.Order.User.UserName)
          .IgnoreNonMapped(true);
+
             // Product
             TypeAdapterConfig<Product, ProductDto>.NewConfig()
                 .Map(dest => dest.CategoryName, src => src.Category.Name)
@@ -41,6 +43,18 @@ namespace ECommerce.Application.Mapping
                 .Map(dest => dest.SellerName, src => src.Seller.StoreName);
             TypeAdapterConfig<Category,ProductDto>.NewConfig().
                 Map(dest => dest.CategoryName, src => src.Name);
+
+            TypeAdapterConfig<Shipment, ShipmentDto>.NewConfig()
+            .Map(dest => dest.Items, src => src.OrderItems);
+            TypeAdapterConfig<Shipment, SellerShipmentDto>.NewConfig()
+            .Map(dest => dest.Items, src => src.OrderItems)
+            .Map(dest => dest.Id, src => src.OrderId);
+
+            TypeAdapterConfig<OrderItem, OrderItemDto>.NewConfig()
+            .Map(dest => dest.ProductName, src => src.Product.Name)
+            .Map(dest => dest.Price, src => src.UnitPrice);
+
+
         }
     }
 }

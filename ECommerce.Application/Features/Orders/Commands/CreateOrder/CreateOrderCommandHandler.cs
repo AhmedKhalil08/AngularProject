@@ -55,6 +55,9 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
                 throw new Exception("Your cart is empty.");
 
+            // 1. هل الدفع كاش؟
+            bool isCashOnDelivery = request.PaymentMethod == PaymentMethod.CashOnDelivery;
+
             var itemsBySeller = new Dictionary<string, List<OrderItem>>();
             var allOrderItems = new List<OrderItem>();
             decimal totalAmount = 0;
@@ -67,8 +70,13 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
                 if (product.Stock < cartItem.Quantity) throw new Exception($"The stock of {product.Name} is insufficient.");
 
                 totalAmount += product.Price * cartItem.Quantity;
-                product.Stock -= cartItem.Quantity;
-                await _productRepository.UpdateAsync(product);
+
+                // 2. خصم المخزون فوراً "فقط" لو الدفع كاش
+                if (isCashOnDelivery)
+                {
+                    product.Stock -= cartItem.Quantity;
+                    await _productRepository.UpdateAsync(product);
+                }
 
                 var orderItem = new OrderItem
                 {
@@ -95,7 +103,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
                 var shipment = new Shipment
                 {
                     SellerId = sellerGroup.Key,
-                    Status = ShipmentStatus.Pending,
+                    Status = isCashOnDelivery ? ShipmentStatus.Processing : ShipmentStatus.Pending,
                     ShippingFee = shipingFee,
                     TotalAmount = totalItemsAmount + shipingFee,
                     OrderItems = sellerGroup.Value
@@ -103,7 +111,6 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
                 shipments.Add(shipment);
             }
 
-            // 4. بناء الأوردر الأساسي
             var shippingAddress = request.Address.Adapt<Address>();
             shippingAddress.UserId = userId;
 
@@ -112,7 +119,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
                 UserId = userId,
                 OrderDate = DateTime.UtcNow,
                 TotalAmount = orderTotalAmount,
-                Status = OrderStatus.Pending,
+                Status = isCashOnDelivery ? OrderStatus.Confirmed : OrderStatus.Pending,
                 PaymentMethod = request.PaymentMethod,
                 ShippingAddress = shippingAddress,
                 OrderItems = allOrderItems,
@@ -127,17 +134,30 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
 
             await _orderRepository.AddAsync(order);
 
-
-            foreach (var item in cart.CartItems)
+            if (isCashOnDelivery)
             {
-                await _cartItemRepository.DeleteAsync(item.Id);
+                foreach (var item in cart.CartItems)
+                {
+                    await _cartItemRepository.DeleteAsync(item.Id);
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();
 
-            var paymentResult = await _paymentService.ProcessPaymentAsync(orderTotalAmount, request.PaymentMethod, order.Id);
-
-            return paymentResult;
+            if (isCashOnDelivery)
+            {
+                return new PaymentResultDto
+                {
+                    IsSuccess = true,
+                    PaymentUrl = null,
+                    Message = "Order confirmed. Payment will be collected upon delivery."
+                };
+            }
+            else
+            {
+                var paymentResult = await _paymentService.ProcessPaymentAsync(orderTotalAmount, request.PaymentMethod, order.Id);
+                return paymentResult;
+            }
         }
     }
 }

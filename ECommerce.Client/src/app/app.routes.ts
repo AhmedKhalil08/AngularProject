@@ -18,6 +18,9 @@ import { SellerLayout } from './layouts/seller-layout/seller-layout';
 import { sellerGuard } from './core/guards/seller-guard';
 import { SellerOverview } from './features/seller/pages/seller-overview/seller-overview';
 import { MyProducts } from './features/seller/pages/my-products/my-products';
+import { OrderCheckOut } from './features/orders/components/order-check-out/order-check-out';
+import { CheckoutSuccess } from './features/orders/components/checkout-success/checkout-success';
+import { Checkoutfailed } from './features/orders/components/checkoutfailed/checkoutfailed';
 
 export const routes: Routes = [
   {
@@ -27,6 +30,12 @@ export const routes: Routes = [
       { path: '', component: Home },
       { path: 'products', component: ProductCatalog },
       { path: 'cart', component: CartComp },
+      {
+        path: 'checkout',
+        component: OrderCheckOut,
+      },
+      { path: 'checkout/success', component: CheckoutSuccess },
+      { path: 'checkout/failed', component: Checkoutfailed },
     ],
   },
   {

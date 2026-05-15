@@ -1,1 +1,110 @@
-<p>order-check-out works!</p>
+<div class="checkout-container">
+    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" class="checkout-grid">
+
+        <!-- Left Section: Shipping & Payment -->
+        <div>
+            <div class="checkout-section main-info">
+                <h3>📍 Shipping Address</h3>
+                <div formGroupName="address" class="address-grid">
+                    <div class="form-group full-width">
+                        <label>Full Name</label>
+                        <input formControlName="fullName" placeholder="John Doe" />
+                    </div>
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input formControlName="street" placeholder="123 Main Street" />
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input formControlName="city" placeholder="New York" />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input formControlName="phone" placeholder="+1 (555) 000-0000" />
+                    </div>
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input formControlName="country" placeholder="United States" />
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input formControlName="state" placeholder="NY" />
+                    </div>
+                    <div class="form-group">
+                        <label>Zip Code</label>
+                        <input formControlName="zipCode" placeholder="10001" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-section" style="margin-top: 2rem;">
+                <h3>💳 Payment Method</h3>
+                <div class="payment-options">
+                    <label class="payment-card">
+                        <input type="radio" formControlName="paymentMethod" value="CreditCard">
+                        <div class="payment-content">
+                            <img src="https://cdn.worldvectorlogo.com/logos/stripe-2.svg" alt="Stripe"
+                                class="payment-logo">
+                            <span>Credit Card</span>
+                        </div>
+                    </label>
+
+                    <label class="payment-card">
+                        <input type="radio" formControlName="paymentMethod" value="PayPal">
+                        <div class="payment-content">
+                            <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg"
+                                alt="PayPal" class="payment-logo">
+                            <span>PayPal</span>
+                        </div>
+                    </label>
+
+                    <label class="payment-card">
+                        <input type="radio" formControlName="paymentMethod" value="CashOnDelivery">
+                        <div class="payment-content">
+                            <img src="https://localhost:7018/uploads/products/CashOnDelevery.jpg" alt="Cash on Delivery"
+                                class="payment-logo">
+                            <span>Cash on Delivery</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section: Order Summary -->
+
+        <div class="checkout-section order-summary">
+            @for(item of cartservice.cartItems(); track item.productId) {
+            <div class="summary-item">
+                <img [src]="item.productImage" alt="Product">
+
+                <div class="item-details">
+                    <p class="item-name">{{ item.productName }}</p>
+                    <p class="item-price">Unit: {{ item.unitPrice | number:'1.2-2' }} EGP</p>
+                    <p class="item-quantity">Qty: {{ item.quantity }}</p>
+                    <p class="item-subtotal">Subtotal: {{ item.subTotal | number:'1.2-2' }} EGP</p>
+                </div>
+            </div>
+            } @empty {
+            <div class="empty-cart-msg">
+                <p>Your cart is empty or loading...</p>
+            </div>
+            }
+
+            <div class="promo-section">
+                <input formControlName="promoCode" placeholder="Enter promo code">
+                <button type="button" class="btn-apply">Apply</button>
+            </div>
+
+            <hr>
+            <div class="total-row">
+                <span>Total:</span>
+                <span class="final-price">${{ cartservice.cartTotal()| number:'1.2-2' }}</span>
+            </div>
+
+            <button type="submit" class="btn-place-order" [disabled]="checkoutForm.invalid">
+                Place Order
+            </button>
+        </div>
+
+    </form>
+</div>
