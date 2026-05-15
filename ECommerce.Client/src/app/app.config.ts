@@ -1,10 +1,11 @@
 import { APP_INITIALIZER, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { lastValueFrom, of } from 'rxjs';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { AuthService } from './core/services/auth.service';
@@ -25,6 +26,8 @@ export const appConfig: ApplicationConfig = {
       useFactory: initializeApp,
       deps:[AuthService],
       multi:true
-    }
+    },
+    //provideHttpClient(withInterceptors([authInterceptor,errorInterceptor]),)
+    provideHttpClient(withFetch())
   ]
 };

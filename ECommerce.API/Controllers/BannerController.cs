@@ -42,22 +42,11 @@ namespace ECommerce.API.Controllers
             return NoContent();
         }
         //Update Banner
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateBannerCommand command)
+        [HttpPut("banners/{id}")]
+        public async Task<IActionResult> UpdateBanner(int id, [FromBody] UpdateBannerCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest("ID mismatch.");
-            }
-
-            var result = await Mediator.Send(command);
-
-            if (result == null)
-            {
-                return NotFound($"Banner with ID {id} not found.");
-            }
-
-
+            command.Id = id;
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
 
