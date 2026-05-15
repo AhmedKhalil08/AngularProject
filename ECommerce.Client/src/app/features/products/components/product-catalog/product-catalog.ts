@@ -28,7 +28,7 @@ export class ProductCatalog implements OnInit {
   public CartService = inject(CartService);
   private readonly backendUrl = 'https://localhost:7018/';
   readonly minRangePrice = 0;
-  readonly maxRangePrice = 7000;
+  maxRangePrice = signal(100000);
 
   // Signals
   products = signal<Product[]>([]);
@@ -36,7 +36,7 @@ export class ProductCatalog implements OnInit {
   searchTerm = signal<string>('');
   selectedCategory = signal<number | null>(null);
   minPrice = signal<number>(0);
-  maxPrice = signal<number>(this.maxRangePrice);
+  maxPrice = signal<number>(this.maxRangePrice());
   selectedRating = signal<number | null>(null);
   isLoading = signal<boolean>(true);
   error = signal<string | null>(null);
@@ -104,6 +104,9 @@ export class ProductCatalog implements OnInit {
           console.log('📦 Product sample:', data[0]);
         }
         this.products.set(data);
+              const maxProductPrice = Math.max(...data.map(p => p.price));
+      this.maxRangePrice.set(maxProductPrice);
+      this.maxPrice.set(maxProductPrice);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -190,39 +193,45 @@ export class ProductCatalog implements OnInit {
     this.searchTerm.set(target.value);
   }
 
-  onMinPriceChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
-    if (value) {
-      const numValue = parseInt(value, 10);
-      if (numValue >= this.minRangePrice && numValue <= this.maxPrice()) {
-        this.minPrice.set(numValue);
-      }
-    }
+onMinPriceChange(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  const value = target.value;
+  if (value === '') {
+    this.minPrice.set(this.minRangePrice);
+    return;
   }
+  const numValue = parseFloat(value);
+  if (!isNaN(numValue)) {
+    // Clamp to valid range instead of silently ignoring
+    this.minPrice.set(Math.max(this.minRangePrice, Math.min(numValue, this.maxPrice())));
+  }
+}
 
-  onMaxPriceChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
-    if (value) {
-      const numValue = parseInt(value, 10);
-      if (numValue >= this.minPrice() && numValue <= this.maxRangePrice) {
-        this.maxPrice.set(numValue);
-      }
-    }
+onMaxPriceChange(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  const value = target.value;
+  if (value === '') {
+    this.maxPrice.set(this.maxRangePrice());
+    return;
   }
+  const numValue = parseFloat(value);
+  if (!isNaN(numValue)) {
+    this.maxPrice.set(Math.min(this.maxRangePrice(), Math.max(numValue, this.minPrice())));
+  }
+}
 
-  onRangeSliderChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = parseInt(target.value, 10);
-    this.maxPrice.set(value);
-  }
+onRangeSliderChange(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  const value = parseFloat(target.value);
+  // Don't let slider go below minPrice
+  this.maxPrice.set(Math.max(value, this.minPrice()));
+}
 
   clearFilters(): void {
     this.searchTerm.set('');
     this.selectedCategory.set(null);
     this.minPrice.set(this.minRangePrice);
-    this.maxPrice.set(this.maxRangePrice);
+    this.maxPrice.set(this.maxRangePrice());
     this.selectedRating.set(null);
   }
 

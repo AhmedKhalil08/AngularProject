@@ -486,7 +486,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Summer Sale - Up to 50% Off",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Summer+Sale",
+                ImageUrl = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?filter=sale",
                 IsActive = true,
                 DisplayOrder = 1
@@ -494,7 +494,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "New Arrivals This Week",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=New+Arrivals",
+                ImageUrl = "https://images.unsplash.com/photo-1581041122145-9f17c04cd153?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?filter=new",
                 IsActive = true,
                 DisplayOrder = 2
@@ -502,7 +502,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Premium Electronics Collection",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Electronics",
+                ImageUrl = "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?category=electronics",
                 IsActive = true,
                 DisplayOrder = 3
@@ -510,7 +510,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Fashion Forward Spring Collection",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Fashion",
+                ImageUrl = "https://plus.unsplash.com/premium_photo-1664202526559-e21e9c0fb46a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?category=fashion",
                 IsActive = true,
                 DisplayOrder = 4
@@ -518,7 +518,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Free Shipping on Orders Over 50 Dollars",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Free+Shipping",
+                ImageUrl = "https://images.unsplash.com/photo-1511495366194-31561af5b3d7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products",
                 IsActive = true,
                 DisplayOrder = 5
