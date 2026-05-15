@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgxParticlesModule } from '@tsparticles/angular';
 import { BannerDto } from '../../../../core/models/banner.model';
@@ -7,6 +7,7 @@ import { Product } from '../../../../core/models/product';
 import { Category } from '../../../../core/models/category';
 import { ApiService } from '../../../../core/services/api.service';
 import { CartService } from '../../../cart/services/cart-service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -22,9 +23,11 @@ export class Home {
   currentBannerIndex = signal(0);
   showBackToTop = signal(false);
   autoSlideInterval: any;
+  
 
-  constructor(private api: ApiService, private cartService : CartService) {}
-
+  constructor(private api: ApiService, private cartService : CartService, private authService:AuthService) {}
+  isLoggedIn = computed(() => this.authService.isLoggedIn());
+  
   ngOnInit(): void {
     this.loadBanners();
     this.loadProducts();

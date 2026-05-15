@@ -32,6 +32,7 @@ import { CustomerService } from './features/contact/pages/customer-service/custo
 import { MyOrders } from './features/profile/pages/my-orders/my-orders';
 import { Shipment } from './features/seller/pages/shipment/shipment';
 import { Products } from './features/admin/pages/products/products';
+import { guestGuard } from './core/guards/guest-guard';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthLayout,
+    canActivate:[guestGuard],
     children: [
       { path: 'login', component: Login },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
