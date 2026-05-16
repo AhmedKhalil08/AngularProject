@@ -1,0 +1,300 @@
+<div class="container-fluid mt-4">
+
+    <!-- Header -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+            Banner Dashboard
+        </h2>
+
+        <button class="btn btn-success"
+                (click)="itemToAdd = !itemToAdd">
+
+            {{ itemToAdd ? 'Cancel' : 'Add Banner' }}
+
+        </button>
+
+    </div>
+
+    <!-- Create Banner Form -->
+
+    <div class="card shadow-sm mb-4" *ngIf="itemToAdd">
+
+        <div class="card-header fw-bold">
+            Create New Banner
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <!-- Title -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Title
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="title"
+                           [(ngModel)]="createdBnr.title">
+
+                </div>
+
+                <!-- Display Order -->
+
+                <div class="col-md-3">
+
+                    <label class="form-label">
+                        Display Order
+                    </label>
+
+                    <input type="number"
+                           class="form-control"
+                           name="displayOrder"
+                           [(ngModel)]="createdBnr.displayOrder">
+
+                </div>
+
+                <!-- Is Active -->
+
+                <div class="col-md-3 d-flex align-items-end">
+
+                    <div class="form-check">
+
+                        <input type="checkbox"
+                               class="form-check-input"
+                               id="isActive"
+                               name="isActive"
+                               [(ngModel)]="createdBnr.isActive">
+
+                        <label class="form-check-label"
+                               for="isActive">
+
+                            Active
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <!-- Image URL -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Image URL
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="imageUrl"
+                           [(ngModel)]="createdBnr.imageUrl">
+
+                </div>
+
+                <!-- Link -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Redirect Link
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="link"
+                           [(ngModel)]="createdBnr.link">
+
+                </div>
+
+            </div>
+
+            <!-- Preview -->
+
+            <div class="mt-4"
+                 *ngIf="createdBnr.imageUrl.trim().length > 0">
+
+                <label class="form-label fw-bold">
+                    Image Preview
+                </label>
+
+                <div>
+
+                    <img [src]="createdBnr.imageUrl"
+                         alt="preview"
+                         class="img-fluid rounded border"
+                         style="max-height: 220px;">
+                </div>
+
+            </div>
+
+            <!-- Save Button -->
+
+            <div class="mt-4">
+
+                <button class="btn btn-primary"
+                        (click)="createBnr(createdBnr)">
+
+                    Save Banner
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Banners Table -->
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+                    <th>#</th>
+                    <th>Preview</th>
+                    <th>Title</th>
+                    <th>Link</th>
+                    <th>Order</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @for (b of Bnrs; track b.id) {
+
+                <tr>
+
+                    <!-- ID -->
+
+                    <td>
+                        {{ b.id }}
+                    </td>
+
+                    <!-- Image -->
+
+                    <td>
+
+                        <img [src]="b.imageUrl"
+                             alt="banner"
+                             width="180"
+                             height="80"
+                             class="rounded border object-fit-cover">
+
+                    </td>
+
+                    <!-- Title -->
+
+                    <td class="fw-semibold">
+                        {{ b.title }}
+                    </td>
+
+                    <!-- Link -->
+
+                    <td>
+
+                        <a [href]="b.link"
+                           target="_blank"
+                           *ngIf="b.link">
+
+                            {{ b.link }}
+
+                        </a>
+
+                        <span *ngIf="!b.link"
+                              class="text-muted">
+
+                            No Link
+
+                        </span>
+
+                    </td>
+
+                    <!-- Display Order -->
+
+                    <td>
+                        {{ b.displayOrder }}
+                    </td>
+
+                    <!-- Status -->
+
+                    <td>
+
+                        <span class="badge"
+                              [ngClass]="b.isActive ? 'bg-success' : 'bg-secondary'">
+
+                            {{ b.isActive ? 'Active' : 'Inactive' }}
+
+                        </span>
+
+                    </td>
+
+                    <!-- Actions -->
+
+                    <td>
+
+                        <div class="d-flex gap-2">
+
+                            <button class="btn btn-primary btn-sm">
+                                Edit
+                            </button>
+
+                            <button class="btn btn-danger btn-sm"
+                                    (click)="deleteBnr(b.id)">
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Save Toast -->
+
+    <ngb-toast
+        *ngIf="showSaveToast"
+        class="position-fixed bottom-0 end-0 m-3"
+        [autohide]="true"
+        [delay]="3000"
+        (hidden)="showSaveToast = false">
+
+        Banner saved successfully
+
+    </ngb-toast>
+
+    <!-- Delete Toast -->
+
+    <ngb-toast
+        *ngIf="showDeleteToast"
+        class="position-fixed bottom-0 end-0 m-3"
+        [autohide]="true"
+        [delay]="3000"
+        (hidden)="showDeleteToast = false">
+
+        Banner deleted successfully
+
+    </ngb-toast>
+
+</div>

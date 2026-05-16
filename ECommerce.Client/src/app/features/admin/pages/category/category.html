@@ -1,0 +1,173 @@
+<p>category works!</p>
+<div class="container-fluid mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Categories Dashboard</h2>
+
+        <button class="btn btn-success"
+                (click)="itemToAdd = !itemToAdd">
+            Add Category
+        </button>
+    </div>
+
+    <!-- Add Category Form -->
+
+    <div class="card mb-4 shadow-sm" *ngIf="itemToAdd">
+
+        <div class="card-header">
+            Create New Category
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">Name</label>
+
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="createdCatg.name">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Image URL</label>
+
+                    <input type="text"
+                           class="form-control"
+                           [(ngModel)]="createdCatg.imageUrl">
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Description</label>
+
+                    <input class="form-control"
+                              rows="4"
+                              [(ngModel)]="createdCatg.description">
+                </div>
+
+            </div>
+
+            <div class="mt-3">
+                <button class="btn btn-primary"
+                        (click)="createCatg(createdCatg)">
+                    Save Category
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Categories Table -->
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @for (c of Catgs; track c.id) {
+
+                <tr>
+
+                    <td>{{ c.id }}</td>
+
+                    <td>
+                        <img [src]="c.imageUrl"
+                             alt="category"
+                             width="80"
+                             height="80"
+                             class="rounded object-fit-cover border">
+                    </td>
+
+                    <td>
+                        {{ c.name }}
+                    </td>
+
+                    <td style="max-width: 350px;">
+                        <div class="text-truncate">
+                            {{ c.description }}
+                        </div>
+                    </td>
+
+                    <td>
+
+                        <div class="d-flex gap-2">
+
+                            <button class="btn btn-primary btn-sm"
+                             (click)="updateCatg(c.id,createdCatg)">
+                                Edit
+                            </button>
+
+                            <button class="btn btn-danger btn-sm"
+                                    (click)="deleteCatg(c.id)">
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Pagination -->
+
+    <div class="d-flex justify-content-center mt-4">
+
+        <ngb-pagination
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [collectionSize]="Catgs.length"
+            (pageChange)="refreshCatgs()">
+        </ngb-pagination>
+
+    </div>
+
+    <!-- Save Toast -->
+
+    <ngb-toast
+        *ngIf="showSaveToast"
+        class="position-fixed bottom-0 end-0 m-3"
+        [autohide]="true"
+        [delay]="3000"
+        (hidden)="showSaveToast = false">
+
+        Category saved successfully
+
+    </ngb-toast>
+
+    <!-- Delete Toast -->
+
+    <ngb-toast
+        *ngIf="showDeleteToast"
+        class="position-fixed bottom-0 end-0 m-3"
+        [autohide]="true"
+        [delay]="3000"
+        (hidden)="showDeleteToast = false">
+
+        Category deleted successfully
+
+    </ngb-toast>
+
+</div>
