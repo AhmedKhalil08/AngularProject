@@ -8,8 +8,8 @@ import { Category } from '../../../../core/models/category';
   selector: 'app-product-modal',
   standalone: true,
   imports: [ReactiveFormsModule],
-templateUrl: './product-modal.html',
-styleUrl: './product-modal.css'
+  templateUrl: './product-modal.html',
+  styleUrl: './product-modal.css',
 })
 export class ProductModal implements OnInit {
   @Input() product: Product | null = null;
@@ -20,7 +20,10 @@ export class ProductModal implements OnInit {
   previewUrls: string[] = [];
   isEditMode = false;
 
-  constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) {}
+  constructor(
+    public activeModal: NgbActiveModal,
+    private fb: FormBuilder,
+  ) {}
 
   ngOnInit(): void {
     this.isEditMode = !!this.product;
@@ -29,8 +32,11 @@ export class ProductModal implements OnInit {
       name: [this.product?.name ?? '', [Validators.required, Validators.minLength(3)]],
       price: [this.product?.price ?? '', [Validators.required, Validators.min(0)]],
       stock: [this.product?.stock ?? '', [Validators.required, Validators.min(0)]],
-      description: [this.product?.description ?? '', [Validators.required, Validators.minLength(10)]],
-      categoryId: [this.product?.categoryId ?? '', Validators.required]
+      description: [
+        this.product?.description ?? '',
+        [Validators.required, Validators.minLength(10)],
+      ],
+      categoryId: [this.product?.categoryId ?? '', Validators.required],
     });
 
     if (this.product?.imageUrls) {
@@ -42,7 +48,7 @@ export class ProductModal implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.selectedImages = Array.from(input.files);
-      this.previewUrls = this.selectedImages.map(f => URL.createObjectURL(f));
+      this.previewUrls = this.selectedImages.map((f) => URL.createObjectURL(f));
     }
   }
 
@@ -61,14 +67,24 @@ export class ProductModal implements OnInit {
 
     if (this.isEditMode) formData.append('id', this.product!.id.toString());
 
-    this.selectedImages.forEach(img => formData.append('images', img));
+    this.selectedImages.forEach((img) => formData.append('images', img));
 
     this.activeModal.close({ formData, isEdit: this.isEditMode });
   }
 
-  get name() { return this.form.get('name'); }
-  get price() { return this.form.get('price'); }
-  get stock() { return this.form.get('stock'); }
-  get description() { return this.form.get('description'); }
-  get categoryId() { return this.form.get('categoryId'); }
+  get name() {
+    return this.form.get('name');
+  }
+  get price() {
+    return this.form.get('price');
+  }
+  get stock() {
+    return this.form.get('stock');
+  }
+  get description() {
+    return this.form.get('description');
+  }
+  get categoryId() {
+    return this.form.get('categoryId');
+  }
 }

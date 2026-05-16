@@ -15,8 +15,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   }
     break;
   case 403:
+    
+  if (!req.url.includes('auth/login')) {
     router.navigate(['/unauthorized']);
-    break;
+  }    break;
   case 500:
     console.error('Server error:', error.message);
     break;

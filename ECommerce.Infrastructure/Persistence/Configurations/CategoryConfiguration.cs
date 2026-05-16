@@ -24,8 +24,6 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
                    .WithMany(c => c.SubCategories)
                    .HasForeignKey(c => c.ParentCategoryId)
                    .OnDelete(DeleteBehavior.NoAction);
-
-
         }
     }
 }

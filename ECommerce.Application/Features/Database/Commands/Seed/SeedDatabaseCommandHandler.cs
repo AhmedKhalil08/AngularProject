@@ -53,6 +53,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             await SeedOrders(cancellationToken);
             await SeedOrderItemsWithShipments(cancellationToken);
             await SeedPayments(cancellationToken);
+            await SeedContactMessages(cancellationToken);
 
             return true;
         }
@@ -226,35 +227,35 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             {
                 Name = "Electronics",
                 Description = "Latest electronic devices, gadgets, and accessories for tech enthusiasts.",
-                ImageUrl = "https://via.placeholder.com/200?text=Electronics",
+                ImageUrl = "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Fashion",
                 Description = "Trendy clothing, footwear, and fashion accessories for all seasons.",
-                ImageUrl = "https://via.placeholder.com/200?text=Fashion",
+                ImageUrl = "https://images.unsplash.com/photo-1445205170230-053b83016050?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Home & Kitchen",
                 Description = "Everything for your home and kitchen, from furniture to appliances.",
-                ImageUrl = "https://via.placeholder.com/200?text=Home",
+                ImageUrl = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Sports & Outdoors",
                 Description = "Sports equipment, outdoor gear, and fitness accessories.",
-                ImageUrl = "https://via.placeholder.com/200?text=Sports",
+                ImageUrl = "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             },
             new Category
             {
                 Name = "Books & Media",
                 Description = "Books, e-books, audiobooks, and multimedia content.",
-                ImageUrl = "https://via.placeholder.com/200?text=Books",
+                ImageUrl = "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=200&h=200&fit=crop",
                 ParentCategoryId = null
             }
         };
@@ -485,7 +486,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Summer Sale - Up to 50% Off",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Summer+Sale",
+                ImageUrl = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?filter=sale",
                 IsActive = true,
                 DisplayOrder = 1
@@ -493,7 +494,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "New Arrivals This Week",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=New+Arrivals",
+                ImageUrl = "https://images.unsplash.com/photo-1581041122145-9f17c04cd153?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?filter=new",
                 IsActive = true,
                 DisplayOrder = 2
@@ -501,7 +502,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Premium Electronics Collection",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Electronics",
+                ImageUrl = "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?category=electronics",
                 IsActive = true,
                 DisplayOrder = 3
@@ -509,7 +510,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Fashion Forward Spring Collection",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Fashion",
+                ImageUrl = "https://plus.unsplash.com/premium_photo-1664202526559-e21e9c0fb46a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products?category=fashion",
                 IsActive = true,
                 DisplayOrder = 4
@@ -517,7 +518,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             new Banner
             {
                 Title = "Free Shipping on Orders Over 50 Dollars",
-                ImageUrl = "https://via.placeholder.com/1200x300?text=Free+Shipping",
+                ImageUrl = "https://images.unsplash.com/photo-1511495366194-31561af5b3d7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                 Link = "/products",
                 IsActive = true,
                 DisplayOrder = 5
@@ -1041,5 +1042,45 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
     /// <summary>
     /// Seed Shipment data for orders from each seller.
     /// </summary>
-    
+    /// 
+    private async Task SeedContactMessages(CancellationToken cancellationToken)
+    {
+        if (await _context.ContactMessages.AnyAsync(cancellationToken))
+            return;
+
+        var messages = new List<ContactMessage>
+    {
+        new ContactMessage
+        {
+            Name = "Ahmed Hassan",
+            Email = "ahmed@example.com",
+            Subject = "Order Delivery Issue",
+            Message = "My order has been delayed for 3 days, can you help?",
+            SentAt = DateTime.UtcNow.AddDays(-5),
+            IsRead = false
+        },
+        new ContactMessage
+        {
+            Name = "Sara Mohamed",
+            Email = "sara@example.com",
+            Subject = "Payment Problem",
+            Message = "I was charged twice for my last order.",
+            SentAt = DateTime.UtcNow.AddDays(-3),
+            IsRead = false
+        },
+        new ContactMessage
+        {
+            Name = "John Smith",
+            Email = "john@example.com",
+            Subject = "Return Request",
+            Message = "I would like to return a product I bought last week.",
+            SentAt = DateTime.UtcNow.AddDays(-1),
+            IsRead = true
+        }
+    };
+
+        await _context.ContactMessages.AddRangeAsync(messages, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
 }

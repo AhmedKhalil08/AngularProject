@@ -1,0 +1,40 @@
+<div class="messages-page">
+
+  <div class="page-header">
+    <h2 class="page-title">✉️ Messages</h2>
+    <span class="message-count">{{ messages().length }} total</span>
+  </div>
+
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="messages-list">
+      @for(message of messages(); track message.id) {
+        <div class="message-card" [class.unread]="!message.isRead" (click)="openMessage(message)">
+          <div class="message-avatar">
+            {{ message.name[0].toUpperCase() }}
+          </div>
+          <div class="message-content">
+            <div class="message-header">
+              <span class="message-name">{{ message.name }}</span>
+              <span class="message-time">{{ message.sentAt | date:'MMM d, y HH:mm' }}</span>
+            </div>
+            <div class="message-subject">{{ message.subject }}</div>
+            <div class="message-preview">{{ message.message }}</div>
+          </div>
+          @if(!message.isRead) {
+            <div class="unread-dot"></div>
+          }
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="bi bi-envelope"></i>
+          <p>No messages yet!</p>
+        </div>
+      }
+    </div>
+  }
+
+</div>

@@ -5,6 +5,11 @@ using ECommerce.Application.Features.Banners.Commands.CreateBanner;
 using ECommerce.Application.Features.Banners.Commands.DeleteBanner;
 using ECommerce.Application.Features.Banners.Commands.UpdateBanner;
 using ECommerce.Application.Features.Banners.Queries.GetAllBanners;
+using ECommerce.Application.Features.ContactMessages.Commands.MarkAsRead;
+using ECommerce.Application.Features.ContactMessages.Queries;
+using ECommerce.Application.Features.ContactMessages.Queries.GetAllMessages;
+using ECommerce.Application.Features.ContactMessages.Queries.GetMessageById;
+using ECommerce.Application.Features.Products.Commands.RestoreProduct;
 using ECommerce.Application.Features.PromoCodes.Commands.CreatePromoCode;
 using ECommerce.Application.Features.PromoCodes.Commands.DeletePromoCode;
 using ECommerce.Application.Features.PromoCodes.Queries.GetAllPromoCodes;
@@ -318,5 +323,41 @@ namespace ECommerce.API.Controllers
             return NoContent();
         }
         #endregion
+
+
+        #region Messages 
+
+
+        [HttpGet("messages")]
+        public async Task<IActionResult> GetAllMessages()
+        {
+            var result = await _mediator.Send(new GetAllContactMessagesQuery());
+            return Ok(result);
+        }
+
+        [HttpPut("messages/{id}/read")]
+        public async Task<IActionResult> MarkAsRead(int id)
+        {
+            var result = await _mediator.Send(new MarkAsReadCommand { Id = id });
+            if (!result) throw new NotFoundException("Message Not Found");
+            return Ok(new { message = "Marked as read" });
+        }
+
+
+        [HttpGet("messages/{id}")]
+        public async Task<IActionResult> GetMessageById(int id)
+        {
+            var result = await _mediator.Send(new GetContactMessageByIdQuery { Id = id });
+            return Ok(result);
+        }
+        #endregion
+
+
+        [HttpPut("products/{id}/restore")]
+        public async Task<IActionResult> RestoreProduct(int id)
+        {
+            var result = await _mediator.Send(new RestoreProductCommand { Id = id });
+            return Ok(result);
+        }
     }
 }

@@ -1,0 +1,54 @@
+<div class="wishlist-page">
+
+<div class="page-header">
+  <h2 class="page-title"><i class="bi bi-heart-fill"></i> My Wishlist</h2>
+  <span class="item-count">{{ items().length }} items</span>
+  @if(items().length > 0) {
+    <button class="clear-btn" (click)="clearWishlist()">
+      <i class="bi bi-trash3"></i> Clear All
+    </button>
+  }
+</div>
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    @if(items().length === 0) {
+      <div class="empty-state">
+        <i class="bi bi-heart"></i>
+        <h4>Your wishlist is empty</h4>
+        <p>Start adding products you love!</p>
+        <a routerLink="/products" class="browse-btn">
+          <i class="bi bi-bag"></i> Browse Products
+        </a>
+      </div>
+    } @else {
+      <div class="wishlist-container">
+        <div class="wishlist-items">
+          @for(item of items(); track item.id) {
+            <div class="wishlist-card">
+              <div class="card-image">
+                <img [src]="getImageUrl(item.productImageUrl)" [alt]="item.productName" />
+              </div>
+              <div class="card-info">
+                <h5>{{ item.productName }}</h5>
+                <span class="price">EGP {{ item.productPrice | number:'1.0-0' }}</span>
+                <span class="added-at"><i class="bi bi-clock"></i> Added {{ item.addedAt | date:'MMM d, y' }}</span>
+              </div>
+              <div class="card-actions">
+                <button class="add-cart-btn" (click)="addToCart(item)">
+                  <i class="bi bi-cart-plus"></i> Add to Cart
+                </button>
+                <button class="remove-btn" (click)="removeItem(item.id)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+
+</div>

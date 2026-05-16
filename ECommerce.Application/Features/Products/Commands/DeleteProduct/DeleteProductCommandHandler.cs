@@ -13,11 +13,12 @@ namespace ECommerce.Application.Features.Products.Commands.DeleteProduct
         private readonly IFileService _fileService;
         private readonly ICurrentUserService _currentUserService;
 
-        public DeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork, IFileService fileService)
+        public DeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork, IFileService fileService, ICurrentUserService currentUserService)
         {
             _productRepository = productRepository;
             _unitOfWork = unitOfWork;
             _fileService = fileService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)

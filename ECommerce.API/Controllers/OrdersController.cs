@@ -2,8 +2,11 @@
 using ECommerce.Application.Features.Orders.Commands.CreateOrder;
 using ECommerce.Application.Features.Orders.Commands.DeleteOrder;
 using ECommerce.Application.Features.Orders.Commands.UpdateOrder;
+using ECommerce.Application.Features.Orders.Commands.UpdateShipement;
 using ECommerce.Application.Features.Orders.Queries.GetAllOrders;
 using ECommerce.Application.Features.Orders.Queries.GetMyOrders;
+using ECommerce.Application.Features.Orders.Queries.GetOrderDetails;
+using ECommerce.Application.Features.Orders.Queries.GetSellerShipments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,7 +52,21 @@ namespace ECommerce.API.Controllers
 
             return Ok(new { message = "Order Changed Successfully" });
         }
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetOrderDetails(int id)
+        {
+            var result = await  Mediator.Send(new GetOrderDetailsQuery { OrderId = id });
+            return Ok(result);
+        }
 
+        [HttpGet("my-shipments")]
+        [Authorize(Roles = "Seller")] 
+        public async Task<IActionResult> GetMyShipments()
+        {
+            var result = await Mediator.Send(new GetSellerShipmentsQuery());
+            return Ok(result);
+        }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
@@ -60,6 +77,17 @@ namespace ECommerce.API.Controllers
                 return NotFound(new { message = "This order doesn't Exist" });
 
             return Ok(new { message = "The order is deleted " });
+        }
+        [Authorize(Roles = "Seller")]
+        [HttpPut("update-shipment")]
+        public async Task<IActionResult> UpdateShipment([FromBody] UpdateShipementCommand command)
+        {
+            var result = await Mediator.Send(command);
+            if (result)
+            {
+                return Ok(new { message = "Shipment updated successfully" });
+            }
+            return BadRequest(new { message = "Failed to update shipment" });
         }
     }
 }

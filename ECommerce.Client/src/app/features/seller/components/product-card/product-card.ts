@@ -20,4 +20,5 @@ getMainImage(): string {
   }
   return 'https://ui-avatars.com/api/?name=' + this.product.name + '&background=7c6ff7&color=fff&size=300';
 }
+
 }

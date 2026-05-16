@@ -32,6 +32,8 @@
         }
         <span class="cart-total">{{ cartService.cartTotal() === 0 ? 'Empty' : (cartService.cartTotal() | number:'1.0-0') + ' EGP' }}</span>
       </a>
+      <a routerLink="/help-center" routerLinkActive="active" class="nav-link">Help Center </a>
+
     </div>
 
     @if(isLoggedIn()) {
@@ -45,7 +47,7 @@
 
 
 
-      <a routerLink="/orders" class="nav-text-link">Orders</a>
+      <!-- <a routerLink="/orders" class="nav-text-link">Orders</a> -->
       <a routerLink="/profile" class="nav-text-link">Profile</a>
 
       @if(isAdmin()) {
@@ -77,7 +79,7 @@
     @if(isLoggedIn()) {
       <a routerLink="/wishlist" (click)="toggleMenu()" class="mobile-link">♥ Wishlist</a>
 
-      <a routerLink="/orders" (click)="toggleMenu()" class="mobile-link">Orders</a>
+      <!-- <a routerLink="/orders" (click)="toggleMenu()" class="mobile-link">Orders</a> -->
       <a routerLink="/profile/info" class="nav-text-link">Profile</a>
       @if(isAdmin()) {
         <a routerLink="/admin/overview" (click)="toggleMenu()" class="mobile-link"> Admin</a>

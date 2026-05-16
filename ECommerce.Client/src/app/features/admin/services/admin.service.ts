@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { OverviewStatsDto, SellerProfileDto, UserDto } from '../../../core/models/auth.model';
 import { PagedResult } from '../../../core/models/pagination.model';
+import { ContactMessageDto } from '../../../core/models/contact.model';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,30 @@ createAdmin(dto: { fullName: string; email: string; password: string }) {
 }
 getOverviewStats() {
   return this.api.get<OverviewStatsDto>('admin/overview');
+}
+getMessages() {
+  return this.api.get<ContactMessageDto[]>('admin/messages');
+}
+
+getMessageById(id: number) {
+  return this.api.get<ContactMessageDto>(`admin/messages/${id}`);
+}
+
+markAsRead(id: number) {
+  return this.api.put<any>(`admin/messages/${id}/read`, {});
+}
+getProducts() {
+  return this.api.get<any[]>('products');
+}
+
+deleteProduct(id: number) {
+  return this.api.delete<any>(`products/${id}`);
+}
+restoreProduct(id: number) {
+  return this.api.put<any>(`admin/products/${id}/restore`, {});
+}
+getSubscribers() {
+  return this.api.get<any[]>('newsletter/subscribers');
 }
 }
 

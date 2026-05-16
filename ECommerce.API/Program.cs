@@ -1,8 +1,11 @@
 
 using ECommerce.API.Extensions;
+using ECommerce.API.Hubs;
 using ECommerce.API.Middlewares;
+using ECommerce.API.Services;
 using ECommerce.Application;
 using ECommerce.Application.Extensions;
+using ECommerce.Application.Interfaces.Services;
 using ECommerce.Application.Mapping;
 using ECommerce.Domain.Entities;
 using ECommerce.Infrastructure;
@@ -30,7 +33,7 @@ namespace ECommerce.API
             //        builder.Services.AddMediatR(cfg =>
             //cfg.RegisterServicesFromAssembly(typeof(CreatePromoCodeCommandHandler).Assembly));
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("ArwaConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             //builder.Services.AddOpenApi();
             builder.Services.AddApplication();
@@ -39,27 +42,21 @@ namespace ECommerce.API
             builder.Services.AddSwaggerGen();
             // CORS for Angular later
             builder.Services.AddCors(options =>
-             {
-                 options.AddPolicy("AllowAngular", policy =>
-                             policy.WithOrigins("http://localhost:4200")
-                                 .AllowAnyHeader()
-                                 .AllowAnyMethod()
-                                 .AllowCredentials());
+            {
+                options.AddPolicy("AllowAngular", policy =>
+                            policy.WithOrigins("http://localhost:4200")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials());
              });
-
-            //        builder.Services.AddCors(options =>
-            //{
-            //    options.AddPolicy("AllowAll", policy =>
-            //        policy.AllowAnyOrigin()
-            //              .AllowAnyHeader()
-            //              .AllowAnyMethod());
-            //});
             builder.Services.AddDatabaseSeeding();
             // Global Exception 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
             // For User Services
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSignalR();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             var app = builder.Build();
             await app.ExecuteDatabaseSeedingAsync();
             MapsterConfig.RegisterMappings();
@@ -80,12 +77,12 @@ namespace ECommerce.API
                 app.UseSwaggerUI();
             }
             app.UseHttpsRedirection();
-           app.UseCors("AllowAngular");
-         //app.UseCors("AllowAll");
+            app.UseCors("AllowAngular");
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();
             app.MapControllers();
+            app.MapHub<NotificationHub>("/hubs/notifications");
             app.Run();
         }
     }
