@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { CartService } from '../../../cart/services/cart-service';
@@ -11,18 +11,33 @@ import { CartService } from '../../../cart/services/cart-service';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
   loginForm: FormGroup;
+  successMessage = '';
   constructor(
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private cartService: CartService,
+     private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       emailOrUserName: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+      this.route.queryParams.subscribe(params => {
+    if (params['message']) {
+      this.successMessage = params['message'];
+    }
+  });
+  }
+    ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['message']) {
+        this.successMessage = params['message'];
+        this.cdr.detectChanges();
+      }
     });
   }
   isLoading = false;
@@ -38,7 +53,7 @@ export class Login {
         this.cartService.loadCartFromApi(); // Load cart from API after login
         this.cartService.syncLocalCartToDb();
         // Sync local cart with API on login
-        this.router.navigate(['/']);
+        // this.router.navigate(['/']);
       },
       error: (err) => {
         this.isLoading = false;

@@ -34,6 +34,7 @@ import { Shipment } from './features/seller/pages/shipment/shipment';
 import { Products } from './features/admin/pages/products/products';
 import { guestGuard } from './core/guards/guest-guard';
 import { Subscribers } from './features/admin/pages/subscribers/subscribers';
+import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,7 @@ export const routes: Routes = [
       { path: 'checkout/failed', component: Checkoutfailed },
       { path: 'help-center', component: HelpCenter },
       { path: 'contact', component: CustomerService },
+      { path: 'wishlist', component: Wishlist, canActivate: [authGuard] }
     ],
   },
   {

@@ -5,6 +5,7 @@ import {
   inject,
   signal,
   computed,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Product } from '../../../../core/models/product';
 import { ProductService } from '../../services/productService';
@@ -15,6 +16,8 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TruncateWordsPipe } from '../../../../shared/pipes/truncate-words.pipe';
 import { CartService } from '../../../cart/services/cart-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
+import { WishlistService } from '../../../wishlist/services/wishlist-service';
 
 @Component({
   selector: 'app-product-catalog',
@@ -32,6 +35,9 @@ export class ProductCatalog implements OnInit {
   maxRangePrice = signal(100000);
   private route=inject(ActivatedRoute);
   private router = inject(Router);
+  private wishlistService = inject(WishlistService);
+private authService = inject(AuthService);
+private cdr = inject(ChangeDetectorRef);
 
   // Signals
   products = signal<Product[]>([]);
@@ -48,7 +54,7 @@ export class ProductCatalog implements OnInit {
   productQuantities = signal<Map<number, number>>(new Map());
 
   // Track wishlist items
-  wishlistItems = signal<Set<number>>(new Set());
+wishlistIds = signal<Map<number, number>>(new Map());
 
   // Computed - Get filtered products based on all filter signals
   filteredProducts = computed(() => {
@@ -84,7 +90,9 @@ export class ProductCatalog implements OnInit {
     // Load categories first, then products
     this.loadCategories();
     this.loadProducts();
-
+    if (this.authService.isLoggedIn()) {
+  this.loadWishlist();
+}
     // Log selected category changes for debugging
     this.selectedCategory.set(null);
 
@@ -269,17 +277,45 @@ onRangeSliderChange(event: Event): void {
   }
 
   // Wishlist management
-  isInWishlist(productId: number): boolean {
-    return this.wishlistItems().has(productId);
-  }
 
-  toggleWishlist(productId: number): void {
-    const newSet = new Set(this.wishlistItems());
-    if (newSet.has(productId)) {
-      newSet.delete(productId);
-    } else {
-      newSet.add(productId);
-    }
-    this.wishlistItems.set(newSet);
+isInWishlist(productId: number): boolean {
+  return this.wishlistIds().has(productId);
+}
+
+
+toggleWishlist(productId: number): void {
+  if (!this.authService.isLoggedIn()) return;
+  
+  if (this.wishlistIds().has(productId)) {
+    const wishlistId = this.wishlistIds().get(productId)!;
+    this.wishlistService.removeFromWishlist(wishlistId).subscribe({
+      next: () => {
+        const newMap = new Map(this.wishlistIds());
+        newMap.delete(productId);
+        this.wishlistIds.set(newMap);
+          this.cdr.markForCheck();
+      }
+    });
+  } else {
+    this.wishlistService.addToWishlist(productId).subscribe({
+      next: (data) => {
+        const newMap = new Map(this.wishlistIds());
+        newMap.set(productId, data.id);
+        this.wishlistIds.set(newMap);
+          this.cdr.markForCheck();
+      }
+    });
   }
 }
+loadWishlist(): void {
+  this.wishlistService.getWishlist().subscribe({
+    next: (data) => {
+      const map = new Map<number, number>();
+      data.forEach(item => map.set(item.productId, item.id));
+      this.wishlistIds.set(map);
+        this.cdr.markForCheck();
+    }
+  });
+}
+}
+

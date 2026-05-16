@@ -28,6 +28,7 @@ namespace ECommerce.Application.Features.Wishlists.Queries.GetAllWishlists
                 .Select(w => new WishlistDto
                 {
                     Id = w.Id,
+                     ProductId = w.ProductId,
                     ProductName = w.Product?.Name,
                     ProductPrice = w.Product?.Price ?? 0,
                     ProductImageUrl = w.Product?.Images?.FirstOrDefault()?.ImageUrl,
