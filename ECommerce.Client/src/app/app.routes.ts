@@ -35,6 +35,7 @@ import { Products } from './features/admin/pages/products/products';
 import { guestGuard } from './core/guards/guest-guard';
 import { Subscribers } from './features/admin/pages/subscribers/subscribers';
 import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
+import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
 
 export const routes: Routes = [
   {
@@ -105,5 +106,6 @@ export const routes: Routes = [
       { path: '', redirectTo: 'info', pathMatch: 'full' },
     ],
   },
+  { path: 'unauthorized', component: Unauthorized },
   { path: '**', redirectTo: '' },
 ];
