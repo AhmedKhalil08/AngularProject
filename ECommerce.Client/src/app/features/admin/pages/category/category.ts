@@ -16,14 +16,14 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 @Component({
   selector: 'app-category',
   imports: [
-    CommonModule, 
-    NgStyle, 
-    NgClass, 
-    FormsModule, 
-    NgbPagination, 
-    NgbInputDatepicker, 
-    NgbAlert, 
-    NgbToast, 
+    CommonModule,
+    NgStyle,
+    NgClass,
+    FormsModule,
+    NgbPagination,
+    NgbInputDatepicker,
+    NgbAlert,
+    NgbToast,
     DateCleanPipe],
   templateUrl: './category.html',
   styleUrl: './category.css',
@@ -31,8 +31,8 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 })
 export class Category {
 
-public Catgs: ICategory[] = [];
-public  ctgNames:string[]=[]
+  public Catgs: ICategory[] = [];
+  public ctgNames: string[] = []
   private modalService = inject(NgbModal);
 
   constructor(public MyService: CategoryService) {
@@ -51,11 +51,12 @@ public  ctgNames:string[]=[]
         console.log(data);
         // this.PromoCodess = data;
         this.Catgs = [...data];
-        console.log("promos are:")
-        console.log(this.Catgs)
-        this.ctgNames=this.Catgs.map(e=>e.name)
-        console.log(this.ctgNames)
+        console.log("catgs are:")
+        //this.showSaveToast = true;
 
+        console.log(this.Catgs)
+        this.ctgNames = this.Catgs.map(e => e.name)
+        console.log(this.ctgNames)
 
       },
 
@@ -92,11 +93,11 @@ public  ctgNames:string[]=[]
   toSave: boolean = true;
   editedId: number = -1;
 
-  
+
   public savedItem?: ICategory;
   public delItem?: ICategory;
 
-  
+
 
   showDeleteToast: Boolean = false;
 
@@ -125,12 +126,12 @@ public  ctgNames:string[]=[]
 
   } //end of delete
 
-itemToAdd: boolean = false;
+  itemToAdd: boolean = false;
   public createdCatg: ICategory = {
     "id": 0,
-              "description":" ",
-             "name":" ",
-              "imageUrl":" "
+    "description": " ",
+    "name": " ",
+    "imageUrl": " "
   }
 
   showSaveToast: Boolean = false;
@@ -138,17 +139,18 @@ itemToAdd: boolean = false;
   public createCatg(newitem: any) {
 
     //validating code
-    if ((newitem.name).length < 3||(newitem.imageUrl).length==0) {
+    if ((newitem.name).length < 3 || (newitem.imageUrl).length == 0) {
       console.log(newitem);
-      
-      alert("enter valid data"); return; }
 
-    
+      alert("enter valid data"); return;
+    }
+   else if(this.ctgNames.includes(newitem.name)==true){ alert("this category already exists!"); return;}
+
     else {
       console.log(newitem);
       this.MyService.createCatg(newitem).subscribe(
         {
-           
+
           next: (response) => {
             console.log(response);
             // this.getPromos();
@@ -157,9 +159,9 @@ itemToAdd: boolean = false;
             this.showSaveToast = true;
             this.createdCatg = {
               "id": 0,
-               "name":" ",
-              "description":" ",
-              "imageUrl":" "
+              "name": " ",
+              "description": " ",
+              "imageUrl": " "
             };
 
 
@@ -172,31 +174,40 @@ itemToAdd: boolean = false;
     }
   } //end of creation function
 
-itemToUpdate: boolean = false;
- public updatedCatg: ICategory = {
+  itemToUpdate: boolean = false;
+  UpdatedId: number = 0;
+  public updatedCatg: ICategory = {
     "id": 0,
-              "description":" ",
-             "name":"lol ",
-              "imageUrl":" "
+    "description": " ",
+    "name": "lol ",
+    "imageUrl": " "
   }
 
-//Update//
-updateCatg(id:any,item:any){
-  console.log(item);
+  //Update//
+  updateCatg(id: any, item: any) {
+    this.createdCatg = {
+      "id": item.id,
+      "name": item.name,
+      "description": item.description,
+      "imageUrl": item.imageUrl
+    };
+    console.log(item);
 
-   if ((item.name).length < 3||(item.imageUrl).length==0) {
+
+    if ((item.name).length < 3 || (item.imageUrl).length == 0) {
       console.log(item);
-      
-      alert("enter valid data"); return; }
 
-    
+      alert("enter valid data"); return;
+    }
+
+
     else {
       console.log(item);
-    
 
-      this.MyService.updateCatg(id,this.createdCatg).subscribe(
+
+      this.MyService.updateCatg(id, this.createdCatg).subscribe(
         {
-           
+
           next: (response) => {
             console.log("updated");
             console.log(response);
@@ -206,9 +217,9 @@ updateCatg(id:any,item:any){
             this.showSaveToast = true;
             this.createdCatg = {
               "id": 0,
-               "name":" ",
-              "description":" ",
-              "imageUrl":" "
+              "name": " ",
+              "description": " ",
+              "imageUrl": " "
             };
 
 
@@ -219,6 +230,54 @@ updateCatg(id:any,item:any){
         }
       );
     }
-}
+  }
+
+  openModal(id: number) {
+    const modalRef = this.modalService.open(NgbdModalConfirm);
+    modalRef.result.then((result) => {
+      console.log('Result:', result);
+      this.deleteCatg(id);
+    }).catch((error) => {
+      // Handle dismissal
+    });
+  }
+
 
 }//end of cat comp. class
+
+@Component({
+  selector: 'ngbd-modal-confirm',
+  template: `
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-title">Category deletion</h4>
+			<button
+				type="button"
+				class="btn-close"
+				aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')"
+			></button>
+		</div>
+		<div class="modal-body">
+			<p>
+				<strong>Are you sure you want to delete this category?</strong>
+			</p>
+			<p>
+				<span class="text-danger">This operation can not be undone.</span>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-danger" (click)="modal.close('1')">Ok</button>
+		</div>
+	`,
+})
+export class NgbdModalConfirm {
+
+  modal = inject(NgbActiveModal);
+  constructor(public activeModal: NgbActiveModal) { }
+  public response: boolean = false;
+
+  passBack() {
+    this.activeModal.close(this.response);
+  }
+}
