@@ -39,12 +39,9 @@ onSubmit() {
 
   this.authService.registerCustomer(registerData).subscribe({
     next: () => {
-      this.authService.login({
-        emailOrUserName: registerData.email,
-        password: registerData.password
-      }).subscribe({
-        next: () => { this.isLoading = false; },
-        error: () => { this.router.navigate(['/auth/login']); }
+      this.isLoading = false;
+      this.router.navigate(['/auth/login'], {
+        queryParams: { message: 'Registration successful! Please check your email to confirm your account.' }
       });
     },
     error: (err) => {

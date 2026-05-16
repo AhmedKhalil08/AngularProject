@@ -128,15 +128,15 @@ namespace ECommerce.Infrastructure.Services
 
             if (user == null)
                 throw new UnauthorizedAccessException("Invalid email/username or password");
-            if (!user.EmailConfirmed)
-            {
-                throw new ForbiddenAccessException("Please Confirm Your Email First");
-            }
-
             //  Check password
             var isValid = await _userManager.CheckPasswordAsync(user, DTO.Password);
             if (!isValid)
                 throw new UnauthorizedAccessException("Invalid email/username or password");
+            
+            if (!user.EmailConfirmed)
+            {
+                throw new ForbiddenAccessException("Please Confirm Your Email First");
+            }
 
             // Check if account is active
             if (!user.IsActive)

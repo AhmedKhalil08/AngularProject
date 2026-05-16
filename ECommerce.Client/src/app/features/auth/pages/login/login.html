@@ -1,10 +1,12 @@
 <div class="login-container">
-    <a routerLink="/" class="back-home">
-    <i class="bi bi-arrow-left"></i> Back to Home
-  </a>
+
   <div class="login-card">
     
     <div class="login-header">
+          <a routerLink="/" class="back-home">
+    <i class="bi bi-arrow-left"></i> Back to Home
+  </a>
+  
       <div class="login-logo">
   <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
     <path d="M16 2 C8 2 2 8 2 16 C2 24 8 30 16 30" stroke="white" stroke-width="3" stroke-linecap="round"/>
@@ -16,7 +18,11 @@
       <h2>Welcome Back</h2>
       <p>Sign in to your account</p>
     </div>
-
+@if(successMessage) {
+  <div class="success-alert">
+    <i class="bi bi-envelope-check"></i> {{ successMessage }}
+  </div>
+}
     @if(errorMessage) {
       <div class="error-alert">
         <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}

@@ -34,6 +34,10 @@ import { Shipment } from './features/seller/pages/shipment/shipment';
 import { Products } from './features/admin/pages/products/products';
 import { guestGuard } from './core/guards/guest-guard';
 import { AllOrders } from './features/admin/pages/all-orders/all-orders';
+import { Subscribers } from './features/admin/pages/subscribers/subscribers';
+// import { Subscribers } from './features/admin/pages/subscribers/subscribers';
+import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
+import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
 
 export const routes: Routes = [
   {
@@ -51,6 +55,7 @@ export const routes: Routes = [
       { path: 'checkout/failed', component: Checkoutfailed },
       { path: 'help-center', component: HelpCenter },
       { path: 'contact', component: CustomerService },
+      { path: 'wishlist', component: Wishlist, canActivate: [authGuard] },
     ],
   },
   {
@@ -77,6 +82,7 @@ export const routes: Routes = [
       { path: 'messages', component: Messages },
       { path: 'products', component: Products },
       { path: 'Orders', component: AllOrders },
+      { path: 'subscribers', component: Subscribers },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
@@ -103,5 +109,6 @@ export const routes: Routes = [
       { path: '', redirectTo: 'info', pathMatch: 'full' },
     ],
   },
+  { path: 'unauthorized', component: Unauthorized },
   { path: '**', redirectTo: '' },
 ];

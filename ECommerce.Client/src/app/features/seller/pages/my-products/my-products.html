@@ -1,13 +1,27 @@
 <div class="my-products-page">
 
   <div class="page-header">
-    <h2 class="page-title">  <i class="bi bi-collection"></i>My Products</h2>
+    <h2 class="page-title"><i class="bi bi-collection"></i> My Products</h2>
     <div class="header-actions">
-      <span class="product-count">{{ products().length }} products</span>
+      <span class="product-count">{{ filteredProducts().length }} products</span>
       <button class="create-btn" (click)="openCreateModal()">
         <i class="bi bi-plus-circle"></i> Add Product
       </button>
     </div>
+  </div>
+
+  <div class="filters-bar">
+    <div class="search-wrapper">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search products..."
+        [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
+    </div>
+    <select class="filter-select" [value]="selectedStatus()"
+      (change)="selectedStatus.set($any($event.target).value)">
+      <option value="all">All Products</option>
+      <option value="active">Active</option>
+      <option value="deleted">Deleted</option>
+    </select>
   </div>
 
   @if(loading()) {
@@ -16,7 +30,7 @@
     </div>
   } @else {
     <div class="row row-cols-1 row-cols-md-3 g-4">
-      @for(product of products(); track product.id) {
+      @for(product of filteredProducts(); track product.id) {
         <div class="col">
           <app-product-card
             [product]="product"
@@ -26,7 +40,7 @@
         </div>
       } @empty {
         <div class="empty-state">
-          <p>No products yet!</p>
+          <p>No products found!</p>
           <button class="create-btn" (click)="openCreateModal()">
             <i class="bi bi-plus-circle"></i> Add Your First Product
           </button>
