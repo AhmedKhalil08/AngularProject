@@ -11,5 +11,9 @@ namespace ECommerce.Application.DTOs
         public decimal ProductPrice { get; set; }
         public string? ProductImageUrl { get; set; }
         public DateTime AddedAt { get; set; }
+
+        public int ProductId { get; set; }
+
+
     }
 }
