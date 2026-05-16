@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
-import {PromoCode} from './features/admin/components/promo-code/promo-code'
-import {Category} from './features/admin/components/category/category'
+import {PromoCode} from './features/admin/pages/promo-code/promo-code'
+import {Category} from './features/admin/pages/category/category'
 import {BnrCarousel} from './features/home/components/bnr-carousel/bnr-carousel'
 import {Footer} from './shared/components/footer/footer'
 
