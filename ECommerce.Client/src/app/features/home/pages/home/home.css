@@ -628,3 +628,112 @@ ngx-particles {
     grid-template-columns: 1fr;
   }
 }
+
+.newsletter-section {
+  padding: 4rem;
+  background: linear-gradient(135deg, #f0f4ff, #e8e4ff);
+  border-top: 1px solid #e8e4ff;
+  border-bottom: 1px solid #e8e4ff;
+}
+
+.newsletter-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.newsletter-text h2 {
+  color: #2d2b55;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.newsletter-text p {
+  color: #7a7a9d;
+  font-size: 0.95rem;
+}
+
+.newsletter-form {
+  flex-shrink: 0;
+}
+
+.subscribe-input {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.subscribe-input input {
+  padding: 0.85rem 1.25rem;
+  border: 2px solid #e8e4ff;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  color: #2d2b55;
+  outline: none;
+  width: 300px;
+  transition: all 0.2s ease;
+}
+
+.subscribe-input input:focus {
+  border-color: #7c6ff7;
+  box-shadow: 0 0 0 4px #7c6ff722;
+}
+
+.subscribe-input button {
+  padding: 0.85rem 1.75rem;
+  background: linear-gradient(135deg, #7c6ff7, #6d28d9);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px #7c6ff755;
+  white-space: nowrap;
+}
+
+.subscribe-input button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px #7c6ff777;
+}
+
+.subscribe-input button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.subscribe-success {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1a7f4b;
+  font-weight: 600;
+  font-size: 1rem;
+  background: #d4f7e7;
+  padding: 0.85rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid #a8edcc;
+}
+
+.subscribe-success i {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .newsletter-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .subscribe-input {
+    flex-direction: column;
+  }
+
+  .subscribe-input input {
+    width: 100%;
+  }
+}

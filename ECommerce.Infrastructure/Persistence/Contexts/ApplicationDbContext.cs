@@ -40,5 +40,8 @@ namespace ECommerce.Infrastructure.Persistence.Contexts
         // messages
         public DbSet<ContactMessage> ContactMessages { get; set; }
 
+        // Newsletter
+        public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
+
     }
 }
