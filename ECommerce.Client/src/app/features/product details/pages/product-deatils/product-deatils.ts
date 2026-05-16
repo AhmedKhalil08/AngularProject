@@ -6,10 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
-  selector: 'app-product-details',
+  selector: 'app-product-deatils',
   imports: [CommonModule],
-  templateUrl: './product-details.html',
-  styleUrl: './product-details.css',
+  templateUrl: './product-deatils.html',
+  styleUrl: './product-deatils.css',
   providers: [ProductService]
 })
 export class ProductDetails implements OnInit {
