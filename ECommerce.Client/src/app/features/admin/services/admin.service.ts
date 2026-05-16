@@ -65,5 +65,8 @@ deleteProduct(id: number) {
 restoreProduct(id: number) {
   return this.api.put<any>(`admin/products/${id}/restore`, {});
 }
+getSubscribers() {
+  return this.api.get<any[]>('newsletter/subscribers');
+}
 }
 

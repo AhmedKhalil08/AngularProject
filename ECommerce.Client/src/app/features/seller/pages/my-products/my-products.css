@@ -64,4 +64,53 @@
   margin-top: 3rem;
   color: #7a7a9d;
   width: 100%;
+}.filters-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-wrapper i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7c6ff7;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 2px solid #e8e4ff;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #2d2b55;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-wrapper input:focus {
+  border-color: #7c6ff7;
+  box-shadow: 0 0 0 3px #7c6ff722;
+}
+
+.filter-select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e8e4ff;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #2d2b55;
+  outline: none;
+  cursor: pointer;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.filter-select:focus {
+  border-color: #7c6ff7;
 }

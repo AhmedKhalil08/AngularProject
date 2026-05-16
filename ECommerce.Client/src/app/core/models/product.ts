@@ -11,4 +11,5 @@ export interface Product {
   rating?: number;
   sellerName?: string;
   storeDes?: string;
+  isDeleted:boolean;
 }
