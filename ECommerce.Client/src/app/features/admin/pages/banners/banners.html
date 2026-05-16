@@ -1,0 +1,94 @@
+<div class="banners-page">
+
+  <div class="page-header">
+    <h2 class="page-title"><i class="bi bi-image"></i> Banners</h2>
+    <button class="create-btn" (click)="openCreateForm()">
+      <i class="bi bi-plus-circle"></i> Add Banner
+    </button>
+  </div>
+
+  @if(showForm()) {
+    <div class="banner-form">
+      <h5>{{ editingBanner() ? 'Edit Banner' : 'Add New Banner' }}</h5>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" class="form-input" [(ngModel)]="form.title" placeholder="Banner title" />
+        </div>
+        <div class="form-group">
+          <label>Display Order</label>
+          <input type="number" class="form-input" [(ngModel)]="form.displayOrder" placeholder="1" />
+        </div>
+        <div class="form-group full-width">
+          <label>Image URL</label>
+          <input type="text" class="form-input" [(ngModel)]="form.imageUrl" placeholder="https://..." />
+        </div>
+        <div class="form-group full-width">
+          <label>Link (optional)</label>
+          <input type="text" class="form-input" [(ngModel)]="form.link" placeholder="/products" />
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="form.isActive" />
+            Active
+          </label>
+        </div>
+      </div>
+      @if(form.imageUrl) {
+        <div class="image-preview">
+          <img [src]="form.imageUrl" alt="Preview" />
+        </div>
+      }
+      <div class="form-actions">
+        <button class="cancel-btn" (click)="showForm.set(false)">
+          <i class="bi bi-x-circle"></i> Cancel
+        </button>
+        <button class="save-btn" (click)="saveForm()">
+          <i class="bi bi-check-circle"></i> {{ editingBanner() ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="banners-grid">
+      @for(banner of banners(); track banner.id) {
+        <div class="banner-card" [class.inactive]="!banner.isActive">
+          <div class="banner-image">
+            <img [src]="banner.imageUrl" [alt]="banner.title" />
+            @if(!banner.isActive) {
+              <div class="inactive-overlay">Inactive</div>
+            }
+          </div>
+          <div class="banner-info">
+            <h5>{{ banner.title }}</h5>
+            <div class="banner-meta">
+              <span class="order-badge">Order: {{ banner.displayOrder }}</span>
+              @if(banner.link) {
+                <span class="link-badge"><i class="bi bi-link-45deg"></i> {{ banner.link }}</span>
+              }
+            </div>
+          </div>
+          <div class="banner-actions">
+            <button class="action-btn edit-btn" (click)="openEditForm(banner)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" (click)="deleteBanner(banner.id)">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="bi bi-image"></i>
+          <p>No banners yet!</p>
+        </div>
+      }
+    </div>
+  }
+
+</div>
