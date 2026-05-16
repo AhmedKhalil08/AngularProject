@@ -1,0 +1,21 @@
+<div class="toast-container">
+  @for(toast of toasts(); track toast.id) {
+    <div class="toast-item" [class]="'toast-' + toast.type" (click)="removeToast(toast.id)">
+      <div class="toast-icon">
+        @switch(toast.type) {
+          @case('info') { <i class="bi bi-envelope-fill"></i> }
+          @case('success') { <i class="bi bi-check-circle-fill"></i> }
+          @case('error') { <i class="bi bi-exclamation-circle-fill"></i> }
+          @case('warning') { <i class="bi bi-exclamation-triangle-fill"></i> }
+        }
+      </div>
+      <div class="toast-content">
+        <span class="toast-title">{{ toast.title }}</span>
+        <span class="toast-message">{{ toast.message }}</span>
+      </div>
+      <button class="toast-close" (click)="removeToast(toast.id)">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  }
+</div>
