@@ -18,9 +18,24 @@ import { SellerLayout } from './layouts/seller-layout/seller-layout';
 import { sellerGuard } from './core/guards/seller-guard';
 import { SellerOverview } from './features/seller/pages/seller-overview/seller-overview';
 import { MyProducts } from './features/seller/pages/my-products/my-products';
+import { OrderCheckOut } from './features/orders/components/order-check-out/order-check-out';
+import { CheckoutSuccess } from './features/orders/components/checkout-success/checkout-success';
+import { Checkoutfailed } from './features/orders/components/checkoutfailed/checkoutfailed';
 import { Profile } from './features/profile/pages/profile/profile';
 import { ProfileLayout } from './layouts/profile-layout/profile-layout';
 import { authGuard } from './core/guards/auth-guard';
+import { ChangePassword } from './features/profile/pages/change-password/change-password';
+import { Addresses } from './features/profile/pages/addresses/addresses';
+import { Messages } from './features/admin/pages/messages/messages';
+import { HelpCenter } from './features/contact/pages/help-center/help-center';
+import { CustomerService } from './features/contact/pages/customer-service/customer-service';
+import { MyOrders } from './features/profile/pages/my-orders/my-orders';
+import { Shipment } from './features/seller/pages/shipment/shipment';
+import { Products } from './features/admin/pages/products/products';
+import { guestGuard } from './core/guards/guest-guard';
+import { Subscribers } from './features/admin/pages/subscribers/subscribers';
+import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
+import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
 
 export const routes: Routes = [
   {
@@ -29,12 +44,22 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'products', component: ProductCatalog },
-      { path: 'cart', component: CartComp }
+      { path: 'cart', component: CartComp },
+      {
+        path: 'checkout',
+        component: OrderCheckOut,
+      },
+      { path: 'checkout/success', component: CheckoutSuccess },
+      { path: 'checkout/failed', component: Checkoutfailed },
+      { path: 'help-center', component: HelpCenter },
+      { path: 'contact', component: CustomerService },
+      { path: 'wishlist', component: Wishlist, canActivate: [authGuard] }
     ],
   },
   {
     path: 'auth',
     component: AuthLayout,
+    canActivate:[guestGuard],
     children: [
       { path: 'login', component: Login },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -53,6 +78,9 @@ export const routes: Routes = [
       { path: 'sellers', component: Sellers },
       { path: 'admins', component: Admins },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'messages', component: Messages },
+      { path: 'products', component: Products },
+      { path: 'subscribers', component: Subscribers }
     ],
   },
   {
@@ -62,19 +90,22 @@ export const routes: Routes = [
     children: [
       { path: 'overview', component: SellerOverview },
       { path: 'products', component: MyProducts },
+      { path: 'shipments', component: Shipment },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
   {
-  path: 'profile',
-  component: ProfileLayout,
-  canActivate: [authGuard],
-  children: [
-    { path: 'info', component: Profile },
-    { path: 'password', component: Profile }, // placeholder for now
-    { path: 'addresses', component: Profile }, // placeholder for now
-    { path: '', redirectTo: 'info', pathMatch: 'full' }
-  ]
-},
+    path: 'profile',
+    component: ProfileLayout,
+    canActivate: [authGuard],
+    children: [
+      { path: 'info', component: Profile },
+      { path: 'password', component: ChangePassword }, // placeholder for now
+      { path: 'addresses', component: Addresses },
+      { path: 'myorders', component: MyOrders }, // placeholder for now
+      { path: '', redirectTo: 'info', pathMatch: 'full' },
+    ],
+  },
+  { path: 'unauthorized', component: Unauthorized },
   { path: '**', redirectTo: '' },
 ];

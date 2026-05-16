@@ -32,6 +32,10 @@ namespace ECommerce.Application.Features.Carts.Commands.AddToCart
             var userId = _currentUser.UserId;
             if (string.IsNullOrEmpty(userId))
                 throw new UnauthorizedAccessException("Must be logged in.");
+            //if (_currentUser.Role == "Admin" || _currentUser.Role == "Seller")
+            //{
+            //    throw new UnauthorizedAccessException("Cart Can't be for  seller or Admin");
+            //}
 
             var product = await _productRepository.GetByIdAsync(request.ProductId);
             if (product == null) throw new Exception("Product not found.");

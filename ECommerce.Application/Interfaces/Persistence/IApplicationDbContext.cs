@@ -32,5 +32,11 @@ namespace ECommerce.Application.Interfaces.Persistence
 
         // الميثود الأساسية للحفظ
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
+        // Messages
+        DbSet<ContactMessage> ContactMessages { get; }
+
+        // NewsLetter 
+        DbSet<NewsletterSubscriber> NewsletterSubscribers { get; }
     }
 }

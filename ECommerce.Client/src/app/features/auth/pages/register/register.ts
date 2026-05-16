@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ParseSourceFile } from '@angular/compiler';
 import { matchPassword } from '../../validators/password-match.validator';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -32,7 +32,6 @@ export class Register {
   errorMessage='';
 onSubmit() {
   if (this.registerForm.invalid) return;
-
   this.isLoading = true;
   this.errorMessage = '';
 
@@ -40,7 +39,10 @@ onSubmit() {
 
   this.authService.registerCustomer(registerData).subscribe({
     next: () => {
-      this.router.navigate(['/auth/login']);
+      this.isLoading = false;
+      this.router.navigate(['/auth/login'], {
+        queryParams: { message: 'Registration successful! Please check your email to confirm your account.' }
+      });
     },
     error: (err) => {
       this.isLoading = false;
@@ -51,5 +53,8 @@ onSubmit() {
 }
 registerWithGoogle() {
   window.location.href = 'https://localhost:7018/api/auth/google-login';
+}
+registerWithFacebook() {
+  window.location.href = 'https://localhost:7018/api/auth/facebook-login';
 }
 }

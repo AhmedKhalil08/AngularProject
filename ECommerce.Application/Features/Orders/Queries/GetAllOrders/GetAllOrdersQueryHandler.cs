@@ -10,6 +10,7 @@ namespace ECommerce.Application.Features.Orders.Queries.GetAllOrders
     {
         private readonly IOrderRepository _repository;
 
+
         public GetAllOrdersQueryHandler(IOrderRepository repository)
         {
             _repository = repository;
@@ -17,6 +18,7 @@ namespace ECommerce.Application.Features.Orders.Queries.GetAllOrders
 
         public async Task<List<OrderDto>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
+            
             // 1. جلب البيانات من الداتابيز بكل علاقاتها
             var ordersEntity = await _repository.Table
                 .Include(o => o.User)

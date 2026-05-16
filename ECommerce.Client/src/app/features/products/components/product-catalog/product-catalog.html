@@ -6,7 +6,7 @@
                 <div class="filters-header">
                     <h4>Filters</h4>
                     <button class="clear-btn" (click)="clearFilters()"
-                        [class.visible]="searchTerm() !== '' || selectedCategory() !== null || minPrice() !== 0 || maxPrice() !== 50000 || selectedRating() !== null">
+                        [class.visible]="searchTerm() !== '' || selectedCategory() !== null || minPrice() !== 0 || maxPrice() !== maxRangePrice() || selectedRating() !== null">
                         Clear All
                     </button>
                 </div>
@@ -43,13 +43,13 @@
                             [min]="minRangePrice" [max]="maxPrice()" placeholder="Min" aria-label="Minimum price">
                         <span class="price-separator">-</span>
                         <input type="number" class="price-input" [value]="maxPrice()" (input)="onMaxPriceChange($event)"
-                            [min]="minPrice()" [max]="maxRangePrice" placeholder="Max" aria-label="Maximum price">
+                            [min]="minPrice()" [max]="maxRangePrice()" placeholder="Max" aria-label="Maximum price">
                     </div>
                     <div class="price-display">
                         Range: <strong>{{ minPrice() | number }}</strong> - <strong>{{ maxPrice() | number }}</strong>
                         EGP
                     </div>
-                    <input type="range" class="price-range" [min]="minRangePrice" [max]="maxRangePrice"
+                    <input type="range" class="price-range" [min]="minRangePrice" [max]="maxRangePrice()"
                         [value]="maxPrice()" (input)="onRangeSliderChange($event)" aria-label="Price range slider">
                 </div>
 

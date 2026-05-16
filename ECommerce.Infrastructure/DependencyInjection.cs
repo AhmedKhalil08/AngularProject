@@ -113,7 +113,8 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IMailConfService, MailConfService>();
 
             services.AddHttpClient();
-
+            services.AddScoped<IContactMessageRepository, ContactMessageRepository>();
+            services.AddScoped<INewsletterRepository, NewsletterRepository>();
 
             return services;
 

@@ -9,6 +9,7 @@ namespace ECommerce.Application.DTOs
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string Description { get; set; }
+        public bool IsDeleted { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public List<string> ImageUrls { get; set; }

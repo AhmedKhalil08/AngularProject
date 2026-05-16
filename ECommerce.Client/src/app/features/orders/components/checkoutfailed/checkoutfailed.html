@@ -1,0 +1,38 @@
+<div class="failed-container">
+    <div class="failed-card">
+        <div class="failed-icon-wrapper">
+            <div class="failed-icon">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="40" r="38" stroke="#f56565" stroke-width="4" fill="#fff5f5" />
+                    <path d="M30 30L50 50M50 30L30 50" stroke="#f56565" stroke-width="4" stroke-linecap="round" />
+                </svg>
+            </div>
+        </div>
+
+        <h1 class="failed-title">Order Failed ❌</h1>
+
+        <div class="failed-message">
+            <p class="primary-message">We couldn't process your payment</p>
+            <p class="secondary-message">Your order couldn't be completed. Please check your payment details and try
+                again.</p>
+        </div>
+
+        <div class="error-box">
+            <p>💳 Payment Failed - Please verify your card details and try again</p>
+        </div>
+
+        <div class="common-issues">
+            <p class="issues-title">Common Issues:</p>
+            <ul class="issues-list">
+                <li>Insufficient funds in your account</li>
+                <li>Incorrect card details or expiration date</li>
+                <li>Card blocked by your bank for security reasons</li>
+                <li>Network connectivity issue</li>
+            </ul>
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-primary" routerLink="/checkout">Try Again</button>
+            <button class="btn btn-secondary" routerLink="/products">Browse Products</button>
+        </div>
+    </div>
+</div>

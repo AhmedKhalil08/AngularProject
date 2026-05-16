@@ -14,13 +14,15 @@ namespace ECommerce.Application.Features.Carts.Commands.SyncCart
         private readonly ICartItemRepository _cartItemRepo;
         private readonly ICurrentUserService _currentUser;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductRepository _pr;
 
-        public SyncCartCommandHandler(ICartRepository cartRepo, ICartItemRepository cartItemRepo, IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+        public SyncCartCommandHandler(ICartRepository cartRepo, ICartItemRepository cartItemRepo, IUnitOfWork unitOfWork, ICurrentUserService currentUser, IProductRepository productRepository)
         {
             _cartRepo = cartRepo;
             _cartItemRepo = cartItemRepo;
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _pr = productRepository;
         }
 
         public async Task<bool> Handle(SyncCartCommand request, CancellationToken cancellationToken)
@@ -31,7 +33,7 @@ namespace ECommerce.Application.Features.Carts.Commands.SyncCart
             // 1. Get or Create Cart
             var carts = await _cartRepo.GetByConditionAsync(c => c.UserId == userId && !c.IsDeleted, includeProperties: "CartItems", trackChanges: true);
             var cart = carts.FirstOrDefault() ?? new Cart { UserId = userId};
-
+            
             if (cart.Id == 0) await _cartRepo.AddAsync(cart);
             await _unitOfWork.SaveChangesAsync(); // عشان نضمن وجود ID للسلة
 
@@ -39,13 +41,15 @@ namespace ECommerce.Application.Features.Carts.Commands.SyncCart
             foreach (var syncItem in request.Items)
             {
                 var existingItem = cart.CartItems?.FirstOrDefault(ci => ci.ProductId == syncItem.ProductId);
-                if (existingItem != null)
+                if (existingItem != null && existingItem.Product.Stock >= existingItem.Quantity + syncItem.Quantity)
                 {
-                    existingItem.Quantity += syncItem.Quantity; // تحديث الكمية لو المنتج موجود
+                    existingItem.Quantity += syncItem.Quantity; 
                 }
                 else
                 {
-                    await _cartItemRepo.AddAsync(new CartItem { CartId = cart.Id, ProductId = syncItem.ProductId, Quantity = syncItem.Quantity });
+                    var product = await _pr.GetByIdAsync(syncItem.ProductId);
+                    if (syncItem.Quantity > 0 && product.Stock >= syncItem.Quantity)
+                        await _cartItemRepo.AddAsync(new CartItem { CartId = cart.Id, ProductId = syncItem.ProductId, Quantity = syncItem.Quantity });
                 }
             }
 

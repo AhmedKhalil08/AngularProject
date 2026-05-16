@@ -1,0 +1,134 @@
+.messages-page {
+  padding: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e8e4ff;
+  padding-bottom: 1rem;
+}
+
+.page-title {
+  color: #2d2b55;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.message-count {
+  background: #e8e4ff;
+  color: #7c6ff7;
+  border: 1px solid #c4b8ff;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #e8e4ff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.message-card:hover {
+  border-color: #7c6ff7;
+  box-shadow: 0 4px 15px #7c6ff722;
+  transform: translateX(4px);
+}
+
+.message-card.unread {
+  border-left: 4px solid #7c6ff7;
+  background: #f8f6ff;
+}
+
+.message-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c6ff7, #6d28d9);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.message-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.message-name {
+  color: #2d2b55;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.message-time {
+  color: #7a7a9d;
+  font-size: 0.8rem;
+}
+
+.message-subject {
+  color: #2d2b55;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.message-preview {
+  color: #7a7a9d;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unread-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #7c6ff7;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem;
+  color: #7a7a9d;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #c4b8ff;
+}

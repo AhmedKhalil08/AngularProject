@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { SignalrService } from '../../../../core/services/signalr-service';
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -7,4 +8,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './admin-sidebar.html',
   styleUrl: './admin-sidebar.css',
 })
-export class AdminSidebar {}
+export class AdminSidebar {
+    constructor(public signalrService: SignalrService) {}
+}

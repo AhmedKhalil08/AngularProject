@@ -37,5 +37,11 @@ namespace ECommerce.Infrastructure.Persistence.Contexts
         public DbSet<PromoCode> PromoCodes { get; set; }
         public DbSet<Banner> Banners { get; set; }
 
+        // messages
+        public DbSet<ContactMessage> ContactMessages { get; set; }
+
+        // Newsletter
+        public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
+
     }
 }
