@@ -303,6 +303,48 @@ hr {
     cursor: not-allowed;
     box-shadow: none;
 }
+.promo-message {
+    font-size: 0.85rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
+/* لما الـ input يكون readonly */
+input[readonly] {
+    background-color: #f3f4f6;
+    /* لون رصاصي فاتح */
+    color: #6b7280;
+    /* لون الخط باهت */
+    cursor: not-allowed;
+    /* شكل الماوس وهو مقفول */
+    opacity: 0.7;
+}
+
+/* لما الزرار يكون disabled */
+button:disabled {
+    background-color: #9ca3af;
+    /* لون رصاصي */
+    cursor: not-allowed;
+    opacity: 0.7;
+    pointer-events: none;
+    /* بيمنع أي كليك عليه تماماً */
+}
+/* لون أخضر لو البرومو كود صح */
+.success-text {
+    color: #10b981;
+    /* تقدر تغيره للون الأخضر اللي ماشي مع تصميمك */
+}
+
+/* لون أحمر لو البرومو كود غلط */
+.error-text {
+    color: #f43f5e;
+    /* تقدر تغيره للون الأحمر اللي ماشي مع تصميمك */
+}
+.total-label{
+    color: #4a5568;
+    /* لون رمادي داكن */
+    font-weight: 500;
+    text-decoration:line-through;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

@@ -12,7 +12,8 @@ namespace ECommerce.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<PromoCode> builder)
         {
             builder.HasKey(oi => oi.Id);
-
+            builder.HasIndex(oi => oi.Code)
+                   .IsUnique();
             builder.Property(oi => oi.Code)
            .IsRequired();
 

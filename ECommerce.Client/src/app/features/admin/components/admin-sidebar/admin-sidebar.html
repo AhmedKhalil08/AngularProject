@@ -10,16 +10,16 @@
       <span>Overview</span>
     </a>
     <a routerLink="/admin/messages" routerLinkActive="active" class="nav-item">
-  <i class="bi bi-envelope"></i>
-  <span>Messages</span>
-  @if(signalrService.unreadCount() > 0) {
-    <span class="notification-badge">{{ signalrService.unreadCount() }}</span>
-  }
-</a>
+      <i class="bi bi-envelope"></i>
+      <span>Messages</span>
+      @if(signalrService.unreadCount() > 0) {
+      <span class="notification-badge">{{ signalrService.unreadCount() }}</span>
+      }
+    </a>
     <a routerLink="/admin/admins" routerLinkActive="active" class="nav-item">
-  <i class="bi bi-shield-check"></i>
-  <span>Admins</span>
-</a>
+      <i class="bi bi-shield-check"></i>
+      <span>Admins</span>
+    </a>
     <a routerLink="/admin/customers" routerLinkActive="active" class="nav-item">
       <i class="bi bi-people"></i>
       <span>Customers</span>
@@ -40,7 +40,7 @@
       <i class="bi bi-box-seam"></i>
       <span>Products</span>
     </a>
-    <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+    <a routerLink="/admin/Orders" routerLinkActive="active" class="nav-item">
       <i class="bi bi-receipt"></i>
       <span>Orders</span>
     </a>

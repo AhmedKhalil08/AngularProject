@@ -33,6 +33,7 @@ import { MyOrders } from './features/profile/pages/my-orders/my-orders';
 import { Shipment } from './features/seller/pages/shipment/shipment';
 import { Products } from './features/admin/pages/products/products';
 import { guestGuard } from './core/guards/guest-guard';
+import { AllOrders } from './features/admin/pages/all-orders/all-orders';
 
 export const routes: Routes = [
   {
@@ -55,7 +56,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthLayout,
-    canActivate:[guestGuard],
+    canActivate: [guestGuard],
     children: [
       { path: 'login', component: Login },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -73,9 +74,10 @@ export const routes: Routes = [
       { path: 'customers', component: Customers },
       { path: 'sellers', component: Sellers },
       { path: 'admins', component: Admins },
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'messages', component: Messages },
-      { path: 'products', component: Products }
+      { path: 'products', component: Products },
+      { path: 'Orders', component: AllOrders },
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
   {

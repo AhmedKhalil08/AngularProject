@@ -10,7 +10,6 @@ import { Cart } from '../../../core/models/cart';
 })
 export class CartService {
   private cartItemsSignal = signal<CartItem[]>([]);
-
   public cartItems = this.cartItemsSignal.asReadonly();
 
   private endpoint = 'Cart';
@@ -60,6 +59,11 @@ export class CartService {
       this.cartTotalSignal.set(total);
     }
   }
+  applyDiscount(discountPercent: number) {
+    const currentTotal = this.cartTotalSignal();
+    const newTotal = currentTotal * (1 - discountPercent / 100);
+    this.cartTotalSignal.set(newTotal);
+  }
 
   private saveToStorage(items: CartItem[]) {
     localStorage.setItem('cart', JSON.stringify(items));
@@ -69,6 +73,7 @@ export class CartService {
     const total = items.reduce((acc, item) => acc + (item.subTotal || 0), 0);
     this.cartTotalSignal.set(total);
   }
+
   loadCartFromApi() {
     this.apiService.get<Cart>(this.endpoint).subscribe({
       next: (res) => {
@@ -151,7 +156,10 @@ export class CartService {
   clearCart() {
     if (this.authService.isLoggedIn()) {
       this.apiService.delete(`${this.endpoint}/clear`).subscribe({
-        next: () => this.cartItemsSignal.set([]),
+        next: () => {
+          this.cartItemsSignal.set([]);
+          this.cartTotalSignal.set(0);
+        },
         error: (err) => console.error('Error clearing cart', err),
       });
     } else {

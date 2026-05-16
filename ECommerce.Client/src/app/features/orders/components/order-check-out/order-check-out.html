@@ -91,14 +91,34 @@
             }
 
             <div class="promo-section">
-                <input formControlName="promoCode" placeholder="Enter promo code">
-                <button type="button" class="btn-apply">Apply</button>
+                <input [readOnly]="isPromoValid" formControlName="promoCode" placeholder="Enter promo code">
+                <button [disabled]="isPromoValid" type="button" class="btn-apply"
+                    (click)="checkPromoCode()">Apply</button>
             </div>
-
+            @if(promoMessage){
+            <div class="promo-message" [ngClass]="{'success-text': isPromoValid, 'error-text': !isPromoValid}">
+                {{ promoMessage }}
+            </div>
+            }
             <hr>
             <div class="total-row">
+                @if(isPromoValid){
+                <span style="color:  #4a5568;">Subtotal Before Discount:</span>
+                <span class="subtotal total-label">{{ totalBeforeDiscount() | number:'1.2-2' | currency:'EGP' }}</span>
+                }
+            </div>
+            <div class="total-row">
+
+                <span>Subtotal:</span>
+                <span class="subtotal">{{ cartservice.cartTotal() | number:'1.2-2' | currency:'EGP' }}</span>
+            </div>
+            <div class="total-row">
+                <span>Delivery Fee Per Shipment:</span>
+                <span class="subtotal">{{ 50 | number:'1.2-2' | currency:'EGP' }}</span>
+            </div>
+            <div class="total-row">
                 <span>Total:</span>
-                <span class="final-price">Egp{{ cartservice.cartTotal()| number:'1.2-2' }}</span>
+                <span class="final-price">{{ cartservice.cartTotal()+50| number:'1.2-2'|currency:'EGP' }}</span>
             </div>
 
             <button type="submit" class="btn-place-order" [disabled]="checkoutForm.invalid">

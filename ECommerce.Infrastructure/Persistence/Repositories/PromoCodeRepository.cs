@@ -48,6 +48,10 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
                 return Task.CompletedTask;
             
         }
+        public async Task<PromoCode> GetPromoCodeAsync(string code)
+        {
+            return await _context.Set<PromoCode>().FirstOrDefaultAsync(p => p.Code == code && !p.IsDeleted);
+        }
 
     }
 }
