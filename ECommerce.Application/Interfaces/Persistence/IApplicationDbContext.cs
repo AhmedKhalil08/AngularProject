@@ -35,5 +35,8 @@ namespace ECommerce.Application.Interfaces.Persistence
 
         // Messages
         DbSet<ContactMessage> ContactMessages { get; }
+
+        // NewsLetter 
+        DbSet<NewsletterSubscriber> NewsletterSubscribers { get; }
     }
 }

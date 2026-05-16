@@ -8,10 +8,11 @@ import { Category } from '../../../../core/models/category';
 import { ApiService } from '../../../../core/services/api.service';
 import { CartService } from '../../../cart/services/cart-service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
-  imports: [NgxParticlesModule, RouterLink,CommonModule],
+  imports: [NgxParticlesModule, RouterLink,CommonModule,FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -23,7 +24,10 @@ export class Home {
   currentBannerIndex = signal(0);
   showBackToTop = signal(false);
   autoSlideInterval: any;
-  
+  newsletterEmail = '';
+subscribing = signal(false);
+subscribeSuccess = signal(false);
+
 
   constructor(private api: ApiService, private cartService : CartService, private authService:AuthService) {}
   isLoggedIn = computed(() => this.authService.isLoggedIn());
@@ -103,4 +107,18 @@ export class Home {
   addToCart(product: Product) {
   this.cartService.addToCart(product, 1);
 }
+
+subscribe() {
+  if (!this.newsletterEmail) return;
+  this.subscribing.set(true);
+  this.api.post('newsletter/subscribe', { email: this.newsletterEmail }).subscribe({
+    next: () => {
+      this.subscribeSuccess.set(true);
+      this.subscribing.set(false);
+      this.newsletterEmail = '';
+    },
+    error: () => this.subscribing.set(false)
+  });
+}
+
 }

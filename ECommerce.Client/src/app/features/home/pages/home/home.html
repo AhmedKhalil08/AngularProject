@@ -112,6 +112,34 @@
     </div>
   </section>
 
+  <!-- Newsletter -->
+<section class="newsletter-section">
+  <div class="newsletter-content">
+    <div class="newsletter-text">
+      <h2>Stay Updated!</h2>
+      <p>Subscribe to get the latest deals and offers straight to your inbox</p>
+    </div>
+    <div class="newsletter-form">
+      @if(subscribeSuccess()) {
+        <div class="subscribe-success">
+          <i class="bi bi-check-circle-fill"></i> Thanks for subscribing!
+        </div>
+      } @else {
+        <div class="subscribe-input">
+          <input type="email" placeholder="Enter your email address"
+            [(ngModel)]="newsletterEmail" />
+          <button (click)="subscribe()" [disabled]="subscribing()">
+            @if(subscribing()) {
+              <span class="spinner-border spinner-border-sm"></span>
+            } @else {
+              Subscribe
+            }
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</section>      
   <!-- Sign Up Banner -->
 <section class="signup-banner">
   <div class="signup-content">
