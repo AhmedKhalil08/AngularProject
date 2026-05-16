@@ -38,6 +38,9 @@ import { Subscribers } from './features/admin/pages/subscribers/subscribers';
 // import { Subscribers } from './features/admin/pages/subscribers/subscribers';
 import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
 import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
+import { Banners } from './features/admin/pages/banners/banners';
+import { PromoCodes } from './features/admin/pages/promo-codes/promo-codes';
+import { Categories } from './features/admin/pages/categories/categories';
 
 export const routes: Routes = [
   {
@@ -84,6 +87,9 @@ export const routes: Routes = [
       { path: 'Orders', component: AllOrders },
       { path: 'subscribers', component: Subscribers },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'banners', component: Banners },
+      { path: 'promocodes', component: PromoCodes },
+      { path: 'categories', component: Categories }
     ],
   },
   {
