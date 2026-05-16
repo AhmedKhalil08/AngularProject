@@ -172,5 +172,53 @@ itemToAdd: boolean = false;
     }
   } //end of creation function
 
+itemToUpdate: boolean = false;
+ public updatedCatg: ICategory = {
+    "id": 0,
+              "description":" ",
+             "name":"lol ",
+              "imageUrl":" "
+  }
+
+//Update//
+updateCatg(id:any,item:any){
+  console.log(item);
+
+   if ((item.name).length < 3||(item.imageUrl).length==0) {
+      console.log(item);
+      
+      alert("enter valid data"); return; }
+
+    
+    else {
+      console.log(item);
+    
+
+      this.MyService.updateCatg(id,this.createdCatg).subscribe(
+        {
+           
+          next: (response) => {
+            console.log("updated");
+            console.log(response);
+            // this.getPromos();
+
+            this.getCatgs();
+            this.showSaveToast = true;
+            this.createdCatg = {
+              "id": 0,
+               "name":" ",
+              "description":" ",
+              "imageUrl":" "
+            };
+
+
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        }
+      );
+    }
+}
 
 }//end of cat comp. class

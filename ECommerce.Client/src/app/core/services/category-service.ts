@@ -29,7 +29,7 @@ export class CategoryService {
   }
 
   updateCatg(id:any,data: any): Observable<any> {
-    return this.httpClient.post(this.apiUrl.concat('/', id), data);
+    return this.httpClient.post(this.apiUrl.concat('/id/', id), data);
   }
 
 

@@ -24,7 +24,8 @@ namespace ECommerce.Application.Features.Categories.Queries.GetAllCategories
             {
                 Id = c.Id,
                 Name = c.Name,
-                Description = c.Description
+                Description = c.Description,
+                ImageUrl=c.ImageUrl
             }).ToList();
         }
     }
