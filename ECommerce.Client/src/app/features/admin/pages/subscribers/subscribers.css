@@ -1,0 +1,129 @@
+.subscribers-page {
+  padding: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  color: #2d2b55;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-title i {
+  color: #7c6ff7;
+}
+
+.subscriber-count {
+  background: #e8e4ff;
+  color: #7c6ff7;
+  border: 1px solid #c4b8ff;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.subscribers-table {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e8e4ff;
+  overflow: hidden;
+  box-shadow: 0 2px 12px #7c6ff711;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr;
+  padding: 1rem 1.5rem;
+  background: #f0f4ff;
+  border-bottom: 2px solid #e8e4ff;
+  color: #7a7a9d;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.table-row:hover {
+  background: #f8f6ff;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.index {
+  color: #7a7a9d;
+  font-weight: 600;
+}
+
+.email {
+  color: #2d2b55;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.email i {
+  color: #7c6ff7;
+}
+
+.date {
+  color: #7a7a9d;
+  font-size: 0.85rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.active-badge {
+  background: #d4f7e7;
+  color: #1a7f4b;
+  border: 1px solid #a8edcc;
+}
+
+.inactive-badge {
+  background: #ffd6e0;
+  color: #c0392b;
+  border: 1px solid #ffb3c6;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem;
+  color: #7a7a9d;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #c4b8ff;
+}
