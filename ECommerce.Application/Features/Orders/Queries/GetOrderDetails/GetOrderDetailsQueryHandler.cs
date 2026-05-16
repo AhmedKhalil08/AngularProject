@@ -9,31 +9,56 @@ public class GetOrderDetailsQueryHandler : IRequestHandler<GetOrderDetailsQuery,
 {
     private readonly IOrderRepository _orderRepository;
     private readonly ICurrentUserService _currentUserService;
-
-    public GetOrderDetailsQueryHandler(IOrderRepository orderRepository, ICurrentUserService currentUserService)
+    private readonly IUserRepository _userManager;
+    public GetOrderDetailsQueryHandler(IOrderRepository orderRepository, ICurrentUserService currentUserService, IUserRepository userManager )
     {
         _orderRepository = orderRepository;
         _currentUserService = currentUserService;
+        _userManager = userManager;
     }
 
     public async Task<OrderDetailsDto> Handle(GetOrderDetailsQuery request, CancellationToken cancellationToken)
     {
         var userId = _currentUserService.UserId;
 
-        // بنجيب الأوردر ونجيب معاه الشحنات، والمنتجات اللي جوه الشحنات
-        var orders = await _orderRepository.GetByConditionAsync(
-            o => o.Id == request.OrderId && o.UserId == userId,
-            includeProperties: "Shipments,Shipments.OrderItems,Shipments.OrderItems.Product"
-        );
+        if(_currentUserService.Role == "Admin")
+        {
+            var orders = await _orderRepository.GetByConditionAsync(
+                o => o.Id == request.OrderId,
+                includeProperties: "Shipments,Shipments.OrderItems,Shipments.OrderItems.Product,Shipments.Seller,Shipments.Seller.User"
+            );
+            var order = orders.FirstOrDefault();
 
-        var order = orders.FirstOrDefault();
+            if (order == null)
+                throw new Exception("Order not found.");
 
-        if (order == null)
-            throw new Exception("Order not found.");
+            var orderDto = order.Adapt<OrderDetailsDto>();
+            foreach (var shipmentDto in orderDto.Shipments)
+            {
+                var user = await _userManager.GetByIdAsync(shipmentDto.SellerId);
+                if (user != null)
+                {
+                    shipmentDto.SellerName = user.FullName; 
+                }
+            }
+            return orderDto;
+        }
+        else
+        {
+            var orders = await _orderRepository.GetByConditionAsync(
+                o => o.Id == request.OrderId && o.UserId == userId,
+                includeProperties: "Shipments,Shipments.OrderItems,Shipments.OrderItems.Product"
+            );
+            var order = orders.FirstOrDefault();
 
-        // بنحول الـ Entity لـ DTO (ممكن تستخدم Mapster هنا بـ Adapt)
-        var orderDto = order.Adapt<OrderDetailsDto>();
+            if (order == null)
+                throw new Exception("Order not found.");
 
-        return orderDto;
+            var orderDto = order.Adapt<OrderDetailsDto>();
+
+            return orderDto;
+        }
+
+       
     }
 }

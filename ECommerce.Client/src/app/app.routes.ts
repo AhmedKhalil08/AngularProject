@@ -33,7 +33,9 @@ import { MyOrders } from './features/profile/pages/my-orders/my-orders';
 import { Shipment } from './features/seller/pages/shipment/shipment';
 import { Products } from './features/admin/pages/products/products';
 import { guestGuard } from './core/guards/guest-guard';
+import { AllOrders } from './features/admin/pages/all-orders/all-orders';
 import { Subscribers } from './features/admin/pages/subscribers/subscribers';
+// import { Subscribers } from './features/admin/pages/subscribers/subscribers';
 import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
 import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
 
@@ -53,13 +55,13 @@ export const routes: Routes = [
       { path: 'checkout/failed', component: Checkoutfailed },
       { path: 'help-center', component: HelpCenter },
       { path: 'contact', component: CustomerService },
-      { path: 'wishlist', component: Wishlist, canActivate: [authGuard] }
+      { path: 'wishlist', component: Wishlist, canActivate: [authGuard] },
     ],
   },
   {
     path: 'auth',
     component: AuthLayout,
-    canActivate:[guestGuard],
+    canActivate: [guestGuard],
     children: [
       { path: 'login', component: Login },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -77,10 +79,11 @@ export const routes: Routes = [
       { path: 'customers', component: Customers },
       { path: 'sellers', component: Sellers },
       { path: 'admins', component: Admins },
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'messages', component: Messages },
       { path: 'products', component: Products },
-      { path: 'subscribers', component: Subscribers }
+      { path: 'Orders', component: AllOrders },
+      { path: 'subscribers', component: Subscribers },
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
   {

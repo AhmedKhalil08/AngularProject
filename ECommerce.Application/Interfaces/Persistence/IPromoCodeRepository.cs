@@ -7,5 +7,6 @@ namespace ECommerce.Application.Interfaces.Persistence
 {
     public interface IPromoCodeRepository: IGenericRepository<PromoCode,int>
     {
+        Task<PromoCode> GetPromoCodeAsync(string code);
     }
 }
