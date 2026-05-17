@@ -45,7 +45,11 @@ import { Category } from './features/admin/pages/category/category';
 
 export const routes: Routes = [
   {
+     
+    
+ 
     path: '',
+   
     component: MainLayout,
     children: [
       { path: '', component: Home },

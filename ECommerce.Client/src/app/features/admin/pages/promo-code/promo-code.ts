@@ -27,6 +27,7 @@ export class PromoCode implements OnInit {
   private modalService = inject(NgbModal);
 
   constructor(public MyService: PromoService) {
+    this.getPromos();
     this.refreshPromos();
   }
 
@@ -42,6 +43,7 @@ export class PromoCode implements OnInit {
         console.log(data);
         // this.PromoCodess = data;
         this.PromoCodess = [...data];
+        this.refreshPromos();
         console.log("promos are:")
         console.log(this.PromoCodess)
         console.log(this.PromoCodess[0].id)

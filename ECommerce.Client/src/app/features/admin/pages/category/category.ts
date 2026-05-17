@@ -35,6 +35,7 @@ export class Category {
   private modalService = inject(NgbModal);
 
   constructor(public MyService: CategoryService) {
+     this.getCatgs();
     this.refreshCatgs();
   }
 
@@ -53,7 +54,11 @@ export class Category {
         console.log("catgs are:")
         //this.showSaveToast = true;
 
+
         console.log(this.Catgs)
+        this.refreshCatgs();
+        console.log("cats array");
+        console.log(this.catgs_arr)
         this.ctgNames = this.Catgs.map(e => e.name)
         console.log(this.ctgNames)
 
@@ -127,7 +132,7 @@ export class Category {
 
   itemToAdd: boolean = false;
   public createdCatg: ICategory = {
-    "id": 0,
+    "id":0,
     "description": " ",
     "name": " ",
     "imageUrl": " "
@@ -136,10 +141,11 @@ export class Category {
   showSaveToast: Boolean = false;
 
   public createCatg(newitem: any) {
-
+  console.log(this.createdCatg);
     //validating code
     if ((newitem.name).length < 3 || (newitem.imageUrl).length == 0) {
       console.log(newitem);
+      console.log(this.createCatg);
 
       alert("enter valid data"); return;
     }
@@ -230,6 +236,13 @@ export class Category {
       );
     }
   }
+  emptyCategory(){
+  this.createdCatg = {
+    "id": 0,
+    "description": " ",
+    "name": " ",
+    "imageUrl": " "
+  }}
 
   openModal(id: number) {
     const modalRef = this.modalService.open(NgbdModalConfirm);

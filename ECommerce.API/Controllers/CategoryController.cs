@@ -23,7 +23,7 @@ namespace ECommerce.API.Controllers
         //Create Category
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateCategoryCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateCategoryCommand command)
         {
             var result = await Mediator.Send(command);
 

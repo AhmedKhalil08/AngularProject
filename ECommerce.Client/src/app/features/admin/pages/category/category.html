@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Categories Dashboard</h2>
 
-        <button class="btn btn-success" (click)="itemToAdd = !itemToAdd;itemToUpdate=false">
+        <button class="btn btn-success" (click)="itemToAdd = !itemToAdd;itemToUpdate=false;">
             Add Category
         </button>
     </div>
@@ -41,7 +41,7 @@
             </div>
 
             <div class="mt-3">
-                <button class="btn btn-primary" (click)="updateCatg(UpdatedId,createdCatg)">
+                <button class="btn btn-primary" (click)="updateCatg(UpdatedId,createdCatg);this.emptyCategory();">
                     Save Category
                 </button>
             </div>

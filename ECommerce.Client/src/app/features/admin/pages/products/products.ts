@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmModal } from '../../components/confirm-modal/confirm-modal';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-products',

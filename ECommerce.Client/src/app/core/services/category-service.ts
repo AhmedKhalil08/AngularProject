@@ -3,6 +3,7 @@ import { ICategory } from '../models/Icategory';
 //import { httpResource } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environment/environment';
 
 
 @Injectable({
@@ -10,7 +11,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CategoryService {
 
-  private apiUrl: string = 'http://localhost:5253/api/Category';
+  private apiUrl: string = environment.apiUrl.concat('/Category');
+  
 
   constructor(private httpClient: HttpClient) { }
 

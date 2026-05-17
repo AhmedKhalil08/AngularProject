@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { BannerDto} from '../../../core/models/banner.model';
+import { environment } from '../../../environment/environment'; 
 
 
 @Injectable({
@@ -9,7 +10,9 @@ import { BannerDto} from '../../../core/models/banner.model';
 })
 export class BannerService {
 
- private apiUrl: string = 'http://localhost:5253/api/Admin/banners';
+ private apiUrl: string = environment.apiUrl.concat('/Admin/banners');
+  
+ 
 
  constructor(private httpClient: HttpClient) { }
 
