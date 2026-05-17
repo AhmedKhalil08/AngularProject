@@ -13,7 +13,7 @@ import { Customers } from './features/admin/pages/customers/customers';
 import { Sellers } from './features/admin/pages/sellers/sellers';
 import { Admins } from './features/admin/pages/admins/admins';
 import { ProductCatalog } from './features/products/components/product-catalog/product-catalog';
-import { ProductDetails } from './features/products/components/product-details/product-details';
+import { ProductDetails } from './features/productDetails/pages/product-details/product-details';
 import { CartComp } from './features/cart/components/cart-comp/cart-comp';
 import { SellerLayout } from './layouts/seller-layout/seller-layout';
 import { sellerGuard } from './core/guards/seller-guard';
@@ -39,9 +39,9 @@ import { Subscribers } from './features/admin/pages/subscribers/subscribers';
 // import { Subscribers } from './features/admin/pages/subscribers/subscribers';
 import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
 import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
-import { Banners } from './features/admin/pages/banners/banners';
-import { PromoCodes } from './features/admin/pages/promo-codes/promo-codes';
-import { Categories } from './features/admin/pages/categories/categories';
+import { Banner } from './features/admin/pages/banner/banner';
+import { PromoCode } from './features/admin/pages/promo-code/promo-code';
+import { Category } from './features/admin/pages/category/category';
 
 export const routes: Routes = [
   {
@@ -89,9 +89,10 @@ export const routes: Routes = [
       { path: 'Orders', component: AllOrders },
       { path: 'subscribers', component: Subscribers },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'banners', component: Banners },
-      { path: 'promocodes', component: PromoCodes },
-      { path: 'categories', component: Categories }
+      { path: 'banners', component: Banner },
+      { path: 'promocodes', component: PromoCode },
+      { path: 'categories', component: Category },
+      { path: 'products/:id',component: ProductDetails}
     ],
   },
   {
