@@ -1,30 +1,16 @@
-﻿using ECommerce.Infrastructure.Persistence.Repositories;
-using ECommerce.Application.DTOs.Auth;
-using ECommerce.Application.Exceptions;
-using ECommerce.Application.Interfaces.Persistence;
+﻿//using NETCore.MailKit.Core;
+using ECommerce.Application.DTOs;
 using ECommerce.Application.Interfaces.Services;
 using ECommerce.Domain.Entities;
-using ECommerce.Domain.Enums;
 using ECommerce.Infrastructure.Services.EmailService;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-//using NETCore.MailKit.Core;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.AspNetCore.Mvc;
-using ECommerce.Application.DTOs;
 
 namespace ECommerce.Infrastructure.Services
 {
     // ECommerce.Application/Common/Result.cs
-   
-    public class MailConfService:IMailConfService
+
+    public class MailConfService : IMailConfService
     {
         private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
@@ -32,16 +18,17 @@ namespace ECommerce.Infrastructure.Services
 
         public MailConfService(
                      UserManager<ApplicationUser> userManager,
-                           
+
                     IEmailService emailService,
-                    IConfiguration config) {
+                    IConfiguration config)
+        {
 
 
             _userManager = userManager;
             _config = config;
             _emailService = emailService;
         }
-        public async Task<Result<string>> ConfirmEmail( string userId,  string token)
+        public async Task<Result<string>> ConfirmEmail(string userId, string token)
         {
 
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
@@ -58,9 +45,33 @@ namespace ECommerce.Infrastructure.Services
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
             if (!result.Succeeded)
-                return  Result<string>.Failure("Invalid confirmation link");
+                return Result<string>.Failure("Invalid confirmation link");
 
-             return Result<string>.Success("Email confirmed successfully. You can now log in.");
+            return Result<string>.Success("Email confirmed successfully. You can now log in.");
+        }
+        public async Task<Result<string>> SendOrderStatusUpdateAsync(string userEmail, int orderId, string newStatus)
+        {
+            try
+            {
+                var subject = $"Update on your Order #{orderId}";
+                var body = $@"
+            <div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px;'>
+                <h2 style='color: #4CAF50;'>Order Status Update</h2>
+                <p>Dear Customer,</p>
+                <p>We wanted to let you know that the status of your order <strong>#{orderId}</strong> has been updated.</p>
+                <p>New Status: <span style='font-size: 16px; font-weight: bold; color: #2196F3;'>{newStatus}</span></p>
+                <hr>
+                <p style='font-size: 12px; color: #777;'>Thank you for shopping with us!</p>
+            </div>";
+                await _emailService.SendCustomEmailAsync(userEmail, subject, body);
+                return Result<string>.Success("Order status email sent successfully.");
+            }
+            catch (Exception ex)
+            {
+                return Result<string>.Failure($"Failed to send email: {ex.Message}");
+            }
         }
     }
+
 }
+

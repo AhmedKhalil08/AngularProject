@@ -632,6 +632,10 @@
     margin-top: auto;
     padding-top: 0.75rem;
     border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
 }
 
 .product-price {
@@ -639,6 +643,24 @@
     font-size: 1.25rem;
     font-weight: 700;
     color: #198754;
+}
+
+.btn-view-details {
+    padding: 6px 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-view-details:hover {
+    background: #0056b3;
+    transform: translateX(2px);
 }
 
 /* Empty State */

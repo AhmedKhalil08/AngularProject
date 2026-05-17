@@ -11,5 +11,6 @@ namespace ECommerce.Infrastructure.Services.EmailService
         // void SendEmail(EmailDto request);
         Task SendEmailAsync(EmailDto request);
         Task SendEmailConf(EmailDto request);
+        Task SendCustomEmailAsync(string to, string subject, string body);
     }
 }

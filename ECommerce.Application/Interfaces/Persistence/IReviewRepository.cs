@@ -4,5 +4,6 @@ namespace ECommerce.Application.Interfaces.Persistence
 {
     public interface IReviewRepository : IGenericRepository<Review,int>
     {
+        Task<List<Review>> GetByUserIdAsync(string userId);
     }
 }

@@ -119,5 +119,29 @@ namespace ECommerce.Infrastructure.Services.EmailService
                 await smtp.DisconnectAsync(true);
             }
         }
+        public async Task SendCustomEmailAsync(string to, string subject, string body)
+        {
+            if (string.IsNullOrEmpty(to)) throw new ArgumentNullException(nameof(to));
+
+            try
+            {
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse(_config["EmailSettings:EmailUsername"]));
+                email.To.Add(MailboxAddress.Parse(to));
+
+                email.Subject = subject; 
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = body
+                };
+
+                await SendEmailMessageAsync(email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error sending custom email to {Recipient}", to);
+                throw;
+            }
+        }
     }
 }

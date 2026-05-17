@@ -104,21 +104,20 @@
             <div class="total-row">
                 @if(isPromoValid){
                 <span style="color:  #4a5568;">Subtotal Before Discount:</span>
-                <span class="subtotal total-label">{{ totalBeforeDiscount() | number:'1.2-2' | currency:'EGP' }}</span>
+                <span class="subtotal total-label">{{ totalBeforeDiscount() |currency:'EGP':'symbol':'1.2-2' }}</span>
                 }
             </div>
             <div class="total-row">
-
                 <span>Subtotal:</span>
-                <span class="subtotal">{{ cartservice.cartTotal() | number:'1.2-2' | currency:'EGP' }}</span>
+                <span class="subtotal">{{ cartservice.cartTotal() | number:'1.2-2' }} EGP</span>
             </div>
             <div class="total-row">
                 <span>Delivery Fee Per Shipment:</span>
-                <span class="subtotal">{{ 50 | number:'1.2-2' | currency:'EGP' }}</span>
+                <span class="subtotal">{{ 50 | number:'1.2-2' }} EGP</span>
             </div>
             <div class="total-row">
                 <span>Total:</span>
-                <span class="final-price">{{ cartservice.cartTotal()+50| number:'1.2-2'|currency:'EGP' }}</span>
+                <span class="final-price">{{ cartservice.cartTotal() + 50 | number:'1.2-2' }} EGP</span>
             </div>
 
             <button type="submit" class="btn-place-order" [disabled]="checkoutForm.invalid">
