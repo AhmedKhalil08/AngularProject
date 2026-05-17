@@ -1,0 +1,86 @@
+<div class="promo-page">
+
+  <div class="page-header">
+    <h2 class="page-title"><i class="bi bi-tag"></i> Promo Codes</h2>
+    <button class="create-btn" (click)="showForm.set(true)">
+      <i class="bi bi-plus-circle"></i> Add Promo Code
+    </button>
+  </div>
+
+  @if(showForm()) {
+    <div class="promo-form">
+      <h5>Create New Promo Code</h5>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Code</label>
+          <input type="text" class="form-input" [(ngModel)]="form.code" 
+            placeholder="e.g. SAVE20" style="text-transform: uppercase" />
+        </div>
+        <div class="form-group">
+          <label>Discount %</label>
+          <input type="number" class="form-input" [(ngModel)]="form.discountPercent" 
+            min="1" max="100" placeholder="10" />
+        </div>
+        <div class="form-group">
+          <label>Max Usage Count</label>
+          <input type="number" class="form-input" [(ngModel)]="form.maxUsageCount" 
+            min="1" placeholder="100" />
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="datetime-local" class="form-input" [(ngModel)]="form.expiryDate" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="cancel-btn" (click)="showForm.set(false)">
+          <i class="bi bi-x-circle"></i> Cancel
+        </button>
+        <button class="save-btn" (click)="saveForm()">
+          <i class="bi bi-check-circle"></i> Create
+        </button>
+      </div>
+    </div>
+  }
+
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else {
+    <div class="promo-table">
+      <div class="table-header">
+        <span>Code</span>
+        <span>Discount</span>
+        <span>Usage</span>
+        <span>Expiry</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+
+      @for(promo of promoCodes(); track promo.id) {
+        <div class="table-row">
+          <span class="code-badge">{{ promo.code }}</span>
+          <span class="discount">{{ promo.discountPercent }}% OFF</span>
+          <span class="usage">{{ promo.currentUsageCount }} / {{ promo.maxUsageCount }}</span>
+          <span class="expiry">{{ promo.expiryDate | date:'MMM d, y' }}</span>
+          @if(isExpired(promo.expiryDate)) {
+            <span class="status-badge expired-badge">Expired</span>
+          } @else {
+            <span class="status-badge active-badge">Active</span>
+          }
+          <div class="actions">
+            <button class="action-btn delete-btn" (click)="deletePromoCode(promo.id)">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <i class="bi bi-tag"></i>
+          <p>No promo codes yet!</p>
+        </div>
+      }
+    </div>
+  }
+
+</div>

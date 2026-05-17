@@ -1,0 +1,122 @@
+<div class="cart-container">
+    <!-- Header -->
+    <div class="cart-header">
+        <h1 class="cart-title">🛒 Shopping Cart</h1>
+        <p class="cart-subtitle">Review and manage your items</p>
+    </div>
+
+    <!-- Main Cart Content -->
+    <div class="cart-content">
+        <!-- Empty Cart State -->
+        @if (CartService.cartCount() === 0) {
+        <div class="empty-cart">
+            <div class="empty-icon">🛍️</div>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added anything yet!</p>
+            <button class="btn-continue-shopping" routerLink="/products">
+                Continue Shopping
+            </button>
+        </div>
+        } @else {
+        <!-- Cart Items + Summary -->
+        <div class="cart-layout">
+            <!-- Left: Cart Items -->
+            <div class="cart-items">
+                <div class="items-header">
+                    <span class="items-count">{{ CartService.cartCount() }} {{ CartService.cartCount() === 1 ? 'Item' :
+                        'Items' }} in
+                        Cart</span>
+                </div>
+
+                <!-- Cart Item -->
+                @for (item of Mycart().items; track $index) {
+                <div class="cart-item">
+                    <div class="item-image-section">
+                        <img [src]="backendUrl + item.productImage" [alt]="item.productName" class="item-image">
+                    </div>
+
+                    <div class="item-details">
+                        <h3 class="item-name">{{ item.productName }}</h3>
+                        <p class="item-price">EGP {{ item.subTotal.toFixed(2) }} </p>
+
+                        <!-- Quantity Controls -->
+                        <div class="quantity-controls">
+                            <button class="qty-btn-sm minus"
+                                (click)="buttonUpdateQuantity(item.id, item.quantity - 1)">−</button>
+                            <input class="qty-input" min="1" [value]="item.quantity" readonly>
+                            <button class="qty-btn-sm plus"
+                                (click)="buttonUpdateQuantity(item.id, item.quantity + 1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="item-summary">
+                        <div class="item-subtotal">
+                            <span class="subtotal-label">Subtotal</span>
+                            <span class="subtotal-value"> EGP {{ item.subTotal.toFixed(2) }}</span>
+                        </div>
+                        <button class="btn-remove" title="Remove item" (click)="buttonRemoveItem(item.id)">
+                            <span>🗑️</span>
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+
+            <!-- Right: Order Summary -->
+            <div class="cart-summary">
+                <h2 class="summary-title">Order Summary</h2>
+
+                <!-- Summary Details -->
+                <div class="summary-section">
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal</span>
+                        <span class="summary-value"> EGP {{ Mycart().totalPrice.toFixed(2) }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Shipping</span>
+                        <span class="summary-value shipping">
+
+                        </span>
+                    </div>
+
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-row total">
+                        <span class="summary-label"> Total</span>
+                        <span class="summary-value"> EGP {{ (Mycart().totalPrice).toFixed(2) }}</span>
+                    </div>
+                </div>
+
+
+                <!-- Action Buttons -->
+                <div class="summary-actions">
+                    <button class="btn-checkout" routerLink="/checkout">
+                        <span>💳</span> Proceed to Checkout
+                    </button>
+                    <button class="btn-continue" routerLink="/products">
+                        <span>◀</span> Continue Shopping
+
+                    </button>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="trust-badges">
+                    <div class="badge">
+                        <span class="badge-icon">🔒</span>
+                        <span class="badge-text">Secure Checkout</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-icon">🚚</span>
+                        <span class="badge-text">Fast Delivery</span>
+                    </div>
+                    <div class="badge">
+                        <span class="badge-icon">↩️</span>
+                        <span class="badge-text">Easy Return</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>

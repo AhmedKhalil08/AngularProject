@@ -1,0 +1,167 @@
+<div class="home-page">
+
+  <!-- Hero Banner Slider -->
+<section class="hero-section">
+  <div class="electric-bg">
+    <div class="electric-wave wave1"></div>
+    <div class="electric-wave wave2"></div>
+    <div class="electric-wave wave3"></div>
+    <div class="electric-orb orb1"></div>
+    <div class="electric-orb orb2"></div>
+    <div class="electric-spark spark1"></div>
+    <div class="electric-spark spark2"></div>
+    <div class="electric-spark spark3"></div>
+  </div>
+    @if(banners().length > 0) {
+      <div class="banner-slider">
+        @for(banner of banners(); track banner.id; let i = $index) {
+          <div class="banner-slide" [class.active]="i === currentBannerIndex()">
+            <a [routerLink]="banner.link || '/products'" class="banner-link">
+            <img [src]="banner.imageUrl" [alt]="banner.title" />
+            <div class="banner-overlay">
+            <h2>{{ banner.title }}</h2>
+            <span class="banner-btn">Shop Now <i class="bi bi-arrow-right"></i></span>
+        </div>
+        </a>
+</div>
+        }
+
+        <button class="slider-btn prev-btn" (click)="prevBanner()">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="slider-btn next-btn" (click)="nextBanner()">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <div class="slider-dots">
+          @for(banner of banners(); track banner.id; let i = $index) {
+            <button class="dot" [class.active]="i === currentBannerIndex()" (click)="goToBanner(i)"></button>
+          }
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="features-section">
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="bi bi-truck"></i>
+        <h4>Fast Delivery</h4>
+        <p>Get your orders delivered within 3-5 business days</p>
+      </div>
+      <div class="feature-card">
+        <i class="bi bi-shield-check"></i>
+        <h4>Secure Payment</h4>
+        <p>100% secure payments with SSL encryption</p>
+      </div>
+      <div class="feature-card">
+        <i class="bi bi-arrow-return-left"></i>
+        <h4>Easy Returns</h4>
+        <p>30-day hassle-free return policy</p>
+      </div>
+      <div class="feature-card">
+        <i class="bi bi-headset"></i>
+        <h4>24/7 Support</h4>
+        <p>Our support team is always here to help you</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories-section">
+    <div class="section-header">
+      <h2>Shop by Category</h2>
+      <p>Find what you're looking for</p>
+    </div>
+    <div class="categories-grid">
+      @for(category of categories(); track category.id) {
+        <a [routerLink]="['/products']" [queryParams]="{category: category.id}" class="category-card">
+          @if(category.imageUrl) {
+            <img [src]="category.imageUrl" [alt]="category.name" />
+          } @else {
+            <div class="category-icon">
+              <i class="bi bi-grid"></i>
+            </div>
+          }
+          <h5>{{ category.name }}</h5>
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="products-section">
+    <div class="section-header">
+      <h2>Explore Products</h2>
+      <a routerLink="/products" class="view-all-btn">View All <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="products-grid">
+      @for(product of products(); track product.id) {
+        <a [routerLink]="['/products', product.id]" class="product-card">
+          <div class="product-image">
+            <img [src]="getProductImage(product)" [alt]="product.name" />
+          </div>
+          <div class="product-info">
+            <h5>{{ product.name }}</h5>
+            <span class="product-price">EGP {{ product.price | number:'1.0-0' }}</span>
+              <button class="add-to-cart-btn" (click)="addToCart(product); $event.preventDefault()">                    <i class="bi bi-cart-plus"></i></button>
+          </div>
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+<section class="newsletter-section">
+  <div class="newsletter-content">
+    <div class="newsletter-text">
+      <h2>Stay Updated!</h2>
+      <p>Subscribe to get the latest deals and offers straight to your inbox</p>
+    </div>
+    <div class="newsletter-form">
+      @if(subscribeSuccess()) {
+        <div class="subscribe-success">
+          <i class="bi bi-check-circle-fill"></i> Thanks for subscribing!
+        </div>
+      } @else {
+        <div class="subscribe-input">
+          <input type="email" placeholder="Enter your email address"
+            [(ngModel)]="newsletterEmail" />
+          <button (click)="subscribe()" [disabled]="subscribing()">
+            @if(subscribing()) {
+              <span class="spinner-border spinner-border-sm"></span>
+            } @else {
+              Subscribe
+            }
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</section>      
+  <!-- Sign Up Banner -->
+<section class="signup-banner">
+  <div class="signup-content">
+    <h2>Join Vortex Today!</h2>
+    <p>Create an account and get access to exclusive deals and offers</p>
+    <div class="signup-actions">
+      @if(!isLoggedIn()) {
+        <a routerLink="/auth/register-type" class="signup-btn">Get Started</a>
+      } @else {
+        <a routerLink="/products" class="signup-btn">Shop Now</a>
+      }
+      <a routerLink="/products" class="browse-btn">Browse Products</a>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Back to Top -->
+  @if(showBackToTop()) {
+    <button class="back-to-top" (click)="scrollToTop()">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+  }
+
+</div>

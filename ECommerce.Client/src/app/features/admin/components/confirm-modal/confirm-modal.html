@@ -1,0 +1,19 @@
+<div class="confirm-modal">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ title }}</h5>
+    <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <p>{{ message }}</p>
+  </div>
+
+  <div class="modal-footer">
+    <button class="action-btn cancel-btn" (click)="activeModal.dismiss()">
+      <i class="bi bi-x-circle"></i> Cancel
+    </button>
+    <button class="action-btn confirm-btn-{{confirmClass}}" (click)="activeModal.close(true)">
+      <i class="bi bi-check-circle"></i> {{ confirmText }}
+    </button>
+  </div>
+</div>

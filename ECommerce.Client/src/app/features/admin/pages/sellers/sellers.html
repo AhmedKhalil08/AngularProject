@@ -1,0 +1,73 @@
+<div class="sellers-page">
+
+  <div class="page-header">
+    <h2 class="page-title">🏪 Sellers</h2>
+    <span class="seller-count">{{ pagedResult()?.totalCount ?? 0 }} total</span>
+  </div>
+
+  <div class="filters-bar">
+    <div class="search-wrapper">
+      <i class="bi bi-search search-icon"></i>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by store, name or email..."
+        (input)="onSearch($any($event.target).value)" />
+    </div>
+
+    <select class="status-select" (change)="onStatusFilter($any($event.target).value)">
+      <option value="">All Sellers</option>
+      <option value="approved">Approved</option>
+      <option value="pending"> Pending</option>
+      <option value="banned"> Banned</option>
+      <option value="deleted"> Deleted</option>
+    </select>
+  </div>
+
+  @if(loading()) {
+    <div class="text-center mt-5">
+      <div class="spinner-border text-purple" role="status"></div>
+    </div>
+  } @else {
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      @for(seller of sellers(); track seller.id) {
+        <div class="col">
+          <app-seller-card
+            [seller]="seller"
+            (onApprove)="approveSeller($event)"
+            (onToggleStatus)="toggleStatus($event)"
+            (onDelete)="deleteSeller($event)"
+            (onRestore)="restoreSeller($event)">
+          </app-seller-card>
+        </div>
+      } @empty {
+        <p class="no-data">No sellers found.</p>
+      }
+    </div>
+
+    @if(pagedResult() && pagedResult()!.totalPages > 1) {
+      <div class="pagination-bar">
+        <button class="page-btn"
+          [disabled]="!pagedResult()!.hasPrevious"
+          (click)="goToPage(currentPage() - 1)">
+          ‹
+        </button>
+
+        @for(page of getPages(); track page) {
+          <button class="page-btn"
+            [class.active]="page === currentPage()"
+            (click)="goToPage(page)">
+            {{ page }}
+          </button>
+        }
+
+        <button class="page-btn"
+          [disabled]="!pagedResult()!.hasNext"
+          (click)="goToPage(currentPage() + 1)">
+          ›
+        </button>
+      </div>
+    }
+  }
+
+</div>

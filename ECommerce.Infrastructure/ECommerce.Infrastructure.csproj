@@ -1,19 +1,58 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<NoWarn>NU1902;NU1903;NU1904;NU1510;NU1504</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ECommerce.Application\ECommerce.Application.csproj" />
-    <ProjectReference Include="..\ECommerce.Domain\ECommerce.Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ECommerce.Application\ECommerce.Application.csproj" />
+		<ProjectReference Include="..\ECommerce.Domain\ECommerce.Domain.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ECommerce.Application\ECommerce.Application.csproj" />
+		<ProjectReference Include="..\ECommerce.Domain\ECommerce.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Data\" />
+		<Folder Include="ECommerce\" />
+		<Folder Include="Repositories\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- حزم المصادقة (Authentication) -->
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />-->
+
+		<!-- حزم قواعد البيانات (Entity Framework Core) -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.7">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+
+		<!-- حزم أخرى -->
+		<PackageReference Include="PayPalCheckoutSdk" Version="1.0.4" />
+		<PackageReference Include="Stripe.net" Version="51.1.0" />
+		<PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
 </Project>

@@ -1,0 +1,66 @@
+    <form [formGroup]="form">
+    <div class="create-admin-modal">
+    <div class="modal-header">
+        <h5 class="modal-title">⚡ Create New Admin</h5>
+        <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-input"
+            formControlName="fullName"
+            placeholder="Enter full name"
+            [class.is-invalid]="fullName?.invalid && fullName?.touched" />
+        @if(fullName?.invalid && fullName?.touched) {
+            @if(fullName?.errors?.['required']) {
+            <span class="error">Full name is required</span>
+            } @else if(fullName?.errors?.['minlength']) {
+            <span class="error">Minimum 3 characters</span>
+            }
+        }
+        </div>
+
+        <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-input"
+            formControlName="email"
+            placeholder="Enter email"
+            [class.is-invalid]="email?.invalid && email?.touched" />
+        @if(email?.invalid && email?.touched) {
+            @if(email?.errors?.['required']) {
+            <span class="error">Email is required</span>
+            } @else if(email?.errors?.['email']) {
+            <span class="error">Invalid email format</span>
+            }
+        }
+        </div>
+
+        <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-input"
+            formControlName="password"
+            placeholder="Enter password"
+            [class.is-invalid]="password?.invalid && password?.touched" />
+        @if(password?.invalid && password?.touched) {
+            @if(password?.errors?.['required']) {
+            <span class="error">Password is required</span>
+            } @else if(password?.errors?.['minlength']) {
+            <span class="error">Minimum 8 characters</span>
+            } @else if(password?.errors?.['pattern']) {
+            <span class="error">Must include uppercase, number and special character</span>
+            }
+        }
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="action-btn cancel-btn" (click)="activeModal.dismiss()">
+        <i class="bi bi-x-circle"></i> Cancel
+        </button>
+        <button class="action-btn confirm-btn" (click)="submit()">
+        <i class="bi bi-plus-circle"></i> Create
+        </button>
+    </div>
+    </div>
+    </form>

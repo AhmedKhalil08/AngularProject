@@ -1,0 +1,216 @@
+<div class="container py-4">
+
+    <!-- إحصائيات سريعة للداشبورد -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3 shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-box-seam me-2"></i> Total Shipments</h6>
+                    <h2 class="mb-0">{{ shipmentService.totalShipmentsCount() }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-dark bg-warning mb-3 shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-hourglass-split me-2"></i> Pending Actions</h6>
+                    <h2 class="mb-0">{{ shipmentService.pendingShipmentsCount() }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3 shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-cash-stack me-2"></i> Expected Revenue</h6>
+                    <h2 class="mb-0">{{ shipmentService.totalRevenue() | currency }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="card-title mb-3"><i class="bi bi-funnel me-2"></i> Filters</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label small text-muted">Filter by Status</label>
+                            <select class="form-select form-select-sm" [value]="shipmentService.selectedStatus()"
+                                (change)="onFilterChange($any($event).target.value)">
+                                <option value="">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Shipped">Shipped</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small text-muted">Items Per Page</label>
+                            <select class="form-select form-select-sm" [value]="shipmentService.pageSize()"
+                                (change)="onPageSizeChange($any($event).target.value)">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- حالة التحميل -->
+    @if (shipmentService.isLoading()) {
+    <div class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted">Loading your shipments...</p>
+    </div>
+    } @else {
+    <div class="row">
+        <!-- عرض الشحنات -->
+        @for (shipment of shipmentService.paginatedShipments(); track shipment.id) {
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm border-0">
+
+                <!-- هيدر الكارت -->
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 text-dark">
+                        <i class="bi bi-box-seam me-2 text-primary"></i> Shipment #{{ shipment.id }}
+                    </h5>
+                    <span class="badge" [ngClass]="{
+                      'bg-warning text-dark': shipment.status === 'Pending',
+                      'bg-info text-dark': shipment.status === 'Confirmed',
+                      'bg-primary': shipment.status === 'Shipped',
+                      'bg-success': shipment.status === 'Delivered',
+                        'bg-secondary': shipment.status === 'Cancelled'
+                    }">
+                        {{ shipment.status }}
+                    </span>
+                </div>
+
+                <!-- جسم الكارت (المنتجات) -->
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless mb-0">
+                            <thead class="table-light border-bottom">
+                                <tr>
+                                    <th class="ps-4">Product Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (item of shipment.items; track item.productId) {
+                                <tr>
+                                    <td class="ps-4 fw-medium">{{ item.productName }}</td>
+                                    <td>{{ item.price | currency }}</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">{{ item.quantity }}</span>
+                                    </td>
+                                    <td class="fw-bold text-secondary">{{ (item.price * item.quantity) | currency }}
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- فوتر الكارت (الإجماليات والأزرار) -->
+                <div
+                    class="card-footer bg-light border-top-0 py-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
+
+                    <!-- زرار تغيير الحالة -->
+                    <div class="mb-3 mb-md-0">
+                        @if (shipment.status === 'Confirmed') {
+                        <button class="btn btn-primary px-4" (click)="onStatusChange(shipment.id, 'Shipped')">
+                            <i class="bi bi-truck me-2"></i> Mark as Shipped
+                        </button>
+                        <button class="btn btn-danger px-4" (click)="onStatusChange(shipment.id, 'Cancelled')">
+                            <i class="bi bi-x-circle me-2"></i> Cancelled
+                        </button>
+                        } @else if (shipment.status === 'Shipped') {
+                        <button class="btn btn-primary px-4" (click)="onStatusChange(shipment.id, 'Delivered')">
+                            <i class="bi bi-check-circle me-2"></i> Mark as Completed
+                        </button>
+                        }
+                        @else {
+                        <span class="text-muted small">
+                            <i class="bi bi-check-circle-fill text-success me-1"></i> No further actions required
+                        </span>
+                        }
+                    </div>
+
+                    <!-- الإجماليات -->
+                    <div class="text-end">
+                        <div class="text-muted mb-1">
+                            <small>Shipping Fee:</small> <span class="fw-medium text-dark">{{ shipment.shippingFee |
+                                currency }}</span>
+                        </div>
+                        <div>
+                            <small class="text-muted me-2">Total Amount:</small>
+                            <span class="fs-5 fw-bold text-success">{{ shipment.totalAmount | currency }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        } @empty {
+        <!-- رسالة في حالة عدم وجود شحنات -->
+        <div class="col-12">
+            <div class="alert alert-info text-center shadow-sm py-5 border-0">
+                <i class="bi bi-inbox fs-1 d-block mb-3 text-info"></i>
+                <h5 class="mb-1">No shipments found.</h5>
+                <p class="text-muted mb-0">Try adjusting your filters or check back later.</p>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if ((shipmentService.totalPages() > 1)) {
+    <nav aria-label="Pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- Previous Button -->
+            <li class="page-item" [ngClass]="{ disabled: shipmentService.currentPage() === 1 }">
+                <button class="page-link" (click)="onPageChange(shipmentService.currentPage() - 1)"
+                    [disabled]="shipmentService.currentPage() === 1">
+                    <i class="bi bi-chevron-left"></i> Previous
+                </button>
+            </li>
+
+            <!-- Page Numbers -->
+            @for (page of getPages(); track page) {
+            <li class="page-item" [ngClass]="{ active: page === shipmentService.currentPage() }">
+                <button class="page-link" (click)="onPageChange(page)">
+                    {{ page }}
+                </button>
+            </li>
+            }
+
+            <!-- Next Button -->
+            <li class="page-item"
+                [ngClass]="{ disabled: shipmentService.currentPage() === shipmentService.totalPages() }">
+                <button class="page-link" (click)="onPageChange(shipmentService.currentPage() + 1)"
+                    [disabled]="shipmentService.currentPage() === shipmentService.totalPages()">
+                    Next <i class="bi bi-chevron-right"></i>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Info -->
+    <div class="text-center text-muted small mt-2">
+        Showing page {{ shipmentService.currentPage() }} of {{ shipmentService.totalPages() }} |
+        Total: {{ shipmentService.filteredShipments().length }} shipments
+    </div>
+    }
+    }
+</div>
