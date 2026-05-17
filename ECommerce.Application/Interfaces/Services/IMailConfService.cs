@@ -16,5 +16,6 @@ namespace ECommerce.Application.Interfaces.Services
     public interface IMailConfService
     {
         Task <Result<string>> ConfirmEmail(string userId, string token);
+        Task<Result<string>> SendOrderStatusUpdateAsync(string userEmail, int orderId, string newStatus);
     }
 }

@@ -22,7 +22,7 @@ namespace ECommerce.API.Controllers
 
         //Create Review
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateReviewCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateReviewCommand command)
         {
             var result = await Mediator.Send(command);
 

@@ -13,6 +13,7 @@ import { Customers } from './features/admin/pages/customers/customers';
 import { Sellers } from './features/admin/pages/sellers/sellers';
 import { Admins } from './features/admin/pages/admins/admins';
 import { ProductCatalog } from './features/products/components/product-catalog/product-catalog';
+import { ProductDetails } from './features/products/components/product-details/product-details';
 import { CartComp } from './features/cart/components/cart-comp/cart-comp';
 import { SellerLayout } from './layouts/seller-layout/seller-layout';
 import { sellerGuard } from './core/guards/seller-guard';
@@ -49,6 +50,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'products', component: ProductCatalog },
+      { path: 'products/:id', component: ProductDetails },
       { path: 'cart', component: CartComp },
       {
         path: 'checkout',

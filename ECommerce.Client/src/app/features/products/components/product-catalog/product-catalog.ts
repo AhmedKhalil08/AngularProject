@@ -33,11 +33,11 @@ export class ProductCatalog implements OnInit {
   private readonly backendUrl = 'https://localhost:7018/';
   readonly minRangePrice = 0;
   maxRangePrice = signal(100000);
-  private route=inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private wishlistService = inject(WishlistService);
-private authService = inject(AuthService);
-private cdr = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   // Signals
   products = signal<Product[]>([]);
@@ -54,7 +54,7 @@ private cdr = inject(ChangeDetectorRef);
   productQuantities = signal<Map<number, number>>(new Map());
 
   // Track wishlist items
-wishlistIds = signal<Map<number, number>>(new Map());
+  wishlistIds = signal<Map<number, number>>(new Map());
 
   // Computed - Get filtered products based on all filter signals
   filteredProducts = computed(() => {
@@ -91,16 +91,16 @@ wishlistIds = signal<Map<number, number>>(new Map());
     this.loadCategories();
     this.loadProducts();
     if (this.authService.isLoggedIn()) {
-  this.loadWishlist();
-}
+      this.loadWishlist();
+    }
     // Log selected category changes for debugging
     this.selectedCategory.set(null);
 
-      // read category query param
-  const categoryId = this.route.snapshot.queryParams['category'];
-  if (categoryId) {
-    this.selectedCategory.set(Number(categoryId));
-  }
+    // read category query param
+    const categoryId = this.route.snapshot.queryParams['category'];
+    if (categoryId) {
+      this.selectedCategory.set(Number(categoryId));
+    }
     // Debug: Check data after 2 seconds
     setTimeout(() => {
       console.log('=== DEBUG INFO ===');
@@ -117,9 +117,9 @@ wishlistIds = signal<Map<number, number>>(new Map());
         if (data.length > 0) {
         }
         this.products.set(data);
-              const maxProductPrice = Math.max(...data.map(p => p.price));
-      this.maxRangePrice.set(maxProductPrice);
-      this.maxPrice.set(maxProductPrice);
+        const maxProductPrice = Math.max(...data.map((p) => p.price));
+        this.maxRangePrice.set(maxProductPrice);
+        this.maxPrice.set(maxProductPrice);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -191,10 +191,10 @@ wishlistIds = signal<Map<number, number>>(new Map());
     console.log('Products before filter:', this.products().length);
     console.log('Filtered products after selection:', this.filteredProducts().length);
     this.selectedCategory.set(categoryId);
-      this.router.navigate([], {
-    queryParams: { category: categoryId ?? null },
-    queryParamsHandling: 'merge'
-  });
+    this.router.navigate([], {
+      queryParams: { category: categoryId ?? null },
+      queryParamsHandling: 'merge',
+    });
   }
 
   selectStarRating(rating: number): void {
@@ -206,39 +206,39 @@ wishlistIds = signal<Map<number, number>>(new Map());
     this.searchTerm.set(target.value);
   }
 
-onMinPriceChange(event: Event): void {
-  const target = event.target as HTMLInputElement;
-  const value = target.value;
-  if (value === '') {
-    this.minPrice.set(this.minRangePrice);
-    return;
+  onMinPriceChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+    if (value === '') {
+      this.minPrice.set(this.minRangePrice);
+      return;
+    }
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      // Clamp to valid range instead of silently ignoring
+      this.minPrice.set(Math.max(this.minRangePrice, Math.min(numValue, this.maxPrice())));
+    }
   }
-  const numValue = parseFloat(value);
-  if (!isNaN(numValue)) {
-    // Clamp to valid range instead of silently ignoring
-    this.minPrice.set(Math.max(this.minRangePrice, Math.min(numValue, this.maxPrice())));
-  }
-}
 
-onMaxPriceChange(event: Event): void {
-  const target = event.target as HTMLInputElement;
-  const value = target.value;
-  if (value === '') {
-    this.maxPrice.set(this.maxRangePrice());
-    return;
+  onMaxPriceChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+    if (value === '') {
+      this.maxPrice.set(this.maxRangePrice());
+      return;
+    }
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      this.maxPrice.set(Math.min(this.maxRangePrice(), Math.max(numValue, this.minPrice())));
+    }
   }
-  const numValue = parseFloat(value);
-  if (!isNaN(numValue)) {
-    this.maxPrice.set(Math.min(this.maxRangePrice(), Math.max(numValue, this.minPrice())));
-  }
-}
 
-onRangeSliderChange(event: Event): void {
-  const target = event.target as HTMLInputElement;
-  const value = parseFloat(target.value);
-  // Don't let slider go below minPrice
-  this.maxPrice.set(Math.max(value, this.minPrice()));
-}
+  onRangeSliderChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = parseFloat(target.value);
+    // Don't let slider go below minPrice
+    this.maxPrice.set(Math.max(value, this.minPrice()));
+  }
 
   clearFilters(): void {
     this.searchTerm.set('');
@@ -246,10 +246,10 @@ onRangeSliderChange(event: Event): void {
     this.minPrice.set(this.minRangePrice);
     this.maxPrice.set(this.maxRangePrice());
     this.selectedRating.set(null);
-      this.router.navigate([], {
-    queryParams: {},
-    queryParamsHandling: ''
-  });
+    this.router.navigate([], {
+      queryParams: {},
+      queryParamsHandling: '',
+    });
   }
 
   // Quantity management
@@ -278,44 +278,46 @@ onRangeSliderChange(event: Event): void {
 
   // Wishlist management
 
-isInWishlist(productId: number): boolean {
-  return this.wishlistIds().has(productId);
-}
+  isInWishlist(productId: number): boolean {
+    return this.wishlistIds().has(productId);
+  }
 
+  toggleWishlist(productId: number): void {
+    if (!this.authService.isLoggedIn()) return;
 
-toggleWishlist(productId: number): void {
-  if (!this.authService.isLoggedIn()) return;
-  
-  if (this.wishlistIds().has(productId)) {
-    const wishlistId = this.wishlistIds().get(productId)!;
-    this.wishlistService.removeFromWishlist(wishlistId).subscribe({
-      next: () => {
-        const newMap = new Map(this.wishlistIds());
-        newMap.delete(productId);
-        this.wishlistIds.set(newMap);
+    if (this.wishlistIds().has(productId)) {
+      const wishlistId = this.wishlistIds().get(productId)!;
+      this.wishlistService.removeFromWishlist(wishlistId).subscribe({
+        next: () => {
+          const newMap = new Map(this.wishlistIds());
+          newMap.delete(productId);
+          this.wishlistIds.set(newMap);
           this.cdr.markForCheck();
-      }
-    });
-  } else {
-    this.wishlistService.addToWishlist(productId).subscribe({
+        },
+      });
+    } else {
+      this.wishlistService.addToWishlist(productId).subscribe({
+        next: (data) => {
+          const newMap = new Map(this.wishlistIds());
+          newMap.set(productId, data.id);
+          this.wishlistIds.set(newMap);
+          this.cdr.markForCheck();
+        },
+      });
+    }
+  }
+  loadWishlist(): void {
+    this.wishlistService.getWishlist().subscribe({
       next: (data) => {
-        const newMap = new Map(this.wishlistIds());
-        newMap.set(productId, data.id);
-        this.wishlistIds.set(newMap);
-          this.cdr.markForCheck();
-      }
+        const map = new Map<number, number>();
+        data.forEach((item) => map.set(item.productId, item.id));
+        this.wishlistIds.set(map);
+        this.cdr.markForCheck();
+      },
     });
   }
-}
-loadWishlist(): void {
-  this.wishlistService.getWishlist().subscribe({
-    next: (data) => {
-      const map = new Map<number, number>();
-      data.forEach(item => map.set(item.productId, item.id));
-      this.wishlistIds.set(map);
-        this.cdr.markForCheck();
-    }
-  });
-}
-}
 
+  navigateToProductDetails(productId: number): void {
+    this.router.navigate(['/products', productId]);
+  }
+}

@@ -49,9 +49,9 @@ namespace ECommerce.Application.Mapping
             TypeAdapterConfig<Shipment, SellerShipmentDto>.NewConfig()
             .Map(dest => dest.Items, src => src.OrderItems)
             .Map(dest=> dest.SellerName, src => src.Seller.User.FullName);
-            
             //.Map(dest => dest.Id, src => src.OrderId);
-         
+            TypeAdapterConfig<Review, ReviewDto>.NewConfig()
+            .Map(dest => dest.UserFullName, src => src.User.FullName);
 
             TypeAdapterConfig<OrderItem, OrderItemDto>.NewConfig()
             .Map(dest => dest.ProductName, src => src.Product.Name)
