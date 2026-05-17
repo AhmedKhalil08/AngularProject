@@ -6,13 +6,13 @@ import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
-  selector: 'app-product-deatils',
+  selector: 'app-product-details',
   imports: [CommonModule],
-  templateUrl: './product-deatils.html',
-  styleUrl: './product-deatils.css',
+  templateUrl: './productDetails.html',
+  styleUrl: './productDetails.css',
   providers: [ProductService]
 })
-export class ProductDetails implements OnInit {
+export class productDetails implements OnInit {
 
    product?: Product;
    
