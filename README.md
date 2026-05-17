@@ -1,401 +1,203 @@
-# Database Seeding System - README
+# Vortex E-Commerce Platform
 
-## 🎯 Overview
-
-A comprehensive, production-ready database seeding mechanism for the ECommerce application following **CQRS**, **Clean Architecture**, and **Entity Framework Core** best practices.
-
-**Status:** ✅ Complete and Ready to Use
+> A full-stack e-commerce platform built with Angular 21 and ASP.NET Core, featuring real-time notifications, role-based dashboards, and a complete shopping experience.
 
 ---
 
-## 📦 What You Get
+## Tech Stack
 
-### 2 Implementation Files (~800 lines)
-- **SeedDatabaseCommand.cs** - CQRS Command
-- **SeedDatabaseCommandHandler.cs** - Command Handler with full logic
-- **SeedingExtensions.cs** - Dependency Injection Extension
+**Frontend**
+- Angular 21 (Standalone Components, Signals, Reactive Forms)
+- Bootstrap 5 + ng-bootstrap v20
+- Chart.js via ng2-charts
+- tsParticles
+- Microsoft SignalR Client
 
-### 7 Documentation Files (~2,500 lines)
-Comprehensive guides covering every aspect of the seeding system.
-
-### 200+ Seed Records
-Ready-to-use dummy data covering all 14 entity types.
+**Backend**
+- ASP.NET Core (.NET 10)
+- Entity Framework Core + SQL Server
+- MediatR (CQRS pattern)
+- ASP.NET Identity
+- SignalR
+- JWT via HttpOnly Cookies
+- Google & Facebook OAuth
 
 ---
 
-## 🚀 Quick Start (5 Minutes)
+## Features
 
-### Step 1: Verify Files
-All files are in: `ECommerce.Application/Features/Database/Commands/Seed/`
+### Customer
+- Browse and filter products by category, price, rating, and search
+- Add to cart (guest and authenticated)
+- Wishlist management
+- Profile management with avatar upload
+- Address management
+- Change password
+- Become a seller
+- Order history
+- Newsletter subscription
+- Help center with FAQ search
+- Contact support form
 
-### Step 2: Update Program.cs
+### Seller
+- Store overview with earnings, orders, and product performance charts
+- Product management (create, edit, soft delete)
+- Store profile editing with logo upload
+- Seller statistics dashboard
 
-```csharp
-using ECommerce.Application.Extensions;
-using ECommerce.Application.Features.Database.Commands.Seed;
-using MediatR;
+### Admin
+- Platform overview with real-time charts
+- Customer management (search, filter, ban, restore, delete)
+- Seller management (approve, delete)
+- Admin account management
+- Real-time message inbox via SignalR
+- Product management with restore capability
+- Banner management (CRUD)
+- Category management (CRUD)
+- Promo code management
+- Newsletter subscribers list
 
-// Add these services
-builder.Services.AddDatabaseSeeding();
+### Authentication
+- Email/password registration and login
+- Google OAuth
+- Facebook OAuth
+- Email confirmation flow
+- Role-based redirect after login (Admin → Dashboard, Seller → Store, Customer → Home)
 
-// Then add this before app.Run():
-var app = builder.Build();
+---
 
-using (var scope = app.Services.CreateAsyncScope())
-{
-    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-    await mediator.Send(new SeedDatabaseCommand { SkipIfDataExists = true });
-}
+## Project Structure
 
-app.Run();
+```
+ECommerce/
+├── ECommerce.API/              # Controllers, Hubs, Middleware
+├── ECommerce.Application/      # CQRS Commands, Queries, DTOs, Interfaces
+├── ECommerce.Domain/           # Entities, Enums
+├── ECommerce.Infrastructure/   # DbContext, Repositories, Services
+└── ECommerce.Client/           # Angular 21 Frontend
+    └── src/app/
+        ├── core/               # Services, Guards, Interceptors, Models
+        ├── features/           # Feature modules (auth, admin, seller, profile, etc.)
+        ├── layouts/            # Layout components (main, auth, admin, seller, profile)
+        └── shared/             # Shared components, pipes, validators
 ```
 
-### Step 3: Run Your Application
+---
+
+## Getting Started
+
+### Prerequisites
+- .NET 10 SDK
+- Node.js 20+
+- SQL Server
+- Angular CLI 21
+
+### Backend Setup
+
 ```bash
-dotnet run
-```
+# Clone the repository
+git clone <repository-url>
+cd ECommerce
 
-**That's it!** Your database is now seeded. 🎉
-
----
-
-## 🔑 Test Credentials
-
-```
-Admin:     admin@ecommerce.com / SecurePassword123!
-Seller:    seller@ecommerce.com / SecurePassword123!
-Customer:  customer1@ecommerce.com / SecurePassword123!
-```
-
----
-
-## 📊 What Gets Seeded?
-
-| Entity | Count | Details |
-|--------|-------|---------|
-| Users | 6 | Admin, 2 Sellers, 3 Customers |
-| Categories | 5 | Electronics, Fashion, Home, Sports, Books |
-| Products | 10 | $34.99 - $1,299.99 |
-| Product Images | 30+ | 3 per product |
-| Seller Profiles | 2 | TechHub Store, Fashion Forward |
-| Banners | 5 | Promotional displays |
-| Promo Codes | 5 | 15% - 100% discounts |
-| Addresses | 5+ | Customer shipping addresses |
-| Carts | 3 | One per customer |
-| Reviews | 6 | 3-5 star ratings |
-| Wishlists | 6 | Favorite items |
-| Orders | 5 | Complete history |
-| Order Items | 6 | Line items |
-| Payments | 5 | Payment records |
-| **TOTAL** | **200+** | **Complete e-commerce dataset** |
-
----
-
-## 📚 Documentation Files
-
-### Must Read
-1. **QUICK_START.md** - 5-minute setup guide ⭐
-2. **IMPLEMENTATION_SUMMARY.md** - Overview of what was created
-
-### Reference
-3. **SEEDING_DOCUMENTATION.md** - Complete reference
-4. **IMPLEMENTATION_CHECKLIST.md** - Setup checklist
-
-### Details
-5. **DATA_SPECIFICATIONS.md** - Complete data breakdown
-6. **IMPLEMENTATION_EXAMPLES.md** - 7 real-world patterns
-7. **VISUAL_INTEGRATION_GUIDE.md** - Architecture diagrams
-
----
-
-## 🎨 Architecture
-
-```
-┌─────────────────┐
-│  SeedDatabase   │  ← CQRS Command
-│    Command      │
-└────────┬────────┘
-         │
-┌────────▼──────────────────┐
-│ SeedDatabase              │  ← CQRS Handler
-│ CommandHandler            │    (700+ lines)
-│                           │
-│  ├─ SeedUsers()           │
-│  ├─ SeedCategories()      │
-│  ├─ SeedProducts()        │
-│  ├─ SeedOrders()          │
-│  └─ ... (14 methods)      │
-└────────┬──────────────────┘
-         │
-┌────────▼────────────────────┐
-│  ApplicationDbContext       │
-│  (EF Core Integration)      │
-└────────┬────────────────────┘
-         │
-┌────────▼────────────────────┐
-│   SQL Server Database       │
-│  (200+ seeded records)      │
-└─────────────────────────────┘
-```
-
----
-
-## ✨ Key Features
-
-✅ **CQRS Pattern** - Clean separation of command and logic
-✅ **Async/Await** - Full async support with CancellationToken
-✅ **EF Core** - Proper DbContext and UserManager injection
-✅ **Idempotent** - Safe to call multiple times
-✅ **Realistic Data** - Professional e-commerce dataset
-✅ **Best Practices** - Clean code, proper error handling
-✅ **English Only** - No Arabic content
-✅ **Well Documented** - 2,500+ lines of documentation
-✅ **Production Ready** - Complete implementation
-✅ **Easy Integration** - 3-line setup in Program.cs
-
----
-
-## 🔧 Configuration Options
-
-### Skip If Data Exists (Default - Recommended)
-```csharp
-await mediator.Send(new SeedDatabaseCommand { SkipIfDataExists = true });
-```
-✅ Safe - Won't create duplicates
-✅ Idempotent - Can call multiple times
-✅ Recommended for production
-
-### Force Reseed (Development Only)
-```csharp
-await mediator.Send(new SeedDatabaseCommand { SkipIfDataExists = false });
-```
-⚠️ Caution - Will override existing data
-⚠️ Use only in development
-❌ Never use in production
-
----
-
-## 📖 Usage Patterns
-
-### 1. Automatic on Startup (Recommended)
-```csharp
-// Program.cs
-using (var scope = app.Services.CreateAsyncScope())
-{
-    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-    await mediator.Send(new SeedDatabaseCommand { SkipIfDataExists = true });
+# Update connection string in appsettings.json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=YOUR_SERVER;Database=VortexDB;Trusted_Connection=True;"
 }
-app.Run();
+
+# Apply migrations and seed database
+dotnet ef database update
+
+# Run the API
+dotnet run --project ECommerce.API
 ```
 
-### 2. API Endpoint
-```csharp
-[HttpPost("admin/seed")]
-[Authorize(Roles = "Admin")]
-public async Task<IActionResult> SeedDatabase()
-{
-    var result = await _mediator.Send(new SeedDatabaseCommand());
-    return result ? Ok("Seeded") : BadRequest("Failed");
-}
+The API will be available at `https://localhost:7018`
+
+### Frontend Setup
+
+```bash
+cd ECommerce.Client
+
+# Install dependencies
+npm install
+
+# Start the development server
+ng serve
 ```
 
-### 3. Hosted Service
-See IMPLEMENTATION_EXAMPLES.md for full implementation
-
-### 4. Unit Tests
-See IMPLEMENTATION_EXAMPLES.md for NUnit example
+The app will be available at `http://localhost:4200`
 
 ---
 
-## 🧪 Verification
+## Seed Accounts
 
-### Check Database
-```sql
-SELECT COUNT(*) FROM Users;           -- Should be 6
-SELECT COUNT(*) FROM Categories;      -- Should be 5
-SELECT COUNT(*) FROM Products;        -- Should be 10
-SELECT COUNT(*) FROM Orders;          -- Should be 5
--- ... and so on
-```
+The database seeds the following accounts automatically on first run:
 
-### Test Login
-Use any of the test credentials to login and verify data is present.
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@vortex.com | Admin@123 |
+| Seller | seller@vortex.com | Seller@123 |
+| Customer | customer@vortex.com | Customer@123 |
 
-### Query API
-```
-GET /api/products              -- Should return 10 products
-GET /api/categories            -- Should return 5 categories
-GET /api/orders                -- Should return orders
-```
+> **Note:** All seed accounts have email confirmation pre-approved.
 
 ---
 
-## 🛠️ Troubleshooting
+## API Overview
 
-### ❌ "SeedDatabaseCommand not found"
-**Solution:** Ensure `AddDatabaseSeeding()` is called in Program.cs
-
-### ❌ "DbContext not registered"
-**Solution:** Verify DbContext is added to DI container
-
-### ❌ "Data not seeding"
-**Solution:** Check logs, verify database connection, ensure first run
-
-### ❌ "Foreign key constraint violation"
-**Solution:** This shouldn't happen; the handler respects seeding order
-
-### See Full Troubleshooting
-Refer to QUICK_START.md for more solutions
-
----
-
-## 🔐 Security
-
-✅ All operations require proper authorization
-✅ Passwords are hashed by UserManager
-✅ Default password is only for testing
-✅ Production: Implement custom password policy
-✅ Seeding endpoint: Protected with [Authorize(Roles = "Admin")]
+| Group | Base Route | Description |
+|-------|-----------|-------------|
+| Auth | `/api/auth` | Login, register, OAuth, change password |
+| Admin | `/api/admin` | Full platform management |
+| User | `/api/user` | Profile management |
+| Seller | `/api/seller` | Seller dashboard and products |
+| Products | `/api/products` | Product catalog |
+| Cart | `/api/cart` | Shopping cart |
+| Wishlist | `/api/wishlist` | Wishlist management |
+| Orders | `/api/orders` | Order management |
+| Category | `/api/category` | Product categories |
+| Contact | `/api/contact` | Customer support messages |
+| Newsletter | `/api/newsletter` | Newsletter subscriptions |
+| Banner | `/api/banner` | Homepage banners |
 
 ---
 
-## 📈 Performance
+## Real-Time Features
 
-- **Seeding Time:** ~100-200ms
-- **Records Created:** 200+
-- **Database Size:** ~2-3 MB
-- **Idempotency Check:** <5ms (when data exists)
+Vortex uses SignalR for real-time communication:
 
----
-
-## 🎯 Requirements Met
-
-✅ CQRS Pattern implemented
-✅ MediatR integration complete
-✅ EF Core best practices followed
-✅ Async/Await throughout
-✅ CancellationToken support
-✅ Realistic e-commerce data
-✅ All relationships linked
-✅ Existence checks present
-✅ English language only
-✅ 200+ seed records
-✅ Professional code quality
-✅ Comprehensive documentation
+- Admins automatically join the `Admins` group on dashboard load
+- When a customer submits a contact message, admins receive an instant toast notification
+- Unread message badge updates in real-time without page refresh
 
 ---
 
-## 📁 File Locations
+## Architecture
 
-```
-ECommerce.Application/
-├── Features/Database/Commands/Seed/
-│   ├── SeedDatabaseCommand.cs                  (47 lines)
-│   ├── SeedDatabaseCommandHandler.cs           (700+ lines)
-│   ├── SEEDING_DOCUMENTATION.md               (500+ lines)
-│   ├── QUICK_START.md                         (200+ lines)
-│   ├── IMPLEMENTATION_EXAMPLES.md             (400+ lines)
-│   ├── DATA_SPECIFICATIONS.md                 (400+ lines)
-│   ├── VISUAL_INTEGRATION_GUIDE.md            (400+ lines)
-│   ├── IMPLEMENTATION_SUMMARY.md              (300+ lines)
-│   ├── IMPLEMENTATION_CHECKLIST.md            (300+ lines)
-│   └── README.md                              (this file)
-│
-└── Extensions/
-    └── SeedingExtensions.cs                    (28 lines)
+The backend follows **Clean Architecture** with **CQRS** pattern:
+
+- **Domain** — Entities and business rules
+- **Application** — Use cases via MediatR commands and queries
+- **Infrastructure** — Database, repositories, external services
+- **API** — Controllers, SignalR hubs, middleware
+
+Authentication uses **HttpOnly cookies** for JWT storage, preventing XSS attacks. All API calls are intercepted to handle 401/403 responses automatically.
+
+---
+
+## Environment Configuration
+
+Frontend environment (`src/environments/environment.ts`):
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'https://localhost:7018/api/'
+};
 ```
 
 ---
 
-## 🚀 Recommended Setup
+## License
 
-1. **Read QUICK_START.md** (5 min)
-2. **Add files to your project** (1 min)
-3. **Update Program.cs** (2 min)
-4. **Run application** (1 min)
-5. **Verify seeded data** (2 min)
-6. **Customize if needed** (optional)
-
-**Total Time:** ~15 minutes to production-ready
-
----
-
-## 🎓 Learning Resources
-
-- **SEEDING_DOCUMENTATION.md** - Deep dive into architecture
-- **IMPLEMENTATION_EXAMPLES.md** - Real-world patterns
-- **VISUAL_INTEGRATION_GUIDE.md** - Diagrams and flows
-- **DATA_SPECIFICATIONS.md** - Complete data reference
-
----
-
-## 💡 Next Steps
-
-After seeding is working:
-
-1. [ ] Test with provided credentials
-2. [ ] Verify all data is present
-3. [ ] Customize seed data if needed
-4. [ ] Add logging for production
-5. [ ] Implement authorization
-6. [ ] Deploy to staging
-7. [ ] Test in production environment
-8. [ ] Monitor performance
-9. [ ] Document any modifications
-10. [ ] Train team on seeding process
-
----
-
-## 📞 Support
-
-All files include:
-- ✅ XML documentation
-- ✅ Inline comments
-- ✅ Comprehensive guides
-- ✅ Implementation examples
-- ✅ Troubleshooting sections
-- ✅ Architecture diagrams
-
----
-
-## 📝 Version Information
-
-- **Created:** 2024
-- **Status:** Production Ready ✅
-- **.NET Version:** Net 8.0+ compatible
-- **Entity Framework Core:** 8.0+
-- **MediatR:** 12.0+
-
----
-
-## ✅ Quality Assurance
-
-- [x] Compiles without errors
-- [x] No compilation warnings
-- [x] All async methods proper
-- [x] All tests pass
-- [x] Production ready
-- [x] Well documented
-- [x] Best practices followed
-- [x] SOLID principles applied
-
----
-
-## 🎉 Summary
-
-You now have a **complete, professional-grade database seeding system** that:
-
-- ✅ Follows CQRS and Clean Architecture
-- ✅ Integrates seamlessly with MediatR
-- ✅ Seeds 200+ realistic records
-- ✅ Is production-ready
-- ✅ Includes comprehensive documentation
-- ✅ Provides multiple usage patterns
-- ✅ Supports full customization
-- ✅ Follows all best practices
-
-**Get started in 5 minutes - see QUICK_START.md**
-
----
-
-**Ready to seed your database? Let's go! 🚀**
+This project is licensed for educational purposes.
