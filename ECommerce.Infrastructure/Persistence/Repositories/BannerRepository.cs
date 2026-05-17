@@ -31,7 +31,7 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
             if (entity != null)
             {
                 entity.IsDeleted = true;
-                _context.Set<Banner>().Update(entity);
+                _context.Set<Banner>().Remove(entity);
             }
         }
 

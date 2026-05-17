@@ -51,7 +51,7 @@
         </tr>
 
 
-        @for (p of PromoCodess; track p.id) {
+        @for (p of proms_arr; track p.id) {
         <tr>
             <th scope="row">{{p.id}}</th>
             <td *ngIf="!(p.id==editedId);">{{ p.code }}</td>
@@ -59,7 +59,7 @@
             <td *ngIf="!(p.id==editedId);">{{p.discountPercent}}</td>
             <td *ngIf="!(p.id==editedId); ">{{p.maxUsageCount}}</td>
             <td>{{p.currentUsageCount}}</td>
-            <td *ngIf="!(p.id==editedId);">{{p.expiryDate|dateClean}}</td>
+            <td *ngIf="!(p.id==editedId);">{{p.expiryDate | date:'yyyy-MM-dd'}}</td>
             @switch(p.isActive){
             @case(true){
             <td class="text-success">Active</td>
@@ -68,8 +68,8 @@
             <td class="text-danger">Expired</td>
             }}
             <!-- <td>{{p.isActive}}</td> -->
-            <td *ngIf="!(p.id==editedId); else saveEdit"><button class="btn btn-primary" (click)="EditMode(p.id)"
-                    disabled="true">Edit</button></td>
+            <!-- <td *ngIf="!(p.id==editedId); else saveEdit"><button class="btn btn-primary" (click)="EditMode(p.id)"
+                    disabled="true">Edit</button></td> -->
             <ng-template #saveEdit>
                 <td> <button class="btn btn-success" (click)="createPromo(createdPromo)">Save</button></td>
             </ng-template>
@@ -81,18 +81,15 @@
     </tbody>
 </table>
 
-<div class="d-flex justify-content-between p-2">
-    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
-        (pageChange)="refreshPromos()">
-    </ngb-pagination>
+<!-- Pagination -->
 
-    <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshPromos()">
-        <option [ngValue]="2">2 items per page</option>
-        <option [ngValue]="4">4 items per page</option>
-        <option [ngValue]="100">100 items per page</option>
-    </select>
-</div>
+    <div class="d-flex justify-content-center mt-4">
 
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="PromoCodess.length"
+            (pageChange)="refreshPromos()">
+        </ngb-pagination>
+
+    </div>
 
 
 

@@ -1,5 +1,5 @@
-export interface Category {
-    id: number;
+export interface ICategory {
+  id: number;
   name: string;
   description: string;
   parentCategoryId?: number | null;

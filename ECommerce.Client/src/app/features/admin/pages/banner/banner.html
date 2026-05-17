@@ -9,7 +9,7 @@
         </h2>
 
         <button class="btn btn-success"
-                (click)="itemToAdd = !itemToAdd">
+                (click)="itemToAdd = !itemToAdd;itemToUpdate=false;emptyBanner()">
 
             {{ itemToAdd ? 'Cancel' : 'Add Banner' }}
 
@@ -17,137 +17,164 @@
 
     </div>
 
-    <!-- Create Banner Form -->
+    <div class="card mb-4 shadow-sm" *ngIf="itemToUpdate">
 
-    <div class="card shadow-sm mb-4" *ngIf="itemToAdd">
-
-        <div class="card-header fw-bold">
-            Create New Banner
+        <div class="card-header">
+            Update Banner
         </div>
 
         <div class="card-body">
+            <!-- "id": 0,
+
+    "title": "",
+    "imageUrl": " ",
+    "link": " ",
+    "isActive": false,
+    "displayOrder": 0, -->
 
             <div class="row g-3">
 
-                <!-- Title -->
+                <div class="col-md-4">
+                    <label class="form-label">Title</label>
 
-                <div class="col-md-6">
-
-                    <label class="form-label">
-                        Title
-                    </label>
-
-                    <input type="text"
-                           class="form-control"
-                           name="title"
-                           [(ngModel)]="createdBnr.title">
-
+                    <input type="text" class="form-control" [(ngModel)]="createdBnr.title">
                 </div>
 
-                <!-- Display Order -->
+                <div class="col-md-4">
+                    <label class="form-label">Image URL</label>
 
-                <div class="col-md-3">
-
-                    <label class="form-label">
-                        Display Order
-                    </label>
-
-                    <input type="number"
-                           class="form-control"
-                           name="displayOrder"
-                           [(ngModel)]="createdBnr.displayOrder">
-
+                    <input type="text" class="form-control" [(ngModel)]="createdBnr.imageUrl">
                 </div>
 
-                <!-- Is Active -->
+                <div class="col-md-12">
+                    <label class="form-label">link</label>
 
-                <div class="col-md-3 d-flex align-items-end">
-
-                    <div class="form-check">
-
-                        <input type="checkbox"
-                               class="form-check-input"
-                               id="isActive"
-                               name="isActive"
-                               [(ngModel)]="createdBnr.isActive">
-
-                        <label class="form-check-label"
-                               for="isActive">
-
-                            Active
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-                <!-- Image URL -->
-
-                <div class="col-md-6">
-
-                    <label class="form-label">
-                        Image URL
-                    </label>
-
-                    <input type="text"
-                           class="form-control"
-                           name="imageUrl"
-                           [(ngModel)]="createdBnr.imageUrl">
-
-                </div>
-
-                <!-- Link -->
-
-                <div class="col-md-6">
-
-                    <label class="form-label">
-                        Redirect Link
-                    </label>
-
-                    <input type="text"
-                           class="form-control"
-                           name="link"
-                           [(ngModel)]="createdBnr.link">
-
+                    <input class="form-control" rows="4" [(ngModel)]="createdBnr.link">
                 </div>
 
             </div>
 
-            <!-- Preview -->
-
-            <div class="mt-4"
-                 *ngIf="createdBnr.imageUrl.trim().length > 0">
-
-                <label class="form-label fw-bold">
-                    Image Preview
-                </label>
-
-                <div>
-
-                    <img [src]="createdBnr.imageUrl"
-                         alt="preview"
-                         class="img-fluid rounded border"
-                         style="max-height: 220px;">
-                </div>
-
-            </div>
-
-            <!-- Save Button -->
-
-            <div class="mt-4">
-
-                <button class="btn btn-primary"
-                        (click)="createBnr(createdBnr)">
-
+            <div class="mt-3">
+                <button class="btn btn-primary" (click)="updateBnr(UpdatedId,createdBnr)">
                     Save Banner
-
                 </button>
-
             </div>
 
         </div>
 
+    </div>
+
+    <!-- Create Banner Form -->
+
+    <div class="card shadow-sm mb-4" *ngIf="itemToAdd">
+    
+        <div class="card-header fw-bold">
+            Create New Banner
+        </div>
+    
+        <div class="card-body">
+    
+            <div class="row g-3">
+    
+                <!-- Title -->
+    
+                <div class="col-md-6">
+    
+                    <label class="form-label">
+                        Title
+                    </label>
+    
+                    <input type="text" class="form-control" name="title" [(ngModel)]="createdBnr.title">
+    
+                </div>
+    
+                <!-- Display Order -->
+    
+                <div class="col-md-3">
+    
+                    <label class="form-label">
+                        Display Order
+                    </label>
+    
+                    <input type="number" class="form-control" name="displayOrder" [(ngModel)]="createdBnr.displayOrder">
+    
+                </div>
+    
+                <!-- Is Active -->
+    
+                <div class="col-md-3 d-flex align-items-end">
+    
+                    <div class="form-check">
+    
+                        <input type="checkbox" class="form-check-input" id="isActive" name="isActive"
+                            [(ngModel)]="createdBnr.isActive">
+    
+                        <label class="form-check-label" for="isActive">
+    
+                            Active
+    
+                        </label>
+    
+                    </div>
+    
+                </div>
+    
+                <!-- Image URL -->
+    
+                <div class="col-md-6">
+    
+                    <label class="form-label">
+                        Image URL
+                    </label>
+    
+                    <input type="text" class="form-control" name="imageUrl" [(ngModel)]="createdBnr.imageUrl">
+    
+                </div>
+    
+                <!-- Link -->
+    
+                <div class="col-md-6">
+    
+                    <label class="form-label">
+                        Redirect Link
+                    </label>
+    
+                    <input type="text" class="form-control" name="link" [(ngModel)]="createdBnr.link">
+    
+                </div>
+    
+            </div>
+    
+            <!-- Preview -->
+    
+            <div class="mt-4" *ngIf="createdBnr.imageUrl.trim().length > 0">
+    
+                <label class="form-label fw-bold">
+                    Image Preview
+                </label>
+    
+                <div>
+    
+                    <img [src]="createdBnr.imageUrl" alt="preview" class="img-fluid rounded border"
+                        style="max-height: 220px;">
+                </div>
+    
+            </div>
+    
+            <!-- Save Button -->
+    
+            <div class="mt-4">
+    
+                <button class="btn btn-primary" (click)="createBnr(createdBnr)">
+    
+                    Save Banner
+    
+                </button>
+    
+            </div>
+    
+        </div>
+    
     </div>
 
     <!-- Banners Table -->
@@ -207,8 +234,8 @@
                         <a [href]="b.link"
                            target="_blank"
                            *ngIf="b.link">
-
-                            {{ b.link }}
+<a href="{{b.link}}">Click Here to show</a>
+                            <!-- {{ b.link }} -->
 
                         </a>
 
@@ -246,12 +273,13 @@
 
                         <div class="d-flex gap-2">
 
-                            <button class="btn btn-primary btn-sm">
+                            <button class="btn btn-primary btn-sm"
+                             (click)="itemToUpdate = !itemToUpdate;UpdatedId=b.id;itemToAdd=false;createdBnr=b;">
                                 Edit
                             </button>
 
                             <button class="btn btn-danger btn-sm"
-                                    (click)="deleteBnr(b.id)">
+                                    (click)="openModal(b.id)">
 
                                 Delete
 

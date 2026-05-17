@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, AfterViewInit } from '@angular/core';
-import { ICategory } from '../../../../core/models/icategory';
+import { ICategory} from '../../../../core/models/Icategory';
 import { CommonModule, NgClass, NgStyle } from '@angular/common';
 import { CategoryService } from '../../../../core/services/category-service'
 import { HttpClient } from '@angular/common/http';
@@ -10,7 +10,6 @@ import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/alert';
 import { NgbInputDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker';
 import { JsonPipe } from '@angular/common';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap/toast';
-import { DateCleanPipe } from '../../../../shared/pipes/date-clean-pipe'
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 
 @Component({
@@ -24,7 +23,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
     NgbInputDatepicker,
     NgbAlert,
     NgbToast,
-    DateCleanPipe],
+    ],
   templateUrl: './category.html',
   styleUrl: './category.css',
   providers: [CategoryService]
@@ -76,7 +75,7 @@ export class Category {
 
   // }
   page = 1;
-  pageSize = 4;
+  pageSize = 8;
   collectionSize = this.Catgs.length;
   catgs_arr: ICategory[] = [];
 

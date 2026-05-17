@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, AfterViewInit } from '@angular/core';
-import { IPromoCode } from '../../../../core/models/IPromoCode';
+import { IPromoCode } from '../../../../core/models/ipromo-code';
 import { CommonModule, NgClass, NgStyle } from '@angular/common';
-import { PromoService } from '../../../../core/services/promoservice'
+import { PromoService } from '../../services/promo-service'
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
@@ -10,14 +10,14 @@ import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/alert';
 import { NgbInputDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker';
 import { JsonPipe } from '@angular/common';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap/toast';
-import { DateCleanPipe } from '../../../../shared/pipes/date-clean-pipe'
+// import { DateCleanPipe } from '../../../../shared/pipes/date-clean-pipe'
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 
 
 
 @Component({
   selector: 'app-promo-code',
-  imports: [CommonModule, NgStyle, NgClass, FormsModule, NgbPagination, NgbInputDatepicker, NgbAlert, JsonPipe, NgbToast, DateCleanPipe],
+  imports: [CommonModule, NgStyle, NgClass, FormsModule, NgbPagination, NgbInputDatepicker, NgbAlert, JsonPipe, NgbToast,],//DateCleanPipe
   templateUrl: './promo-code.html',
   styleUrl: './promo-code.css',
   providers: [PromoService]
@@ -65,10 +65,11 @@ export class PromoCode implements OnInit {
 
   // }
   page = 1;
-  pageSize = 4;
+  pageSize = 8;
   collectionSize = this.PromoCodess.length;
   proms_arr: IPromoCode[] = [];
 
+ 
   refreshPromos() {
     console.log(this.pageSize)
     this.proms_arr = this.PromoCodess
@@ -127,11 +128,13 @@ export class PromoCode implements OnInit {
 
   itemToAdd: boolean = false;
   public createdPromo: IPromoCode = {
-    "code": "string",
+    "code":"string",
     "discountPercent": 0,
     "maxUsageCount": 0,
+    "currentUsageCount":0,
     "expiryDate": new Date(),
     "id": 7,
+    "isActive":true
   }
 
   showSaveToast: Boolean = false;
@@ -169,7 +172,9 @@ export class PromoCode implements OnInit {
               code: '',
               discountPercent: 0,
               maxUsageCount: 0,
-              expiryDate: new Date()
+              currentUsageCount:0,
+              expiryDate: new Date(),
+              isActive:false
             };
 
 
