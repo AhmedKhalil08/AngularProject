@@ -6,8 +6,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-// تأكد من عمل using لمسار الـ Enums بتاعك هنا
-// using ECommerce.Domain.Enums; 
+using Microsoft.AspNetCore.Identity; 
+using ECommerce.Domain.Entities; 
 
 namespace ECommerce.Application.Features.Orders.Commands.UpdateShipement
 {
@@ -18,18 +18,33 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateShipement
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
         private readonly IProductRepository _productRepository;
-        public UpdateShipementCommandHandler(IShipmentRepository shipmentRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IProductRepository productRepository)
+
+        private readonly IMailConfService _mailConfService;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public UpdateShipementCommandHandler(
+            IShipmentRepository shipmentRepository,
+            IOrderRepository orderRepository,
+            IUnitOfWork unitOfWork,
+            ICurrentUserService currentUserService,
+            IProductRepository productRepository,
+            IMailConfService mailConfService,
+            UserManager<ApplicationUser> userManager)
         {
             _shipmentRepository = shipmentRepository;
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
             _productRepository = productRepository;
+
+            // 👇 حقن السيرفيسز
+            _mailConfService = mailConfService;
+            _userManager = userManager;
         }
 
         public async Task<bool> Handle(UpdateShipementCommand request, CancellationToken cancellationToken)
         {
-            var userId = _currentUserService.UserId;
+            var userId = _currentUserService.UserId; // ده الـ Seller
             if (string.IsNullOrEmpty(userId))
                 throw new UnauthorizedAccessException("Must be logged in.");
 
@@ -41,6 +56,8 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateShipement
 
             if (shipment.SellerId != userId)
                 throw new UnauthorizedAccessException("You can only update shipments for your own orders.");
+
+            // إرجاع المخزون لو الشحنة اتلغت
             if (request.ShipmentStatus == ShipmentStatus.Cancelled && shipment.Status != ShipmentStatus.Cancelled)
             {
                 foreach (var item in shipment.OrderItems)
@@ -48,7 +65,7 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateShipement
                     var product = await _productRepository.GetByIdAsync(item.ProductId);
                     if (product != null)
                     {
-                        product.Stock += item.Quantity; 
+                        product.Stock += item.Quantity;
                         await _productRepository.UpdateAsync(product);
                     }
                 }
@@ -65,7 +82,8 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateShipement
             bool isAllShipped = hasShipments && orderShipments.All(s =>
                 s.Status == ShipmentStatus.Shipped ||
                 s.Status == ShipmentStatus.Delivered);
-            bool isPartiallyShipped = hasShipments && !isAllShipped && orderShipments.Any(s => s.Status == ShipmentStatus.Shipped);
+
+            var originalOrderStatus = order.Status;
 
             if (isAllDelivered)
             {
@@ -91,9 +109,16 @@ namespace ECommerce.Application.Features.Orders.Commands.UpdateShipement
                     await _orderRepository.UpdateAsync(order);
                 }
             }
-            
-
             await _unitOfWork.SaveChangesAsync();
+            if (originalOrderStatus != order.Status)
+            {
+                var customer = await _userManager.FindByIdAsync(order.UserId);
+
+                if (customer != null && !string.IsNullOrEmpty(customer.Email))
+                {
+                    await _mailConfService.SendOrderStatusUpdateAsync(customer.Email, order.Id, order.Status.ToString());
+                }
+            }
             return true;
         }
     }

@@ -24,7 +24,7 @@ namespace ECommerce.Application.Features.Banners.Queries.GetAllBanners
         public async Task<List<BannerDto>> Handle(GetAllBannersQuery request, CancellationToken cancellationToken)
         {
             var items = await _repository.GetAllAsync();
-            return items.Select(i => new BannerDto
+            return items.Where(i => !i.IsDeleted).Select(i => new BannerDto
             {
                 Id = i.Id,
                 Title = i.Title,

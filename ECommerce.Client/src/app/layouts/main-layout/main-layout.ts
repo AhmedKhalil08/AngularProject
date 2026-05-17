@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { Navbar} from '../../shared/components/navbar/navbar';
-import {Footer} from '../../shared/components/footer/footer'
-import {Category} from '../../features/admin/pages/category/category'
+import { Navbar } from '../../shared/components/navbar/navbar';
+import { Footer } from '../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, Navbar,Footer,Category],
+  imports: [RouterOutlet, Navbar,Footer],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
 })

@@ -13,6 +13,7 @@ import { Customers } from './features/admin/pages/customers/customers';
 import { Sellers } from './features/admin/pages/sellers/sellers';
 import { Admins } from './features/admin/pages/admins/admins';
 import { ProductCatalog } from './features/products/components/product-catalog/product-catalog';
+import { ProductDetails } from './features/products/components/product-details/product-details';
 import { CartComp } from './features/cart/components/cart-comp/cart-comp';
 import { SellerLayout } from './layouts/seller-layout/seller-layout';
 import { sellerGuard } from './core/guards/seller-guard';
@@ -33,9 +34,14 @@ import { MyOrders } from './features/profile/pages/my-orders/my-orders';
 import { Shipment } from './features/seller/pages/shipment/shipment';
 import { Products } from './features/admin/pages/products/products';
 import { guestGuard } from './core/guards/guest-guard';
+import { AllOrders } from './features/admin/pages/all-orders/all-orders';
 import { Subscribers } from './features/admin/pages/subscribers/subscribers';
+// import { Subscribers } from './features/admin/pages/subscribers/subscribers';
 import { Wishlist } from './features/wishlist/pages/wishlist/wishlist';
 import { Unauthorized } from './features/auth/pages/unauthorized/unauthorized';
+import { Banners } from './features/admin/pages/banners/banners';
+import { PromoCodes } from './features/admin/pages/promo-codes/promo-codes';
+import { Categories } from './features/admin/pages/categories/categories';
 
 export const routes: Routes = [
   {
@@ -44,6 +50,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'products', component: ProductCatalog },
+      { path: 'products/:id', component: ProductDetails },
       { path: 'cart', component: CartComp },
       {
         path: 'checkout',
@@ -53,13 +60,13 @@ export const routes: Routes = [
       { path: 'checkout/failed', component: Checkoutfailed },
       { path: 'help-center', component: HelpCenter },
       { path: 'contact', component: CustomerService },
-      { path: 'wishlist', component: Wishlist, canActivate: [authGuard] }
+      { path: 'wishlist', component: Wishlist, canActivate: [authGuard] },
     ],
   },
   {
     path: 'auth',
     component: AuthLayout,
-    canActivate:[guestGuard],
+    canActivate: [guestGuard],
     children: [
       { path: 'login', component: Login },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -77,10 +84,14 @@ export const routes: Routes = [
       { path: 'customers', component: Customers },
       { path: 'sellers', component: Sellers },
       { path: 'admins', component: Admins },
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'messages', component: Messages },
       { path: 'products', component: Products },
-      { path: 'subscribers', component: Subscribers }
+      { path: 'Orders', component: AllOrders },
+      { path: 'subscribers', component: Subscribers },
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'banners', component: Banners },
+      { path: 'promocodes', component: PromoCodes },
+      { path: 'categories', component: Categories }
     ],
   },
   {

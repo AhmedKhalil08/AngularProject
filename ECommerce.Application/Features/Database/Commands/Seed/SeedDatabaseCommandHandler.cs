@@ -453,7 +453,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
             productImages.Add(new ProductImage
             {
                 ProductId = product.Id,
-                ImageUrl = $"https://via.placeholder.com/400?text=Product_{product.Id}_Main",
+                ImageUrl = $"//uploads/products/{product.Name}1.jpg",
                 IsMain = true
             });
 
@@ -463,7 +463,7 @@ public class SeedDatabaseCommandHandler : IRequestHandler<SeedDatabaseCommand, b
                 productImages.Add(new ProductImage
                 {
                     ProductId = product.Id,
-                    ImageUrl = $"https://via.placeholder.com/400?text=Product_{product.Id}_Image{i}",
+                    ImageUrl = $"//uploads/products/{product.Name}{i}.jpg",
                     IsMain = false
                 });
             }

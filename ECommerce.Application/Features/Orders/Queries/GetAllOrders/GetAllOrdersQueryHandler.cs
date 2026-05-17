@@ -19,7 +19,6 @@ namespace ECommerce.Application.Features.Orders.Queries.GetAllOrders
         public async Task<List<OrderDto>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
             
-            // 1. جلب البيانات من الداتابيز بكل علاقاتها
             var ordersEntity = await _repository.Table
                 .Include(o => o.User)
                 .Include(o => o.ShippingAddress)
@@ -28,7 +27,6 @@ namespace ECommerce.Application.Features.Orders.Queries.GetAllOrders
                 .Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
                 .ToListAsync(cancellationToken);
 
-            // 2. المابينج اليدوي (Manual Mapping)
             var ordersDto = ordersEntity.Select(order => new OrderDto
             {
                 Id = order.Id,
@@ -36,9 +34,9 @@ namespace ECommerce.Application.Features.Orders.Queries.GetAllOrders
                 TotalAmount = order.TotalAmount,
                 Status = order.Status,
                 Notes = order.Notes,
-                UserName = order.User?.UserName ?? "N/A", // سحب الاسم مباشرة
+                UserName = order.User?.UserName ?? "N/A", 
                 IsDeleted = order.IsDeleted,
-                // مابينج العنوان
+
                 Address = order.ShippingAddress == null ? null : new AddressDto
                 {
                     Id = order.ShippingAddress.Id,

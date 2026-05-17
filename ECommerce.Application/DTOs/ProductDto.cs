@@ -13,6 +13,7 @@ namespace ECommerce.Application.DTOs
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public List<string> ImageUrls { get; set; }
+        public List<ReviewDto> Reviews { get; set; }
 
         public string SellerName { get; set; }
 

@@ -19,6 +19,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
         private readonly IShipmentRepository _shipmentRepository;
         private readonly ICartRepository _cartRepository;
         private readonly ICartItemRepository _cartItemRepository;
+        private readonly IPromoCodeRepository _promoCodeRepository;
 
         public CreateOrderCommandHandler(
             IOrderRepository orderRepository,
@@ -28,7 +29,8 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             IUnitOfWork unitOfWork,
             IShipmentRepository shipmentRepository,
             ICartRepository cartRepository,
-            ICartItemRepository cartItemRepository)
+            ICartItemRepository cartItemRepository,
+            IPromoCodeRepository promoCodeRepository    )
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
@@ -38,6 +40,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             _unitOfWork = unitOfWork;
             _cartRepository = cartRepository;
             _cartItemRepository = cartItemRepository;
+            _promoCodeRepository = promoCodeRepository;
         }
 
         public async Task<PaymentResultDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -55,7 +58,6 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
                 throw new Exception("Your cart is empty.");
 
-            // 1. هل الدفع كاش؟
             bool isCashOnDelivery = request.PaymentMethod == PaymentMethod.CashOnDelivery;
 
             var itemsBySeller = new Dictionary<string, List<OrderItem>>();
@@ -65,7 +67,7 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             foreach (var cartItem in cart.CartItems)
             {
                 var product = cartItem.Product;
-
+                if (product.IsDeleted) continue;
                 if (product.Stock == 0) continue;
                 if (product.Stock < cartItem.Quantity) continue;
                 totalAmount += product.Price * cartItem.Quantity;
@@ -82,7 +84,6 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
                     Quantity = cartItem.Quantity,
                     UnitPrice = product.Price
                 };
-
                 if (!itemsBySeller.ContainsKey(product.SellerId))
                 {
                     itemsBySeller[product.SellerId] = new List<OrderItem>();
@@ -94,7 +95,14 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
             var shipments = new List<Shipment>();
             var shipingFee = 50;
             var orderTotalAmount = totalAmount + (itemsBySeller.Count * shipingFee);
-
+            if (request.PromoCode != null && request.PromoCode != "")
+            {
+                var promoCode = await _promoCodeRepository.GetPromoCodeAsync(request.PromoCode);
+                if (promoCode != null)
+                {
+                    orderTotalAmount -= orderTotalAmount * (promoCode.DiscountPercent / 100);
+                }
+            }
             foreach (var sellerGroup in itemsBySeller)
             {
                 decimal totalItemsAmount = sellerGroup.Value.Sum(oi => oi.UnitPrice * oi.Quantity);
@@ -129,7 +137,8 @@ namespace ECommerce.Application.Features.Orders.Commands.CreateOrder
                     Status = PaymentStatus.Pending
                 }
             };
-
+           
+            if (order.OrderItems.Count > 0)
             await _orderRepository.AddAsync(order);
 
             if (isCashOnDelivery)

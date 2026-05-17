@@ -41,7 +41,6 @@ namespace ECommerce.Application.Features.Orders.Queries.GetMyOrders
          .ToListAsync(cancellationToken);
 
          
-            // 3. المابينج اليدوي لضمان عدم حدوث FormatException
             var ordersDto = ordersEntity.Select(order => new OrderDto
             {
                 Id = order.Id,

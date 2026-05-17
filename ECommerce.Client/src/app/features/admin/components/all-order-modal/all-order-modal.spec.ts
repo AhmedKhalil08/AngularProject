@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Shipment } from './shipment';
+import { AllOrderModal } from './all-order-modal';
 
-describe('Shipment', () => {
-  let component: Shipment;
-  let fixture: ComponentFixture<Shipment>;
+describe('AllOrderModal', () => {
+  let component: AllOrderModal;
+  let fixture: ComponentFixture<AllOrderModal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Shipment],
+      imports: [AllOrderModal],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Shipment);
+    fixture = TestBed.createComponent(AllOrderModal);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

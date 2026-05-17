@@ -39,7 +39,7 @@ namespace ECommerce.Application.Features.Carts.Commands.AddToCart
 
             var product = await _productRepository.GetByIdAsync(request.ProductId);
             if (product == null) throw new Exception("Product not found.");
-            if (product.Stock < request.Quantity) throw new Exception("Not enough stock.");
+            if (product.Stock < request.Quantity || product.IsDeleted) throw new Exception("Not enough stock.");
 
             var carts = await _cartRepository.GetByConditionAsync(
                 c => c.UserId == userId && !c.IsDeleted,
