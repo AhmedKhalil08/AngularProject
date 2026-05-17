@@ -3,6 +3,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { OverviewStatsDto, SellerProfileDto, UserDto } from '../../../core/models/auth.model';
 import { PagedResult } from '../../../core/models/pagination.model';
 import { ContactMessageDto } from '../../../core/models/contact.model';
+import { BannerDto } from '../../../core/models/banner.model';
 
 @Injectable({
   providedIn: 'root',
@@ -67,6 +68,47 @@ restoreProduct(id: number) {
 }
 getSubscribers() {
   return this.api.get<any[]>('newsletter/subscribers');
+}
+getBanners() {
+  return this.api.get<BannerDto[]>('admin/banners');
+}
+
+createBanner(command: any) {
+  return this.api.post<BannerDto>('admin/banners', command);
+}
+
+updateBanner(id: number, command: any) {
+  return this.api.put<BannerDto>(`admin/banners/${id}`, command);
+}
+
+deleteBanner(id: number) {
+  return this.api.delete<any>(`admin/banners/${id}`);
+}
+getPromoCodes() {
+  return this.api.get<any[]>('admin/promocodes');
+}
+
+createPromoCode(dto: any) {
+  return this.api.post<any>('admin/promocodes', dto);
+}
+
+deletePromoCode(id: number) {
+  return this.api.delete<any>(`admin/promocodes/${id}`);
+}
+getCategories() {
+  return this.api.get<any[]>('category');
+}
+
+createCategory(dto: any) {
+  return this.api.post<any>('category', dto);
+}
+
+updateCategory(id: number, dto: any) {
+  return this.api.put<any>(`category/${id}`, dto);
+}
+
+deleteCategory(id: number) {
+  return this.api.delete<any>(`category/${id}`);
 }
 }
 
